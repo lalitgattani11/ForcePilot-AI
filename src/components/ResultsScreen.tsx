@@ -1,13 +1,11 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Trophy, 
   Target, 
   RotateCcw, 
   ChevronDown,
   Star, 
   MessageSquare,
-  Zap,
   Brain,
   Cpu,
   BarChart2,

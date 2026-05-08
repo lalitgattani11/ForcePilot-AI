@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import SetupScreen from './components/SetupScreen';
 import ChatInterface from './components/ChatInterface';
 import ResultsScreen from './components/ResultsScreen';

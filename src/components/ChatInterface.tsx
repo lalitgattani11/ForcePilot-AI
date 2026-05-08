@@ -13,7 +13,6 @@ import {
   Mic,
   Send,
   Cpu,
-  User,
   UserCheck,
   ShieldCheck,
   HeartHandshake,
