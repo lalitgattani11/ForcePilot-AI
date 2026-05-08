@@ -12,11 +12,28 @@ function App() {
   const [phase, setPhase] = useState<Phase>('setup');
   const [config, setConfig] = useState<InterviewConfig | null>(null);
   const [answers, setAnswers] = useState<Answer[]>([]);
+  const [showCreatorTag, setShowCreatorTag] = useState(false);
 
   useEffect(() => {
     // Always dark mode for the premium experience
     document.documentElement.classList.add('dark');
     document.body.classList.add('dark');
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 250) {
+        setShowCreatorTag(true);
+      } else {
+        setShowCreatorTag(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -54,26 +71,31 @@ function App() {
       <div className="relative min-h-screen bg-[#02040a] text-slate-300 font-sans selection:bg-emerald-500/20 overflow-x-hidden antialiased">
         {/* Cinematic Premium Background */}
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-          <div className="absolute inset-0 bg-aurora opacity-[0.25] animate-aurora"></div>
+          <div className="absolute inset-0 bg-aurora opacity-[0.15] sm:opacity-[0.25] sm:animate-aurora"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#02040a]/10 to-[#02040a]"></div>
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_-20%,rgba(16,185,129,0.05)_0%,transparent_50%)]"></div>
         </div>
 
-        {/* Minimal Navigation */}
-        <header className="fixed top-0 left-0 right-0 z-50 px-10 py-10 flex justify-between items-center bg-transparent pointer-events-none">
-          <div className="flex items-center gap-3 group cursor-default pointer-events-auto">
-            <div className="w-10 h-10 rounded-xl bg-white text-slate-950 flex items-center justify-center shadow-lg transition-transform hover:scale-105 duration-500">
-              <span className="font-bold text-xl tracking-tighter">F</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold tracking-tight text-white leading-none">ForcePilot<span className="text-emerald-500">.</span></span>
+        {/* New Premium Neon Navbar */}
+        <header className="fixed top-0 left-0 right-0 z-50 border-b border-cyan-500/10 bg-black/70 backdrop-blur-md sm:backdrop-blur-2xl">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-start">
+            <div className="flex items-center gap-2 lg:gap-3">
+              <div className="flex items-center justify-center h-10 w-10 rounded-2xl bg-cyan-500/10 border border-cyan-400/20 shadow-[0_0_15px_rgba(34,211,238,0.1)] sm:shadow-[0_0_30px_rgba(34,211,238,0.18)] transition-transform sm:hover:scale-105 duration-500 will-change-transform">
+                <span className="font-bold text-lg tracking-tighter text-cyan-400">F</span>
+              </div>
+              <div className="flex flex-col justify-center items-start text-left">
+                <h1 className="text-sm sm:text-base font-semibold tracking-wide text-white leading-none">ForcePilot AI</h1>
+                <div className="block lg:hidden">
+                  <p className="text-[10px] sm:text-xs text-cyan-300/70 tracking-wide uppercase mx-0">Interview Intelligence</p>
+                </div>
+              </div>
             </div>
           </div>
         </header>
 
         {/* Main Content */}
-        <main className="relative z-10 pt-40 pb-24 min-h-screen">
-          <div className="container mx-auto px-12">
+        <main className="relative z-10 pt-28 sm:pt-32 lg:pt-36 pb-16 sm:pb-24 min-h-screen">
+          <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8">
             {phase === 'setup' && (
               <SetupScreen onStart={startInterview} />
             )}
@@ -94,16 +116,14 @@ function App() {
           </div>
         </main>
 
-        {/* Footer Signature */}
-        <footer className="fixed bottom-0 left-0 right-0 z-50 px-12 py-10 bg-transparent flex justify-end items-center pointer-events-none">
-          <div className="pointer-events-auto">
-            <div className="group flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500/50 transition-all duration-500">
-              <span className="group-hover:text-slate-400 transition-colors duration-500">Engineered by</span>
-              <div className="w-1 h-1 rounded-full bg-emerald-500/30 group-hover:bg-emerald-400 transition-colors duration-500"></div>
-              <span className="text-emerald-500/60 group-hover:text-emerald-400 tracking-[0.3em] transition-colors duration-500">Lalit Gattani</span>
+        {/* Floating Creator Branding */}
+        {showCreatorTag ? (
+          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0 z-50">
+            <div className="rounded-full border border-cyan-400/20 bg-black/80 px-4 py-2 text-xs text-cyan-200/80 backdrop-blur-sm sm:backdrop-blur-xl">
+              Engineered by Lalit Gattani
             </div>
           </div>
-        </footer>
+        ) : null}
       </div>
     </ErrorBoundary>
   );

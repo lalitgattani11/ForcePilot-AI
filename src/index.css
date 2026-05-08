@@ -60,46 +60,46 @@ body {
 
 /* High-End Minimalist Glassmorphism */
 .premium-glass {
-  @apply bg-white/[0.01] backdrop-blur-3xl border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.5)];
+  @apply bg-white/[0.01] backdrop-blur-md sm:backdrop-blur-3xl border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.5)];
 }
 
 .premium-card {
-  @apply bg-white/[0.02] backdrop-blur-xl border border-white/[0.04] transition-all duration-500;
+  @apply bg-white/[0.02] backdrop-blur-sm sm:backdrop-blur-xl border border-white/[0.04] transition-all duration-500;
 }
 
 .premium-card:hover {
-  @apply bg-white/[0.04] border-white/[0.1] shadow-xl -translate-y-0.5;
+  @apply bg-white/[0.04] border-white/[0.1] shadow-xl sm:-translate-y-0.5 will-change-transform;
 }
 
 /* Elegant Typography Systems */
 .hero-title {
-  @apply text-5xl md:text-8xl font-bold tracking-[-0.03em] leading-[1.05] text-white;
+  @apply text-4xl sm:text-6xl md:text-8xl font-bold tracking-[-0.03em] leading-[1.05] text-white;
 }
 
 .sub-title {
-  @apply text-lg md:text-xl text-slate-400 font-medium tracking-tight leading-relaxed max-w-2xl;
+  @apply text-sm sm:text-base md:text-xl text-slate-400 font-medium tracking-tight leading-relaxed max-w-2xl;
 }
 
 .meta-label {
-  @apply text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-4;
+  @apply text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-3 md:mb-4;
 }
 
 /* Polished Interaction Feedback */
 .cta-button {
-  @apply relative overflow-hidden bg-white text-slate-950 px-10 py-5 rounded-2xl font-bold text-sm transition-all duration-500 
+  @apply relative overflow-hidden bg-white text-slate-950 px-8 py-4 md:px-10 md:py-5 rounded-xl md:rounded-2xl font-bold text-sm transition-all duration-500 
          hover:bg-slate-100 hover:shadow-[0_0_40px_rgba(255,255,255,0.15)] active:scale-[0.98]
          before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-emerald-500/10 before:to-transparent 
-         before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-1000;
+         before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-1000 will-change-transform;
 }
 
 .input-glass {
-  @apply bg-white/[0.02] border border-white/[0.08] rounded-2xl px-6 py-5 text-lg text-white placeholder:text-slate-700 
+  @apply bg-white/[0.02] border border-white/[0.08] rounded-xl md:rounded-2xl px-5 py-4 md:px-6 md:py-5 text-base md:text-lg text-white placeholder:text-slate-700 
          focus:outline-none focus:border-emerald-500/40 focus:bg-white/[0.04] focus:ring-4 focus:ring-emerald-500/5 transition-all duration-500;
 }
 
 /* Clean Integrated Selectors */
 .card-selector {
-  @apply relative overflow-hidden rounded-2xl border transition-all duration-500 backdrop-blur-xl;
+  @apply relative overflow-hidden rounded-2xl border transition-all duration-500 backdrop-blur-sm sm:backdrop-blur-xl will-change-transform;
 }
 
 .card-selector.active {

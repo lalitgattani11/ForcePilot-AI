@@ -424,14 +424,15 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto h-[calc(100vh-16rem)]">
+    <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-8 h-[calc(100vh-16rem)]">
       
       {/* Handshake Mask */}
       {status === "AWAITING_UNLOCK" && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-6"
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm sm:backdrop-blur-xl flex items-center justify-center p-6"
         >
           <div className="max-w-xs w-full text-center space-y-8">
             <div className="space-y-3">
@@ -453,21 +454,21 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       <div className="h-full flex flex-col premium-glass rounded-2xl overflow-hidden border border-white/10">
         
         {/* Header */}
-        <div className="px-8 py-6 border-b border-white/[0.05] flex justify-between items-center bg-white/[0.02]">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-white text-slate-950 flex items-center justify-center shadow-sm">
-              <Cpu size={20} />
+        <div className="px-4 sm:px-8 py-4 sm:py-6 border-b border-white/[0.05] flex justify-between items-center bg-white/[0.02]">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white text-slate-950 flex items-center justify-center shadow-sm">
+              <Cpu size={18} className="sm:size-[20px]" />
             </div>
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">Interviewer</span>
+              <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
+                <span className="text-[9px] sm:text-[10px] font-bold text-emerald-500 uppercase tracking-wider">Interviewer</span>
                 <div className="w-1 h-1 rounded-full bg-slate-700"></div>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1 sm:gap-1.5">
                   {getPersonaIcon()}
-                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{config.personality}</span>
+                  <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider">{config.personality}</span>
                 </div>
               </div>
-              <h2 className="text-sm font-semibold text-white">{config.role}</h2>
+              <h2 className="text-xs sm:text-sm font-semibold text-white truncate max-w-[150px] sm:max-w-none">{config.role}</h2>
             </div>
           </div>
 
@@ -488,20 +489,21 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         </div>
 
         {/* Chat History */}
-        <div className="flex-grow overflow-y-auto p-8 space-y-8 scrollbar-hide">
+        <div className="flex-grow overflow-y-auto p-4 sm:p-8 space-y-6 sm:space-y-8 scrollbar-hide">
           <AnimatePresence initial={false}>
             {messages.map((msg) => (
               <motion.div
                 key={msg.id}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`flex ${msg.sender === "candidate" ? "justify-end" : "justify-start"}`}
+                transition={{ duration: 0.2 }}
+                className={`flex ${msg.sender === "candidate" ? "justify-end" : "justify-start"} will-change-transform`}
               >
-                <div className={`max-w-[80%] ${msg.sender === "candidate" ? "text-right" : "text-left"}`}>
-                  <div className="flex items-center gap-2 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider justify-end">
+                <div className={`max-w-[90%] sm:max-w-[80%] ${msg.sender === "candidate" ? "text-right" : "text-left"}`}>
+                  <div className={`flex items-center gap-2 mb-1.5 sm:mb-2 text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider ${msg.sender === "candidate" ? "justify-end" : "justify-start"}`}>
                     {msg.sender === "candidate" ? "You" : "AI Interviewer"}
                   </div>
-                  <div className={`px-6 py-4 rounded-2xl text-sm leading-relaxed ${
+                  <div className={`px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-sm leading-relaxed ${
                     msg.sender === "candidate" 
                     ? "bg-emerald-500/10 text-white border border-emerald-500/20" 
                     : "bg-white/[0.03] text-slate-200 border border-white/[0.05]"
@@ -516,36 +518,37 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         </div>
 
         {/* Input Area */}
-        <div className="p-8 border-t border-white/[0.05] bg-white/[0.01]">
-          <div className="flex gap-4 items-end max-w-3xl mx-auto relative">
+        <div className="p-4 sm:p-8 border-t border-white/[0.05] bg-white/[0.01]">
+          <div className="flex gap-3 sm:gap-4 items-end max-w-3xl mx-auto relative">
             <textarea
               value={manualInput}
               onChange={(e) => setManualInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={isManualMode ? "Type your answer..." : "Listening..."}
-              className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-6 py-4 text-white text-sm outline-none resize-none transition-all focus:border-white/20 focus:bg-white/[0.05]"
+              className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 sm:px-6 py-3 sm:py-4 text-white text-sm outline-none resize-none transition-all focus:border-white/20 focus:bg-white/[0.05]"
               rows={1}
-              style={{ minHeight: '60px', maxHeight: '150px' }}
+              style={{ minHeight: '50px', maxHeight: '150px' }}
             />
-            {!isMobile && (
-              <div className="flex gap-2 absolute right-4 bottom-4">
+            
+            <div className="flex gap-2 shrink-0 sm:absolute sm:right-4 sm:bottom-4">
+              {!isMobile && (
                 <button
                   onClick={handleMicClick}
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
+                  className={`w-10 h-10 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-all ${
                     speechState === "LISTENING" ? 'bg-rose-500 text-white' : 'bg-white/5 text-slate-500 hover:text-white'
                   }`}
                 >
-                  <Mic size={14} className={speechState === "LISTENING" ? 'animate-pulse' : ''} />
+                  <Mic size={16} className={`${speechState === "LISTENING" ? 'animate-pulse' : ''} sm:size-[14px]`} />
                 </button>
-                <button
-                  disabled={!manualInput.trim()}
-                  onClick={handleManualSubmit}
-                  className="w-8 h-8 rounded-lg bg-white text-slate-950 flex items-center justify-center transition-all hover:scale-105 disabled:opacity-20 disabled:scale-100"
-                >
-                  <Send size={14} />
-                </button>
-              </div>
-            )}
+              )}
+              <button
+                disabled={!manualInput.trim()}
+                onClick={handleManualSubmit}
+                className="w-10 h-10 sm:w-8 sm:h-8 rounded-lg bg-white text-slate-950 flex items-center justify-center transition-all hover:scale-105 disabled:opacity-20 disabled:scale-100"
+              >
+                <Send size={16} className="sm:size-[14px]" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
