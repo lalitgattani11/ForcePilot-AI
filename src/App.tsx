@@ -78,7 +78,7 @@ function App() {
 
         {/* New Premium Neon Navbar */}
         <header className="fixed top-0 left-0 right-0 z-50 border-b border-cyan-500/10 bg-black/70 backdrop-blur-md sm:backdrop-blur-2xl">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-start">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-start">
             <div className="flex items-center gap-2 lg:gap-3">
               <div className="flex items-center justify-center h-10 w-10 rounded-2xl bg-cyan-500/10 border border-cyan-400/20 shadow-[0_0_15px_rgba(34,211,238,0.1)] sm:shadow-[0_0_30px_rgba(34,211,238,0.18)] transition-transform sm:hover:scale-105 duration-500 will-change-transform">
                 <span className="font-bold text-lg tracking-tighter text-cyan-400">F</span>
@@ -94,8 +94,8 @@ function App() {
         </header>
 
         {/* Main Content */}
-        <main className="relative z-10 pt-28 sm:pt-32 lg:pt-36 pb-16 sm:pb-24 min-h-screen">
-          <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <main className="relative z-10 pt-20 sm:pt-24 pb-4 min-h-[86vh] overflow-x-hidden">
+          <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8 min-h-[86vh]">
             {phase === 'setup' && (
               <SetupScreen onStart={startInterview} />
             )}

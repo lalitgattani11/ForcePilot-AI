@@ -53,7 +53,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onStart }) => {
   ];
 
   return (
-    <div className="max-w-4xl w-full mx-auto py-8 sm:py-12 md:py-24">
+    <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto py-4 sm:py-8 px-3 sm:px-5 lg:px-8">
       {/* Premium Hero Identity */}
       <div className="text-center mb-12 sm:mb-24 space-y-4 sm:space-y-8 reveal-1">
         <div className="hidden lg:flex justify-center mb-6">

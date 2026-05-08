@@ -393,11 +393,28 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     }
   };
 
+  const [isInterviewReady, setIsInterviewReady] =
+    useState(false);
+
   useEffect(() => {
-    if (status === "INITIALIZING") {
+    const initializeInterview = async () => {
+      // Simulate/wait for necessary initialization
+      await Promise.resolve();
+      
+      // Ensure layout has a chance to settle
+      requestAnimationFrame(() => {
+        setIsInterviewReady(true);
+      });
+    };
+
+    initializeInterview();
+  }, []);
+
+  useEffect(() => {
+    if (status === "INITIALIZING" && isInterviewReady) {
       setStatus("AWAITING_UNLOCK");
     }
-  }, [status]);
+  }, [status, isInterviewReady]);
 
   useEffect(() => {
     if (status === "AWAITING_UNLOCK" && isUnlocked) {
@@ -423,8 +440,25 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     return <UserCheck className="text-emerald-400" size={14} />;
   };
 
+  if (!isInterviewReady) {
+    return (
+      <div className="flex min-h-[86vh] items-center justify-center bg-transparent">
+        <div className="flex flex-col items-center gap-6">
+          <div className="h-12 w-12 rounded-full border-2 border-cyan-400/30 border-t-cyan-400 animate-spin" />
+          <p className="text-xs font-bold tracking-[0.2em] text-cyan-400/60 uppercase">Initializing Simulator</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-8 h-[calc(100vh-16rem)]">
+    <motion.div 
+      initial={false}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
+      className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8 py-3 sm:py-5 min-h-[86vh]"
+      style={{ width: '100%' }}
+    >
       
       {/* Handshake Mask */}
       {status === "AWAITING_UNLOCK" && (
@@ -451,7 +485,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       )}
 
       {/* Main Interface */}
-      <div className="h-full flex flex-col premium-glass rounded-2xl overflow-hidden border border-white/10">
+      <div className="h-full min-h-[86vh] flex flex-col premium-glass rounded-none sm:rounded-3xl overflow-hidden border border-white/10">
         
         {/* Header */}
         <div className="px-4 sm:px-8 py-4 sm:py-6 border-b border-white/[0.05] flex justify-between items-center bg-white/[0.02]">
@@ -489,7 +523,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         </div>
 
         {/* Chat History */}
-        <div className="flex-grow overflow-y-auto p-4 sm:p-8 space-y-6 sm:space-y-8 scrollbar-hide">
+        <div className="flex-grow overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 scrollbar-hide">
           <AnimatePresence initial={false}>
             {messages.map((msg) => (
               <motion.div
@@ -499,7 +533,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 transition={{ duration: 0.2 }}
                 className={`flex ${msg.sender === "candidate" ? "justify-end" : "justify-start"} will-change-transform`}
               >
-                <div className={`max-w-[90%] sm:max-w-[80%] ${msg.sender === "candidate" ? "text-right" : "text-left"}`}>
+                <div className={`w-full ${msg.sender === "candidate" ? "text-right" : "text-left"}`}>
                   <div className={`flex items-center gap-2 mb-1.5 sm:mb-2 text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider ${msg.sender === "candidate" ? "justify-end" : "justify-start"}`}>
                     {msg.sender === "candidate" ? "You" : "AI Interviewer"}
                   </div>
@@ -519,7 +553,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
         {/* Input Area */}
         <div className="p-4 sm:p-8 border-t border-white/[0.05] bg-white/[0.01]">
-          <div className="flex gap-3 sm:gap-4 items-end max-w-3xl mx-auto relative">
+          <div className="flex gap-3 sm:gap-4 items-end w-full mx-auto relative">
             <textarea
               value={manualInput}
               onChange={(e) => setManualInput(e.target.value)}
@@ -531,16 +565,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             />
             
             <div className="flex gap-2 shrink-0 sm:absolute sm:right-4 sm:bottom-4">
-              {!isMobile && (
-                <button
-                  onClick={handleMicClick}
-                  className={`w-10 h-10 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-all ${
-                    speechState === "LISTENING" ? 'bg-rose-500 text-white' : 'bg-white/5 text-slate-500 hover:text-white'
-                  }`}
-                >
-                  <Mic size={16} className={`${speechState === "LISTENING" ? 'animate-pulse' : ''} sm:size-[14px]`} />
-                </button>
-              )}
+              <button
+                onClick={handleMicClick}
+                className={`hidden sm:flex w-10 h-10 sm:w-8 sm:h-8 rounded-lg items-center justify-center transition-all ${
+                  speechState === "LISTENING" ? 'bg-rose-500 text-white' : 'bg-white/5 text-slate-500 hover:text-white'
+                }`}
+              >
+                <Mic size={16} className={`${speechState === "LISTENING" ? 'animate-pulse' : ''} sm:size-[14px]`} />
+              </button>
               <button
                 disabled={!manualInput.trim()}
                 onClick={handleManualSubmit}
@@ -552,7 +584,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

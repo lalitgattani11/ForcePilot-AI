@@ -23,8 +23,8 @@
     66% { transform: translateY(10px) rotate(-1deg); }
   }
   @keyframes reveal {
-    from { opacity: 0; transform: translateY(40px) scale(0.95); filter: blur(20px); }
-    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    from { opacity: 0; transform: translateY(10px); filter: blur(10px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
   }
   @keyframes pulse-neural {
     0%, 100% { opacity: 0.1; filter: blur(120px); }

@@ -163,7 +163,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ answers = [], role, onRes
   }
 
   return (
-    <div className="max-w-5xl w-full mx-auto py-8 sm:py-12 px-4 sm:px-0">
+    <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto py-4 sm:py-8 px-3 sm:px-5 lg:px-8">
       
       {/* Assessment Header */}
       <motion.div 
