@@ -1,9 +1,12 @@
+import 'dotenv/config';
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import fetch from "node-fetch";
 import path from "path";
 import { fileURLToPath } from "url";
+import { sendWelcomeEmail } from "./emailService.js";
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -549,6 +552,63 @@ CRITICAL RULES:
     }
   }
 );
+
+/* ==================================================
+   EMAIL ENDPOINTS
+================================================== */
+
+app.post(
+  "/api/email/login-email",
+  async (req, res) => {
+    try {
+      const { email, name } =
+        req.body;
+
+      if (!email) {
+        return res
+          .status(400)
+          .json({
+            success: false,
+            error:
+              "Email is required",
+          });
+      }
+
+      console.log(
+        `[EMAIL_TRACE] Sending welcome email to ${email}`
+      );
+
+      const result =
+        await sendWelcomeEmail(
+          email,
+          name || "Candidate"
+        );
+
+      console.log(
+        "[EMAIL_TRACE] Result:",
+        result
+      );
+
+      return res.status(200).json({
+        success: true,
+        result,
+      });
+    } catch (error) {
+      console.error(
+        "[EMAIL_ERROR]",
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+        error:
+          error.message ||
+          "Failed to send email",
+      });
+    }
+  }
+);
+
 
 /* ==================================================
    EVALUATE ANSWER
