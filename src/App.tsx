@@ -1,23 +1,27 @@
-import { useState, useEffect } from 'react';
-import SetupScreen from './components/SetupScreen';
-import ChatInterface from './components/ChatInterface';
-import ResultsScreen from './components/ResultsScreen';
-import ErrorBoundary from './components/ErrorBoundary';
-import type { InterviewConfig, Answer } from './types';
-import './App.css';
+import AuthButton from "./components/AuthButton";
+import { useState, useEffect } from "react";
+import SetupScreen from "./components/SetupScreen";
+import ChatInterface from "./components/ChatInterface";
+import ResultsScreen from "./components/ResultsScreen";
+import ErrorBoundary from "./components/ErrorBoundary";
+import type { InterviewConfig, Answer } from "./types";
+import { useAuth } from './context/AuthContext';
+import UserMenu from './components/UserMenu';
+import "./App.css";
 
-type Phase = 'setup' | 'interview' | 'results';
+type Phase = "setup" | "interview" | "results";
 
 function App() {
-  const [phase, setPhase] = useState<Phase>('setup');
+  const { user } = useAuth();
+  const [phase, setPhase] = useState<Phase>("setup");
   const [config, setConfig] = useState<InterviewConfig | null>(null);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [showCreatorTag, setShowCreatorTag] = useState(false);
 
   useEffect(() => {
     // Always dark mode for the premium experience
-    document.documentElement.classList.add('dark');
-    document.body.classList.add('dark');
+    document.documentElement.classList.add("dark");
+    document.body.classList.add("dark");
   }, []);
 
   useEffect(() => {
@@ -38,12 +42,12 @@ function App() {
 
   useEffect(() => {
     const stopSpeech = () => {
-      if ('speechSynthesis' in window) {
+      if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
       }
     };
     window.addEventListener("beforeunload", stopSpeech);
-    
+
     return () => {
       window.removeEventListener("beforeunload", stopSpeech);
       stopSpeech();
@@ -52,16 +56,16 @@ function App() {
 
   const startInterview = (config: InterviewConfig) => {
     setConfig(config);
-    setPhase('interview');
+    setPhase("interview");
   };
 
   const completeInterview = (finalAnswers: Answer[]) => {
     setAnswers(finalAnswers || []);
-    setPhase('results');
+    setPhase("results");
   };
 
   const resetInterview = () => {
-    setPhase('setup');
+    setPhase("setup");
     setConfig(null);
     setAnswers([]);
   };
@@ -78,17 +82,37 @@ function App() {
 
         {/* New Premium Neon Navbar */}
         <header className="fixed top-0 left-0 right-0 z-50 border-b border-cyan-500/10 bg-black/70 backdrop-blur-md sm:backdrop-blur-2xl">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-start">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            {/* Left Side Branding */}
             <div className="flex items-center gap-2 lg:gap-3">
               <div className="flex items-center justify-center h-10 w-10 rounded-2xl bg-cyan-500/10 border border-cyan-400/20 shadow-[0_0_15px_rgba(34,211,238,0.1)] sm:shadow-[0_0_30px_rgba(34,211,238,0.18)] transition-transform sm:hover:scale-105 duration-500 will-change-transform">
-                <span className="font-bold text-lg tracking-tighter text-cyan-400">F</span>
+                <span className="font-bold text-lg tracking-tighter text-cyan-400">
+                  F
+                </span>
               </div>
+
               <div className="flex flex-col justify-center items-start text-left">
-                <h1 className="text-sm sm:text-base font-semibold tracking-wide text-white leading-none">ForcePilot AI</h1>
+                <h1 className="text-sm sm:text-base font-semibold tracking-wide text-white leading-none">
+                  ForcePilot AI
+                </h1>
+
                 <div className="block lg:hidden">
-                  <p className="text-[10px] sm:text-xs text-cyan-300/70 tracking-wide uppercase mx-0">Interview Intelligence</p>
+                  <p className="text-[10px] sm:text-xs text-cyan-300/70 tracking-wide uppercase mx-0">
+                    Interview Intelligence
+                  </p>
                 </div>
               </div>
+            </div>
+
+            {/* Right Side Auth */}
+            <div className="flex items-center justify-end">
+              {user ? (
+                <UserMenu />
+              ) : (
+                <div className="w-auto min-w-[180px] flex justify-end">
+                  <AuthButton />
+                </div>
+              )}
             </div>
           </div>
         </header>
@@ -96,22 +120,24 @@ function App() {
         {/* Main Content */}
         <main className="relative z-10 pt-20 sm:pt-24 pb-4 min-h-[86vh] overflow-x-hidden">
           <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8 min-h-[86vh]">
-            {phase === 'setup' && (
-              <SetupScreen onStart={startInterview} />
-            )}
+            {phase === "setup" && <SetupScreen onStart={startInterview} />}
 
-            {phase === 'interview' && config && (
+            {phase === "interview" && config && (
               <ChatInterface config={config} onComplete={completeInterview} />
             )}
 
-            {phase === 'results' && config && (
-              <ResultsScreen answers={answers} role={config.role} onReset={resetInterview} />
+            {phase === "results" && config && (
+              <ResultsScreen
+                answers={answers}
+                role={config.role}
+                onReset={resetInterview}
+              />
             )}
-            
-            {(!['setup', 'interview', 'results'].includes(phase)) && (
-               <div className="flex items-center justify-center min-h-[40vh] text-slate-500 text-xs font-medium">
-                 Error: Invalid phase detected.
-               </div>
+
+            {!["setup", "interview", "results"].includes(phase) && (
+              <div className="flex items-center justify-center min-h-[40vh] text-slate-500 text-xs font-medium">
+                Error: Invalid phase detected.
+              </div>
             )}
           </div>
         </main>
