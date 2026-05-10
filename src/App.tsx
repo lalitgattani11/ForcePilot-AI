@@ -95,12 +95,6 @@ function App() {
                 <h1 className="text-[13px] sm:text-base font-semibold tracking-wide text-white leading-none truncate">
                   ForcePilot AI
                 </h1>
-
-                <div className="hidden sm:block">
-                  <p className="text-[10px] sm:text-xs text-cyan-300/70 tracking-wide uppercase mx-0 truncate">
-                    Interview Intelligence
-                  </p>
-                </div>
               </div>
             </div>
 
