@@ -9,6 +9,10 @@ export default defineConfig({
     tailwindcss(),
   ],
 
+  build: {
+  chunkSizeWarningLimit: 1200,
+},
+
   server: {
     host: '0.0.0.0',
     port: 5173,
