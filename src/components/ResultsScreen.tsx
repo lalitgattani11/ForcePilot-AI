@@ -52,11 +52,11 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
 
       try {
         const transcript = safeAnswers
-          .map((a, i) => `Q${i + 1}: ${a.questionText}\nA: ${a.userAnswer}`)
+          .map((a, i) => `Q${i + 1}: ${a.questionText || "Question"}\nA: ${a.userAnswer || ""}`)
           .join("\n\n");
 
         const feedback = safeAnswers
-          .map((a, i) => `Q${i + 1}: ${a.evaluation?.feedback || ""}`)
+          .map((a, i) => `Q${i + 1}: ${a.evaluation?.feedback || "No feedback provided."}`)
           .join("\n\n");
 
         const {

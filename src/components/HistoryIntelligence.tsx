@@ -130,11 +130,14 @@ const HistoryIntelligence: React.FC<
         const fetchedRecords =
           (data as InterviewRecord[]) || [];
 
-        setRecords(fetchedRecords);
+        setRecords(Array.isArray(fetchedRecords) ? fetchedRecords : []);
 
-        if (fetchedRecords.length > 0) {
+        if (Array.isArray(fetchedRecords) && fetchedRecords.length > 0) {
           const API_URL =
             import.meta.env.VITE_API_URL;
+
+          const firstRecord = fetchedRecords[0];
+          if (!firstRecord) return;
 
           const insightResponse = await fetch(
             `${API_URL}/generate-career-insight`,
@@ -149,16 +152,16 @@ const HistoryIntelligence: React.FC<
               body: JSON.stringify({
                 history: fetchedRecords.map(
                   (r) => ({
-                    role: r.role,
-                    score: r.score,
-                    feedback: r.feedback,
+                    role: r.role || "Unknown",
+                    score: r.score || 0,
+                    feedback: r.feedback || "",
                     weak_concepts:
-                      r.weak_concepts,
-                    date: r.created_at,
+                      Array.isArray(r.weak_concepts) ? r.weak_concepts : [],
+                    date: r.created_at || new Date().toISOString(),
                   }),
                 ),
 
-                role: fetchedRecords[0].role,
+                role: firstRecord.role || "Professional Readiness",
               }),
             },
           );
@@ -168,7 +171,7 @@ const HistoryIntelligence: React.FC<
               await insightResponse.json();
 
             setCareerInsight(
-              insightData.careerInsight,
+              insightData?.careerInsight || "",
             );
           }
         }
@@ -190,9 +193,9 @@ const HistoryIntelligence: React.FC<
 
     const avgScore =
       records.reduce(
-        (acc, r) => acc + r.score,
+        (acc, r) => acc + (r.score || 0),
         0,
-      ) / records.length;
+      ) / (records.length || 1);
 
     const bestRole =
       records[0]?.role || "N/A";
@@ -202,11 +205,11 @@ const HistoryIntelligence: React.FC<
     ]
       .reverse()
       .map((record) => ({
-        date: new Date(
+        date: record.created_at ? new Date(
           record.created_at,
-        ).toLocaleDateString(),
+        ).toLocaleDateString() : "Unknown",
 
-        score: record.score,
+        score: record.score || 0,
       }));
 
     return {

@@ -278,8 +278,8 @@ const INTERMEDIATE_QUESTION_BANK = {
    HELPERS
 ================================================== */
 
-function normalizeText(text = "") {
-  return text
+function normalizeText(text) {
+  return (text || "")
     .toLowerCase()
     .replace(/[^\w\s]/gi, " ")
     .trim();
@@ -290,20 +290,25 @@ function normalizeText(text = "") {
  * Rejects questions that share too many significant words with history.
  */
 function calculateSimilarity(q1, q2) {
-  const clean = (text) => text.toLowerCase()
-    .replace(/[^\w\s]/g, ' ')
-    .split(/\s+/)
-    .filter(w => w.length > 3);
-    
-  const words1 = new Set(clean(q1));
-  const words2 = clean(q2);
-  
-  if (words1.size === 0 || words2.length === 0) return 0;
-  
-  const intersection = words2.filter(w => words1.has(w));
-  return intersection.length / Math.max(words1.size, words2.length);
-}
+  const clean = (text) =>
+    (text || "")
+      .toLowerCase()
+      .replace(/[^\w\s]/g, " ")
+      .split(/\s+/)
+      .filter((w) => w.length > 3);
 
+  const words1 = clean(q1);
+  const words2 = clean(q2);
+
+  const intersection = words1.filter((word) =>
+    words2.includes(word)
+  );
+
+  return (
+    intersection.length /
+    Math.max(words1.length, 1)
+  );
+}
 function isDuplicateQuestion(newQuestion, askedQuestions = []) {
   if (!askedQuestions || askedQuestions.length === 0) return false;
 
@@ -366,7 +371,7 @@ function isProjectQuestion(question = "") {
 }
 
 function getRandomTopic(role, difficulty, askedQuestions = []) {
-  const rolePool = ROLE_TOPICS[role] || { 
+  const rolePool = ROLE_TOPICS[role] || ROLE_TOPICS["Salesforce Admin"] || { 
     Fresher: ["General Concepts"], 
     Intermediate: ["General Concepts"], 
     Advanced: ["General Concepts"] 
@@ -375,8 +380,8 @@ function getRandomTopic(role, difficulty, askedQuestions = []) {
   const topics = rolePool[difficulty] || rolePool["Intermediate"] || ["General Concepts"];
   
   // Try to find a topic that hasn't been used in recent questions
-  const historyText = askedQuestions.join(" ").toLowerCase();
-  const unusedTopics = topics.filter(topic => !historyText.includes(topic.toLowerCase()));
+  const historyText = Array.isArray(askedQuestions) ? askedQuestions.join(" ").toLowerCase() : "";
+  const unusedTopics = topics.filter(topic => !historyText.includes((topic || "").toLowerCase()));
   
   const finalPool = unusedTopics.length > 0 ? unusedTopics : topics;
   const selected = finalPool[Math.floor(Math.random() * finalPool.length)];
@@ -414,11 +419,11 @@ app.post(
     ================================================== */
     if (difficulty === "Intermediate") {
       console.log(`[DIFFICULTY_TRACE] [INTERMEDIATE_BYPASS] Pulling from hardcoded bank...`);
-      const bank = INTERMEDIATE_QUESTION_BANK[role] || ["What is a standard business requirement in Salesforce?"];
+      const bank = INTERMEDIATE_QUESTION_BANK[role] || INTERMEDIATE_QUESTION_BANK["Salesforce Admin"] || ["What is a standard business requirement in Salesforce?"];
       
       // Filter out previously asked questions
-      const historySet = new Set(askedQuestions.map(q => q.toLowerCase()));
-      const available = bank.filter(q => !historySet.has(q.toLowerCase()));
+      const historySet = new Set(Array.isArray(askedQuestions) ? askedQuestions.map(q => (q || "").toLowerCase()) : []);
+      const available = bank.filter(q => !historySet.has((q || "").toLowerCase()));
       
       const pool = available.length > 0 ? available : bank;
       const finalQuestion = pool[Math.floor(Math.random() * pool.length)];
@@ -602,8 +607,8 @@ app.post(
       return res.status(500).json({
         success: false,
         error:
-          error.message ||
-          "Failed to send email",
+          (error && error.message) ||
+"Failed to send email",
       });
     }
   }
@@ -835,11 +840,11 @@ app.post("/generate-career-insight", async (req, res) => {
     }
 
     const averageScore =
-      history.reduce(
+      Array.isArray(history) ? history.reduce(
         (sum, item) =>
-          sum + (item.score || 0),
+          sum + (item?.score || 0),
         0
-      ) / history.length;
+      ) / (history.length || 1) : 0;
 
     let insight = "";
 

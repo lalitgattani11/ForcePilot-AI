@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {
-  useState,
-  useCallback,
-  useRef,
-  useEffect,
-} from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 
 /* ==================================================
    🚀 ADVANCED SALESFORCE TECHNICAL LANGUAGE ENGINE
@@ -30,95 +25,77 @@ interface CorrectionRule {
 ================================================== */
 
 const TECHNICAL_RULES: CorrectionRule[] = [
-
   /* ---------- APEX ---------- */
 
   {
     wrong:
       /\b(goal winner limits|go inner limits|governer limits|governor limit)\b/gi,
 
-    right:
-      "governor limits",
+    right: "governor limits",
 
     domain: "APEX",
   },
 
   {
-    wrong:
-      /\b(so cool|so q l|s o q l|circle query)\b/gi,
+    wrong: /\b(so cool|so q l|s o q l|circle query)\b/gi,
 
-    right:
-      "SOQL",
+    right: "SOQL",
 
     domain: "APEX",
   },
 
   {
-    wrong:
-      /\b(sos cell|s o s l)\b/gi,
+    wrong: /\b(sos cell|s o s l)\b/gi,
 
-    right:
-      "SOSL",
+    right: "SOSL",
 
     domain: "APEX",
   },
 
   {
-    wrong:
-      /\b(cue able apex|queue able apex|cable apex)\b/gi,
+    wrong: /\b(cue able apex|queue able apex|cable apex)\b/gi,
 
-    right:
-      "Queueable Apex",
+    right: "Queueable Apex",
 
     domain: "APEX",
   },
 
   {
-    wrong:
-      /\b(batch a peps|patch apex)\b/gi,
+    wrong: /\b(batch a peps|patch apex)\b/gi,
 
-    right:
-      "Batch Apex",
+    right: "Batch Apex",
 
     domain: "APEX",
   },
 
   {
-    wrong:
-      /\b(trigger old|trigger dot old)\b/gi,
+    wrong: /\b(trigger old|trigger dot old)\b/gi,
 
-    right:
-      "Trigger.old",
+    right: "Trigger.old",
 
     domain: "APEX",
   },
 
   {
-    wrong:
-      /\b(trigger new|trigger dot new)\b/gi,
+    wrong: /\b(trigger new|trigger dot new)\b/gi,
 
-    right:
-      "Trigger.new",
+    right: "Trigger.new",
 
     domain: "APEX",
   },
 
   {
-    wrong:
-      /\b(test setup|at test setup)\b/gi,
+    wrong: /\b(test setup|at test setup)\b/gi,
 
-    right:
-      "@testSetup",
+    right: "@testSetup",
 
     domain: "APEX",
   },
 
   {
-    wrong:
-      /\b(at future|future method)\b/gi,
+    wrong: /\b(at future|future method)\b/gi,
 
-    right:
-      "@future method",
+    right: "@future method",
 
     domain: "APEX",
   },
@@ -126,81 +103,65 @@ const TECHNICAL_RULES: CorrectionRule[] = [
   /* ---------- LWC ---------- */
 
   {
-    wrong:
-      /\b(lightning web components|lwc|l w c)\b/gi,
+    wrong: /\b(lightning web components|lwc|l w c)\b/gi,
 
-    right:
-      "LWC",
+    right: "LWC",
 
     domain: "LWC",
   },
 
   {
-    wrong:
-      /\b(wire method|wire me thud|at wire)\b/gi,
+    wrong: /\b(wire method|wire me thud|at wire)\b/gi,
 
-    right:
-      "@wire",
+    right: "@wire",
 
     domain: "LWC",
   },
 
   {
-    wrong:
-      /\b(at api)\b/gi,
+    wrong: /\b(at api)\b/gi,
 
-    right:
-      "@api",
+    right: "@api",
 
     domain: "LWC",
   },
 
   {
-    wrong:
-      /\b(at track)\b/gi,
+    wrong: /\b(at track)\b/gi,
 
-    right:
-      "@track",
+    right: "@track",
 
     domain: "LWC",
   },
 
   {
-    wrong:
-      /\b(lightning message service|lms|l m s)\b/gi,
+    wrong: /\b(lightning message service|lms|l m s)\b/gi,
 
-    right:
-      "Lightning Message Service",
+    right: "Lightning Message Service",
 
     domain: "LWC",
   },
 
   {
-    wrong:
-      /\b(pop sub|pub sub)\b/gi,
+    wrong: /\b(pop sub|pub sub)\b/gi,
 
-    right:
-      "pub-sub",
+    right: "pub-sub",
 
     domain: "LWC",
   },
 
   {
-    wrong:
-      /\b(connected callback)\b/gi,
+    wrong: /\b(connected callback)\b/gi,
 
-    right:
-      "connectedCallback",
+    right: "connectedCallback",
 
     domain: "LWC",
   },
 
   {
-    wrong:
-      /\b(rendered callback)\b/gi,
+    wrong: /\b(rendered callback)\b/gi,
 
-    right:
-      "renderedCallback",
+    right: "renderedCallback",
 
     domain: "LWC",
   },
@@ -208,71 +169,57 @@ const TECHNICAL_RULES: CorrectionRule[] = [
   /* ---------- ADMIN ---------- */
 
   {
-    wrong:
-      /\b(owd|o w d|organization wide defaults)\b/gi,
+    wrong: /\b(owd|o w d|organization wide defaults)\b/gi,
 
-    right:
-      "OWD",
+    right: "OWD",
 
     domain: "ADMIN",
   },
 
   {
-    wrong:
-      /\b(field level security|f l s|fls)\b/gi,
+    wrong: /\b(field level security|f l s|fls)\b/gi,
 
-    right:
-      "FLS",
+    right: "FLS",
 
     domain: "ADMIN",
   },
 
   {
-    wrong:
-      /\b(create read update delete|crud|c r u d)\b/gi,
+    wrong: /\b(create read update delete|crud|c r u d)\b/gi,
 
-    right:
-      "CRUD",
+    right: "CRUD",
 
     domain: "ADMIN",
   },
 
   {
-    wrong:
-      /\b(validation ruler|validation rolls)\b/gi,
+    wrong: /\b(validation ruler|validation rolls)\b/gi,
 
-    right:
-      "validation rules",
+    right: "validation rules",
 
     domain: "ADMIN",
   },
 
   {
-    wrong:
-      /\b(role high archy|rule hierarchy)\b/gi,
+    wrong: /\b(role high archy|rule hierarchy)\b/gi,
 
-    right:
-      "role hierarchy",
+    right: "role hierarchy",
 
     domain: "ADMIN",
   },
 
   {
-    wrong:
-      /\b(master detailed|master detail)\b/gi,
+    wrong: /\b(master detailed|master detail)\b/gi,
 
-    right:
-      "master-detail",
+    right: "master-detail",
 
     domain: "ADMIN",
   },
 
   {
-    wrong:
-      /\b(permission seat|permission said)\b/gi,
+    wrong: /\b(permission seat|permission said)\b/gi,
 
-    right:
-      "permission set",
+    right: "permission set",
 
     domain: "ADMIN",
   },
@@ -280,31 +227,25 @@ const TECHNICAL_RULES: CorrectionRule[] = [
   /* ---------- GENERAL ---------- */
 
   {
-    wrong:
-      /\b(cell phones|sales force|s f d c)\b/gi,
+    wrong: /\b(cell phones|sales force|s f d c)\b/gi,
 
-    right:
-      "Salesforce",
+    right: "Salesforce",
 
     domain: "GENERAL",
   },
 
   {
-    wrong:
-      /\b(rest api|rest a p i)\b/gi,
+    wrong: /\b(rest api|rest a p i)\b/gi,
 
-    right:
-      "REST API",
+    right: "REST API",
 
     domain: "GENERAL",
   },
 
   {
-    wrong:
-      /\b(soap api|soap a p i)\b/gi,
+    wrong: /\b(soap api|soap a p i)\b/gi,
 
-    right:
-      "SOAP API",
+    right: "SOAP API",
 
     domain: "GENERAL",
   },
@@ -330,32 +271,20 @@ const FILLERS = [
 ================================================== */
 
 const cleanupRawTranscript = (
-  text: string
+  text?: string | null,
 ): string => {
-
-  let cleaned = text;
+  let cleaned = (text || "").trim();
+  if (!cleaned) return "";
 
   FILLERS.forEach((filler) => {
+    const regex = new RegExp(`\\b${filler}\\b`, "gi");
 
-    const regex =
-      new RegExp(
-        `\\b${filler}\\b`,
-        "gi"
-      );
-
-    cleaned =
-      cleaned.replace(regex, " ");
+    cleaned = cleaned.replace(regex, " ");
   });
 
-  cleaned =
-    cleaned.replace(
-      /\b(\w+)\s+\1\b/gi,
-      "$1"
-    );
+  cleaned = cleaned.replace(/\b(\w+)\s+\1\b/gi, "$1");
 
-  return cleaned
-    .replace(/\s+/g, " ")
-    .trim();
+  return cleaned.replace(/\s+/g, " ").trim();
 };
 
 /* ==================================================
@@ -364,40 +293,25 @@ const cleanupRawTranscript = (
 
 const applyTechnicalRules = (
   text: string,
-  domain: SalesforceDomain
+  domain: SalesforceDomain,
 ): string => {
+  let processed = text || "";
+  if (!processed) return "";
 
-  let processed = text;
+  const sortedRules = [...TECHNICAL_RULES].sort((a, b) => {
+    if (a.domain === domain && b.domain !== domain) {
+      return -1;
+    }
 
-  const sortedRules =
-    [...TECHNICAL_RULES].sort(
-      (a, b) => {
+    if (b.domain === domain && a.domain !== domain) {
+      return 1;
+    }
 
-        if (
-          a.domain === domain &&
-          b.domain !== domain
-        ) {
-          return -1;
-        }
-
-        if (
-          b.domain === domain &&
-          a.domain !== domain
-        ) {
-          return 1;
-        }
-
-        return 0;
-      }
-    );
+    return 0;
+  });
 
   sortedRules.forEach((rule) => {
-
-    processed =
-      processed.replace(
-        rule.wrong,
-        rule.right
-      );
+    processed = processed.replace(rule.wrong, rule.right);
   });
 
   return processed;
@@ -407,10 +321,7 @@ const applyTechnicalRules = (
    POLISH
 ================================================== */
 
-const polishGrammar = (
-  text: string
-): string => {
-
+const polishGrammar = (text: string): string => {
   if (!text) return "";
 
   let polished = text;
@@ -429,28 +340,14 @@ const polishGrammar = (
   ];
 
   CAPS.forEach((word) => {
+    const regex = new RegExp(`\\b${word}\\b`, "gi");
 
-    const regex =
-      new RegExp(
-        `\\b${word}\\b`,
-        "gi"
-      );
-
-    polished =
-      polished.replace(
-        regex,
-        word
-      );
+    polished = polished.replace(regex, word);
   });
 
-  polished =
-    polished.charAt(0).toUpperCase() +
-    polished.slice(1);
+  polished = polished.charAt(0).toUpperCase() + polished.slice(1);
 
-  if (
-    polished.length > 15 &&
-    !/[.!?]$/.test(polished)
-  ) {
+  if (polished.length > 15 && !/[.!?]$/.test(polished)) {
     polished += ".";
   }
 
@@ -462,24 +359,16 @@ const polishGrammar = (
 ================================================== */
 
 export const interpretTranscript = (
-  raw: string,
-  domain: SalesforceDomain =
-    "GENERAL"
+  raw?: string | null,
+  domain: SalesforceDomain = "GENERAL",
 ): string => {
-
   if (!raw) return "";
 
-  let processed =
-    cleanupRawTranscript(raw);
+  let processed = cleanupRawTranscript(raw);
 
-  processed =
-    applyTechnicalRules(
-      processed,
-      domain
-    );
+  processed = applyTechnicalRules(processed, domain);
 
-  processed =
-    polishGrammar(processed);
+  processed = polishGrammar(processed);
 
   return processed;
 };
@@ -496,10 +385,9 @@ export type SpeechState =
   | "ERROR";
 
 const IS_MOBILE_DEVICE =
-  typeof navigator !==
-    "undefined" &&
+  typeof navigator !== "undefined" &&
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
+    navigator.userAgent,
   );
 
 /* ==================================================
@@ -507,490 +395,272 @@ const IS_MOBILE_DEVICE =
 ================================================== */
 
 export const useSpeech = () => {
+  const [speechState, setSpeechState] = useState<SpeechState>("IDLE");
 
-  const [
-    speechState,
-    setSpeechState,
-  ] = useState<SpeechState>(
-    "IDLE"
-  );
+  const [transcript, setTranscript] = useState("");
 
-  const [
-    transcript,
-    setTranscript,
-  ] = useState("");
+  const [isSupported, setIsSupported] = useState(!IS_MOBILE_DEVICE);
 
-  const [
-    isSupported,
-    setIsSupported,
-  ] = useState(
-    !IS_MOBILE_DEVICE
-  );
+  const [isUnlocked, setIsUnlocked] = useState(false);
 
-  const [
-    isUnlocked,
-    setIsUnlocked,
-  ] = useState(false);
+  const recognitionRef = useRef<any>(null);
 
-  const recognitionRef =
-    useRef<any>(null);
+  const silenceTimerRef = useRef<any>(null);
 
-  const silenceTimerRef =
-    useRef<any>(null);
+  const isFinalizingRef = useRef(false);
 
-  const isFinalizingRef =
-    useRef(false);
-
-  const isListeningRef =
-    useRef(false);
+  const isListeningRef = useRef(false);
 
   /* =========================================
      INIT
   ========================================= */
 
   useEffect(() => {
-
     if (!IS_MOBILE_DEVICE) {
+      const speechWindow =
+  window as Window &
+    typeof globalThis & {
+      SpeechRecognition?: any;
+      webkitSpeechRecognition?: any;
+    };
 
-      const SpeechRecognition =
-        (window as any)
-          .SpeechRecognition ||
-
-        (window as any)
-          .webkitSpeechRecognition;
-
+const SpeechRecognition =
+  speechWindow.SpeechRecognition ||
+  speechWindow.webkitSpeechRecognition;
       if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
 
-        const recognition =
-          new SpeechRecognition();
+        recognition.continuous = true;
 
-        recognition.continuous =
-          true;
+        recognition.interimResults = true;
 
-        recognition.interimResults =
-          true;
+        recognition.lang = "en-IN";
 
-        recognition.lang =
-          "en-IN";
+        recognitionRef.current = recognition;
 
-        recognitionRef.current =
-          recognition;
-
-        setTimeout(
-          () =>
-            setIsSupported(true),
-          0
-        );
-
+        setTimeout(() => setIsSupported(true), 0);
       } else {
-
-        setTimeout(
-          () =>
-            setIsSupported(false),
-          0
-        );
+        setTimeout(() => setIsSupported(false), 0);
       }
     }
-
   }, []);
 
   /* =========================================
      SPEAK
   ========================================= */
 
-  const speak =
-    useCallback(
-      (
-        text: string
-      ): Promise<void> => {
+  const speak = useCallback((text: string): Promise<void> => {
+    return new Promise((resolve) => {
+      if (!("speechSynthesis" in window)) {
+        return resolve();
+      }
 
-        return new Promise(
-          (resolve) => {
+      window.speechSynthesis.cancel();
 
-            if (
-              !(
-                "speechSynthesis" in
-                window
-              )
-            ) {
-              return resolve();
-            }
+      const utterance = new SpeechSynthesisUtterance(text || "");
 
-            window.speechSynthesis.cancel();
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      utterance.volume = 1;
 
-            const utterance =
-              new SpeechSynthesisUtterance(
-                text
-              );
+      const voices = window.speechSynthesis.getVoices();
 
-            utterance.rate = 1;
-            utterance.pitch = 1;
-            utterance.volume = 1;
+      const englishVoice = voices.find(
+        (v) => v.lang === "en-IN" || v.lang === "en-US" || v.lang === "en-GB",
+      );
 
-            const voices =
-              window.speechSynthesis.getVoices();
+      if (englishVoice) {
+        utterance.voice = englishVoice;
+      }
 
-            const englishVoice =
-              voices.find(
-                (v) =>
-                  v.lang ===
-                    "en-IN" ||
+      utterance.onstart = () => setSpeechState("SPEAKING");
 
-                  v.lang ===
-                    "en-US" ||
+      utterance.onend = () => {
+        setSpeechState("IDLE");
 
-                  v.lang ===
-                    "en-GB"
-              );
+        resolve();
+      };
 
-            if (englishVoice) {
-              utterance.voice =
-                englishVoice;
-            }
+      utterance.onerror = () => {
+        setSpeechState("IDLE");
 
-            utterance.onstart =
-              () =>
-                setSpeechState(
-                  "SPEAKING"
-                );
+        resolve();
+      };
 
-            utterance.onend =
-              () => {
-
-                setSpeechState(
-                  "IDLE"
-                );
-
-                resolve();
-              };
-
-            utterance.onerror =
-              () => {
-
-                setSpeechState(
-                  "IDLE"
-                );
-
-                resolve();
-              };
-
-            window.speechSynthesis.speak(
-              utterance
-            );
-          }
-        );
-      },
-      []
-    );
+      window.speechSynthesis.speak(utterance);
+    });
+  }, []);
 
   /* =========================================
      LISTEN
   ========================================= */
 
-  const listen =
-    useCallback(
-      (
-        silenceThresholdMs: number = 4000
-      ): Promise<string> => {
+  const listen = useCallback(
+    (silenceThresholdMs: number = 4000): Promise<string> => {
+      return new Promise((resolve) => {
+        if (!recognitionRef.current || isListeningRef.current) {
+          return resolve("");
+        }
 
-        return new Promise(
-          (resolve) => {
+        isListeningRef.current = true;
 
-            if (
-              !recognitionRef.current ||
-              isListeningRef.current
-            ) {
-              return resolve("");
+        setTranscript("");
+
+        setSpeechState("LISTENING");
+
+        let finalTranscript = "";
+
+        isFinalizingRef.current = false;
+
+        const stopAndFinalize = () => {
+          if (isFinalizingRef.current) {
+            return;
+          }
+
+          isFinalizingRef.current = true;
+
+          clearTimeout(silenceTimerRef.current);
+
+          try {
+            if (recognitionRef.current) {
+              recognitionRef.current.stop();
             }
+          } catch (e) {
+            console.error("[MIC] Stop Error:", e);
+          }
+        };
 
-            isListeningRef.current =
-              true;
+        recognitionRef.current.onresult = (event: any) => {
+          clearTimeout(silenceTimerRef.current);
 
-            setTranscript("");
+          let interim = "";
 
-            setSpeechState(
-              "LISTENING"
-            );
-
-            let finalTranscript =
-              "";
-
-            isFinalizingRef.current =
-              false;
-
-            const stopAndFinalize =
-              () => {
-
-                if (
-                  isFinalizingRef.current
-                ) {
-                  return;
+          if (event && event.results) {
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+              const result = event.results[i];
+              if (result && result[0]) {
+                if (result.isFinal) {
+                  finalTranscript += result[0].transcript + " ";
+                } else {
+                  interim += result[0].transcript;
                 }
-
-                isFinalizingRef.current =
-                  true;
-
-                clearTimeout(
-                  silenceTimerRef.current
-                );
-
-                try {
-
-                  if (
-                    recognitionRef.current
-                  ) {
-                    recognitionRef.current.stop();
-                  }
-
-                } catch (e) {
-
-                  console.error(
-                    "[MIC] Stop Error:",
-                    e
-                  );
-                }
-              };
-
-            recognitionRef.current.onresult =
-              (event: any) => {
-
-                clearTimeout(
-                  silenceTimerRef.current
-                );
-
-                let interim =
-                  "";
-
-                for (
-                  let i =
-                    event.resultIndex;
-                  i <
-                  event.results.length;
-                  i++
-                ) {
-
-                  if (
-                    event.results[i]
-                      .isFinal
-                  ) {
-
-                    finalTranscript +=
-                      event.results[i][0]
-                        .transcript + " ";
-
-                  } else {
-
-                    interim +=
-                      event.results[i][0]
-                        .transcript;
-                  }
-                }
-
-                const raw =
-                  finalTranscript +
-                  interim;
-
-                const corrected =
-                  interpretTranscript(
-                    raw,
-                    "GENERAL"
-                  );
-
-                console.log(
-                  "[RAW]:",
-                  raw
-                );
-
-                console.log(
-                  "[CORRECTED]:",
-                  corrected
-                );
-
-                setTranscript(
-                  corrected
-                );
-
-                if (
-                  raw.trim().length >
-                  0
-                ) {
-
-                  silenceTimerRef.current =
-                    setTimeout(
-                      () => {
-
-                        console.log(
-                          "[MIC] Silence detected"
-                        );
-
-                        stopAndFinalize();
-
-                      },
-                      silenceThresholdMs
-                    );
-                }
-              };
-
-            recognitionRef.current.onend =
-              () => {
-
-                clearTimeout(
-                  silenceTimerRef.current
-                );
-
-                setSpeechState(
-                  "IDLE"
-                );
-
-                isListeningRef.current =
-                  false;
-
-                const finalCorrected =
-                  interpretTranscript(
-                    finalTranscript,
-                    "GENERAL"
-                  );
-
-                resolve(
-                  finalCorrected.trim()
-                );
-              };
-
-            recognitionRef.current.onerror =
-              (
-                event: any
-              ) => {
-
-                console.error(
-                  "[MIC] Error:",
-                  event.error
-                );
-
-                clearTimeout(
-                  silenceTimerRef.current
-                );
-
-                setSpeechState(
-                  "IDLE"
-                );
-
-                isListeningRef.current =
-                  false;
-
-                resolve("");
-              };
-
-            try {
-
-              recognitionRef.current.start();
-
-              silenceTimerRef.current =
-                setTimeout(
-                  () => {
-
-                    console.log(
-                      "[MIC] Initial silence timeout"
-                    );
-
-                    stopAndFinalize();
-
-                  },
-                  6000
-                );
-
-            } catch (e) {
-
-              console.error(
-                "[MIC] Start Error:",
-                e
-              );
-
-              setSpeechState(
-                "IDLE"
-              );
-
-              isListeningRef.current =
-                false;
-
-              resolve("");
+              }
             }
           }
-        );
-      },
-      []
-    );
+
+          const raw = (finalTranscript + interim) || "";
+
+          const corrected = interpretTranscript(raw, "GENERAL");
+
+          console.log("[RAW]:", raw);
+
+          console.log("[CORRECTED]:", corrected);
+
+          setTranscript(corrected);
+
+          if (raw.trim().length > 0) {
+            silenceTimerRef.current = setTimeout(() => {
+              console.log("[MIC] Silence detected");
+
+              stopAndFinalize();
+            }, silenceThresholdMs);
+          }
+        };
+
+        recognitionRef.current.onend = () => {
+          clearTimeout(silenceTimerRef.current);
+
+          setSpeechState("IDLE");
+
+          isListeningRef.current = false;
+
+          const finalCorrected = interpretTranscript(
+            finalTranscript,
+            "GENERAL",
+          );
+
+          resolve(finalCorrected.trim());
+        };
+
+        recognitionRef.current.onerror = (event: any) => {
+          console.error("[MIC] Error:", event.error);
+
+          clearTimeout(silenceTimerRef.current);
+
+          setSpeechState("IDLE");
+
+          isListeningRef.current = false;
+
+          resolve("");
+        };
+
+        try {
+          recognitionRef.current.start();
+
+          silenceTimerRef.current = setTimeout(() => {
+            console.log("[MIC] Initial silence timeout");
+
+            stopAndFinalize();
+          }, 6000);
+        } catch (e) {
+          console.error("[MIC] Start Error:", e);
+
+          setSpeechState("IDLE");
+
+          isListeningRef.current = false;
+
+          resolve("");
+        }
+      });
+    },
+    [],
+  );
 
   /* =========================================
      UNLOCK
   ========================================= */
 
-  const unlock =
-    useCallback(
-      async () => {
+  const unlock = useCallback(async () => {
+    window.speechSynthesis.cancel();
 
-        window.speechSynthesis.cancel();
+    const silent = new SpeechSynthesisUtterance("");
 
-        const silent =
-          new SpeechSynthesisUtterance(
-            ""
-          );
+    silent.volume = 0;
 
-        silent.volume = 0;
+    window.speechSynthesis.speak(silent);
 
-        window.speechSynthesis.speak(
-          silent
-        );
+    setIsUnlocked(true);
 
-        setIsUnlocked(true);
-
-        return true;
-      },
-      []
-    );
+    return true;
+  }, []);
 
   /* =========================================
      STOP
   ========================================= */
 
-  const stopSpeech =
-    useCallback(() => {
+  const stopSpeech = useCallback(() => {
+    window.speechSynthesis.cancel();
 
-      window.speechSynthesis.cancel();
+    clearTimeout(silenceTimerRef.current);
 
-      clearTimeout(
-        silenceTimerRef.current
-      );
-
-      if (
-        recognitionRef.current
-      ) {
-
-        try {
-
-          recognitionRef.current.stop();
-
-        } catch (e) {
-
-          console.error(
-            "[MIC] Stop Error:",
-            e
-          );
-        }
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {
+        console.error("[MIC] Stop Error:", e);
       }
+    }
 
-      setSpeechState("IDLE");
+    setSpeechState("IDLE");
 
-      isListeningRef.current =
-        false;
-
-    }, []);
+    isListeningRef.current = false;
+  }, []);
 
   return {
     speechState,
     isSupported,
     isUnlocked,
-    isMobile:
-      IS_MOBILE_DEVICE,
+    isMobile: IS_MOBILE_DEVICE,
     transcript,
     speak,
     listen,

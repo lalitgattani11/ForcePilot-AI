@@ -149,12 +149,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
       try {
         const askedTexts =
-          answersRef.current.map(a => a.questionText);
+          Array.isArray(answersRef.current) ? answersRef.current.map(a => a.questionText || "") : [];
         
         const nextQuestionText =
           await generateQuestion(
-            config.role,
-            config.difficulty,
+            config.role || "Professional Readiness",
+            config.difficulty || "Fresher",
             askedTexts
           );
         
@@ -227,11 +227,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       isProcessingRef.current = true;
 
       const cleanedResponse =
-        userResponse.trim() ||
+        (userResponse || "").trim() ||
         "No answer provided.";
 
       const questionTextToLog =
-        currentQuestion.text;
+        currentQuestion?.text || "Question";
 
       setMessages((prev) => [
         ...prev,

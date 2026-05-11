@@ -44,9 +44,10 @@ class ErrorBoundary extends Component<Props, State> {
               <RotateCcw size={18} />
               REBOOT SYSTEM
             </button>
-            <div className="mt-6 text-left p-4 bg-slate-900/50 rounded-lg overflow-auto max-h-40">
-              <code className="text-[10px] text-rose-400/70 block whitespace-pre">
-                {this.state.error?.toString()}
+            <div className="mt-6 text-left p-4 bg-slate-900/50 rounded-lg overflow-auto max-h-60 border border-white/5">
+              <p className="text-[10px] text-rose-400 font-bold mb-2 uppercase tracking-widest">Diagnostic Trace:</p>
+              <code className="text-[10px] text-rose-300/70 block whitespace-pre leading-relaxed">
+                {this.state.error?.stack || this.state.error?.toString()}
               </code>
             </div>
           </div>

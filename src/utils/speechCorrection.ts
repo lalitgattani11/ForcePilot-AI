@@ -79,7 +79,8 @@ const FILLERS = [
  * 🧠 LAYER 1: RAW TRANSCRIPT CLEANUP
  */
 const cleanupRawTranscript = (text: string): string => {
-  let cleaned = text;
+  let cleaned = (text || "").trim();
+  if (!cleaned) return "";
   
   // Remove filler words
   FILLERS.forEach(filler => {
@@ -99,7 +100,8 @@ const cleanupRawTranscript = (text: string): string => {
  * 🧠 LAYER 2 & 3: TECHNICAL & PHONETIC NORMALIZATION
  */
 const applyTechnicalRules = (text: string, domain: SalesforceDomain): string => {
-  let processed = text;
+  let processed = text || "";
+  if (!processed) return "";
 
   // Prioritize rules matching the current domain, then fallback to general
   const sortedRules = [...TECHNICAL_RULES].sort((a, b) => {
@@ -145,7 +147,7 @@ const polishGrammar = (text: string): string => {
  * 🚀 MAIN ENGINE: interpretTranscript
  * Executes the multi-layer pipeline on the raw speech input.
  */
-export const interpretTranscript = (raw: string, domain: SalesforceDomain = 'GENERAL', previousContext?: string): string => {
+export const interpretTranscript = (raw?: string | null, domain: SalesforceDomain = 'GENERAL', previousContext?: string): string => {
   if (!raw) return "";
 
   // 1. Clean raw noise
