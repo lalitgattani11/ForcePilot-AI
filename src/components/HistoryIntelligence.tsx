@@ -4,8 +4,8 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 
 import type { Answer, Role } from "../types";
-const stripHtml = (html?: string | null): string => {
-  return (html || "").replace(/<[^>]*>?/gm, "");
+const stripHtml = (html?: unknown): string => {
+  return String(html || "").replace(/<[^>]*>?/gm, "");
 };
 
 import {
@@ -401,12 +401,16 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
               </div>
 
               <div className="space-y-4">
-                <h4 className="font-bold text-white text-lg">{record.role}</h4>
+                <h4 className="font-bold text-white text-lg">
+                  {record.role || "Unknown Role"}
+                </h4>
 
                 <div className="flex items-center gap-2 text-xs text-slate-500">
                   <Calendar size={12} />
 
-                  {new Date(record.created_at).toLocaleDateString()}
+                  {record.created_at
+                    ? new Date(record.created_at).toLocaleDateString()
+                    : "Unknown Date"}
                 </div>
 
                 <p className="text-xs text-slate-400 line-clamp-2">
