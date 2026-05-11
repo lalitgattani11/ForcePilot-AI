@@ -4,8 +4,13 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 
 import type { Answer, Role } from "../types";
-const stripHtml = (html: string = ""): string => {
-  return html.replace(/<[^>]*>?/gm, "");
+const stripHtml = (
+  html?: string | null,
+): string => {
+  return (html || "").replace(
+    /<[^>]*>?/gm,
+    "",
+  );
 };
 
 import {
@@ -301,7 +306,7 @@ const HistoryIntelligence: React.FC<
               </div>
             </div>
 
-            <div className="w-full h-48">
+           <div className="w-full h-48 min-h-[192px]">
               <ResponsiveContainer
                 width="100%"
                 height="100%"

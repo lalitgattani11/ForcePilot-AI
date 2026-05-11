@@ -18,6 +18,8 @@ import {
   HeartHandshake,
 } from "lucide-react";
 
+import { ThinkingState, TypewriterText } from "./ConversationalEffects";
+
 import type {
   InterviewConfig,
   Answer,
@@ -75,6 +77,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
   const [messages, setMessages] =
     useState<Message[]>([]);
+
+  const [streamingMessageId, setStreamingMessageId] =
+    useState<string | null>(null);
 
   const [manualInput, setManualInput] =
     useState("");
@@ -162,6 +167,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           concepts: [],
         };
 
+        // Subtle delay for premium "thinking" feel
+        await new Promise(resolve => setTimeout(resolve, 800));
+
         setCurrentQuestion(nextQuestion);
 
         const isFirstQuestion =
@@ -178,16 +186,18 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             `${nextQuestion.text}`;
         }
 
+        const msgId = `ai-${Date.now()}`;
         setMessages((prev) => [
           ...prev,
           {
-            id: `ai-${Date.now()}`,
+            id: msgId,
             sender: "interviewer",
             text: aiText,
             timestamp: Date.now(),
           },
         ]);
 
+        setStreamingMessageId(msgId);
         setStatus("AI_SPEAKING");
         await speak(aiText);
         setStatus("WAITING_FOR_ANSWER");
@@ -273,16 +283,21 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           evalResult.acknowledgment ||
           getRandomFallback();
 
+        // Simulated processing/thinking delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        const ackId = `ack-${Date.now()}`;
         setMessages((prev) => [
           ...prev,
           {
-            id: `ack-${Date.now()}`,
+            id: ackId,
             sender: "interviewer",
             text: acknowledgment,
             timestamp: Date.now(),
           },
         ]);
 
+        setStreamingMessageId(ackId);
         setStatus("AI_SPEAKING");
         await speak(acknowledgment);
 
@@ -291,15 +306,17 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           TOTAL_QUESTIONS_GOAL
         ) {
           const finalText = "Thank you. This completes our session.";
+          const finishId = `complete-${Date.now()}`;
           setMessages((prev) => [
             ...prev,
             {
-              id: `complete-${Date.now()}`,
+              id: finishId,
               sender: "interviewer",
               text: finalText,
               timestamp: Date.now(),
             },
           ]);
+          setStreamingMessageId(finishId);
           await speak(finalText);
           setStatus("COMPLETED");
           onComplete(answersRef.current);
@@ -542,11 +559,25 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                     ? "bg-emerald-500/10 text-white border border-emerald-500/20" 
                     : "bg-white/[0.03] text-slate-200 border border-white/[0.05]"
                   }`}>
-                    {msg.text}
+                    {msg.sender === "interviewer" ? (
+                      <TypewriterText 
+                        text={msg.text} 
+                        isStreaming={msg.id === streamingMessageId}
+                        onComplete={() => {
+                          if (msg.id === streamingMessageId) setStreamingMessageId(null);
+                        }}
+                      />
+                    ) : (
+                      msg.text
+                    )}
                   </div>
                 </div>
               </motion.div>
             ))}
+
+            {(status === "ANALYZING" || status === "TRANSITIONING") && (
+              <ThinkingState key="thinking" />
+            )}
           </AnimatePresence>
           <div ref={chatEndRef} />
         </div>

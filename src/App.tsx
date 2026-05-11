@@ -16,6 +16,12 @@ function App() {
   const [phase, setPhase] = useState<Phase>("setup");
   const [config, setConfig] = useState<InterviewConfig | null>(null);
   const [answers, setAnswers] = useState<Answer[]>([]);
+  const [selectedHistory, setSelectedHistory] =
+  useState<any>(null);
+
+const [showHistoryDetail, setShowHistoryDetail] =
+  useState(false);
+
   const [showCreatorTag, setShowCreatorTag] = useState(false);
 
   useEffect(() => {
@@ -69,6 +75,25 @@ function App() {
     setConfig(null);
     setAnswers([]);
   };
+  if (
+  showHistoryDetail &&
+  selectedHistory
+) {
+  return (
+    <ErrorBoundary>
+      <ResultsScreen
+        answers={
+          selectedHistory.full_results || []
+        }
+        role={selectedHistory.role}
+        onReset={() => {
+          setShowHistoryDetail(false);
+          setSelectedHistory(null);
+        }}
+      />
+    </ErrorBoundary>
+  );
+}
 
   return (
     <ErrorBoundary>
@@ -116,9 +141,12 @@ function App() {
           <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8 min-h-[86vh]">
             {phase === "setup" && (
               <SetupScreen
-                onStart={startInterview}
-                onViewHistoryDetail={() => {}}
-              />
+  onStart={startInterview}
+  onViewHistoryDetail={(record) => {
+    setSelectedHistory(record);
+    setShowHistoryDetail(true);
+  }}
+/>
             )}
 
             {phase === "interview" && config && (

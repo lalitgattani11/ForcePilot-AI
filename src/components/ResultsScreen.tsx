@@ -1,8 +1,8 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { supabase } from '../lib/supabase';
-import { RotateCcw, Brain } from 'lucide-react';
-import type { Answer, Role } from '../types';
+import React, { useMemo, useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { supabase } from "../lib/supabase";
+import { RotateCcw, Brain } from "lucide-react";
+import type { Answer, Role } from "../types";
 
 interface ResultsScreenProps {
   answers: Answer[];
@@ -13,13 +13,13 @@ interface ResultsScreenProps {
 const ResultsScreen: React.FC<ResultsScreenProps> = ({
   answers = [],
   role,
-  onReset
+  onReset,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const safeAnswers = useMemo(
     () => (Array.isArray(answers) ? answers : []),
-    [answers]
+    [answers],
   );
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
     const avgScore = totalScore / safeAnswers.length;
 
     return {
-      avgScore: Math.round(avgScore * 10) / 10
+      avgScore: Math.round(avgScore * 10) / 10,
     };
   }, [safeAnswers]);
 
@@ -52,38 +52,38 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
 
       try {
         const transcript = safeAnswers
-          .map(
-            (a, i) =>
-              `Q${i + 1}: ${a.questionText}\nA: ${a.userAnswer}`
-          )
-          .join('\n\n');
+          .map((a, i) => `Q${i + 1}: ${a.questionText}\nA: ${a.userAnswer}`)
+          .join("\n\n");
 
         const feedback = safeAnswers
-          .map(
-            (a, i) =>
-              `Q${i + 1}: ${
-                a.evaluation?.feedback || ''
-              }`
-          )
-          .join('\n\n');
+          .map((a, i) => `Q${i + 1}: ${a.evaluation?.feedback || ""}`)
+          .join("\n\n");
 
-        const { error } = await supabase
-          .from('interview_history')
-          .insert([
-            {
-              role,
-              difficulty: 'Unknown',
-              score: Math.round(metrics.avgScore),
-              feedback,
-              transcript,
-              duration: safeAnswers.length
-            }
-          ]);
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
 
+        if (!user?.id) {
+          console.error("No authenticated user found");
+          return;
+        }
+
+        const { error } = await supabase.from("interview_history").insert([
+          {
+            user_id: user.id,
+            role,
+            difficulty: "Unknown",
+            score: Math.round(metrics.avgScore),
+            feedback,
+            transcript,
+            duration: safeAnswers.length,
+            full_results: safeAnswers,
+          },
+        ]);
         if (error) {
           console.error(error);
         } else {
-          console.log('Interview saved');
+          console.log("Interview saved");
         }
       } catch (err) {
         console.error(err);
@@ -96,24 +96,15 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-white gap-6">
-        <Brain
-          size={40}
-          className="text-emerald-500 animate-pulse"
-        />
+        <Brain size={40} className="text-emerald-500 animate-pulse" />
 
-        <div className="text-lg font-semibold">
-          Generating Results...
-        </div>
+        <div className="text-lg font-semibold">Generating Results...</div>
       </div>
     );
   }
 
   if (!metrics) {
-    return (
-      <div className="text-center text-white py-20">
-        No Results Found
-      </div>
-    );
+    return <div className="text-center text-white py-20">No Results Found</div>;
   }
 
   return (
@@ -123,13 +114,9 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
         animate={{ opacity: 1, y: 0 }}
         className="bg-white/5 border border-white/10 rounded-3xl p-8 mb-8"
       >
-        <h1 className="text-4xl font-bold mb-4">
-          Interview Results
-        </h1>
+        <h1 className="text-4xl font-bold mb-4">Interview Results</h1>
 
-        <p className="text-slate-400 mb-6">
-          {role}
-        </p>
+        <p className="text-slate-400 mb-6">{role}</p>
 
         <div className="text-6xl font-bold text-emerald-500">
           {metrics.avgScore}/10
@@ -152,18 +139,13 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
               {answer.questionText}
             </div>
 
-            <div className="text-slate-300 mb-4">
-              {answer.userAnswer}
-            </div>
+            <div className="text-slate-300 mb-4">{answer.userAnswer}</div>
 
             <div className="text-cyan-400 mb-2">
-              Score:{' '}
-              {answer.evaluation?.score || 0}
+              Score: {answer.evaluation?.score || 0}
             </div>
 
-            <div className="text-slate-400">
-              {answer.evaluation?.feedback}
-            </div>
+            <div className="text-slate-400">{answer.evaluation?.feedback}</div>
           </motion.div>
         ))}
       </div>

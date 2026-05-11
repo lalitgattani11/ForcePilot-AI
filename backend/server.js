@@ -815,6 +815,70 @@ RETURN ONLY JSON:
     });
   }
 });
+/* ==================================================
+   GENERATE CAREER INSIGHT
+================================================== */
+
+app.post("/generate-career-insight", async (req, res) => {
+
+  try {
+
+    const { history, role } = req.body;
+
+    if (!history || history.length === 0) {
+
+      return res.json({
+        careerInsight:
+          "Complete more interviews to unlock AI performance intelligence.",
+      });
+
+    }
+
+    const averageScore =
+      history.reduce(
+        (sum, item) =>
+          sum + (item.score || 0),
+        0
+      ) / history.length;
+
+    let insight = "";
+
+    if (averageScore >= 80) {
+
+      insight =
+        `Strong progress detected in ${role}. Your interview performance demonstrates high technical readiness and improving communication consistency.`;
+
+    } else if (averageScore >= 60) {
+
+      insight =
+        `You are progressing steadily in ${role}. Focus on improving technical depth, confidence, and real-world scenario explanations.`;
+
+    } else {
+
+      insight =
+        `Foundational gaps still exist in ${role}. More structured practice and concept reinforcement are recommended to improve interview readiness.`;
+
+    }
+
+    res.json({
+      careerInsight: insight,
+    });
+
+  } catch (err) {
+
+    console.error(
+      "❌ Career Insight Error:",
+      err.message
+    );
+
+    res.status(500).json({
+      error:
+        "Failed to generate career insight",
+    });
+
+  }
+
+});
 
 /* ==================================================
    START SERVER
