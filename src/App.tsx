@@ -5,8 +5,8 @@ import ChatInterface from "./components/ChatInterface";
 import ResultsScreen from "./components/ResultsScreen";
 import ErrorBoundary from "./components/ErrorBoundary";
 import type { InterviewConfig, Answer } from "./types";
-import { useAuth } from './context/AuthContext';
-import UserMenu from './components/UserMenu';
+import { useAuth } from "./context/AuthContext";
+import UserMenu from "./components/UserMenu";
 import "./App.css";
 
 type Phase = "setup" | "interview" | "results";
@@ -114,7 +114,12 @@ function App() {
         {/* Main Content */}
         <main className="relative z-10 pt-20 sm:pt-28 pb-4 min-h-[86vh] overflow-x-hidden">
           <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8 min-h-[86vh]">
-            {phase === "setup" && <SetupScreen onStart={startInterview} />}
+            {phase === "setup" && (
+              <SetupScreen
+                onStart={startInterview}
+                onViewHistoryDetail={() => {}}
+              />
+            )}
 
             {phase === "interview" && config && (
               <ChatInterface config={config} onComplete={completeInterview} />
