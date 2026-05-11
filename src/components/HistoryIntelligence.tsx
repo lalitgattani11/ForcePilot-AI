@@ -4,13 +4,8 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 
 import type { Answer, Role } from "../types";
-const stripHtml = (
-  html?: string | null,
-): string => {
-  return (html || "").replace(
-    /<[^>]*>?/gm,
-    "",
-  );
+const stripHtml = (html?: string | null): string => {
+  return (html || "").replace(/<[^>]*>?/gm, "");
 };
 
 import {
@@ -22,11 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-} from "recharts";
+import { ResponsiveContainer, AreaChart, Area } from "recharts";
 
 interface SkillMatrixItem {
   name: string;
@@ -82,25 +73,20 @@ interface HistoryIntelligenceProps {
   onViewDetail: (record: InterviewRecord) => void;
 }
 
-const HistoryIntelligence: React.FC<
-  HistoryIntelligenceProps
-> = ({ onViewDetail }) => {
+const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
+  onViewDetail,
+}) => {
   const { user } = useAuth();
 
-  const [records, setRecords] = useState<
-    InterviewRecord[]
-  >([]);
+  const [records, setRecords] = useState<InterviewRecord[]>([]);
 
   const [loading, setLoading] = useState(true);
 
-  const [careerInsight, setCareerInsight] =
-    useState("");
+  const [careerInsight, setCareerInsight] = useState("");
 
   useEffect(() => {
     const fetchHistory = async () => {
-      console.log(
-        "[DEBUG_HISTORY] fetchHistory triggered",
-      );
+      console.log("[DEBUG_HISTORY] fetchHistory triggered");
 
       const {
         data: { user: authUser },
@@ -112,10 +98,7 @@ const HistoryIntelligence: React.FC<
       }
 
       try {
-        console.log(
-          "[DEBUG_HISTORY] Fetching records:",
-          authUser.id,
-        );
+        console.log("[DEBUG_HISTORY] Fetching records:", authUser.id);
 
         const { data, error } = await supabase
           .from("interview_history")
@@ -127,14 +110,38 @@ const HistoryIntelligence: React.FC<
 
         if (error) throw error;
 
-        const fetchedRecords =
-          (data as InterviewRecord[]) || [];
+        const fetchedRecords = ((data as InterviewRecord[]) || []).map(
+          (record) => ({
+            ...record,
+
+            feedback: record.feedback || "",
+
+            transcript: record.transcript || "",
+
+            coach_advice: record.coach_advice || "",
+
+            ai_verdict: record.ai_verdict || "",
+
+            weak_concepts: Array.isArray(record.weak_concepts)
+              ? record.weak_concepts
+              : [],
+
+            skill_matrix: Array.isArray(record.skill_matrix)
+              ? record.skill_matrix
+              : [],
+
+            full_results: Array.isArray(record.full_results)
+              ? record.full_results
+              : [],
+
+            behavior_analytics: record.behavior_analytics || {},
+          }),
+        );
 
         setRecords(Array.isArray(fetchedRecords) ? fetchedRecords : []);
 
         if (Array.isArray(fetchedRecords) && fetchedRecords.length > 0) {
-          const API_URL =
-            import.meta.env.VITE_API_URL;
+          const API_URL = import.meta.env.VITE_API_URL;
 
           const firstRecord = fetchedRecords[0];
           if (!firstRecord) return;
@@ -145,21 +152,19 @@ const HistoryIntelligence: React.FC<
               method: "POST",
 
               headers: {
-                "Content-Type":
-                  "application/json",
+                "Content-Type": "application/json",
               },
 
               body: JSON.stringify({
-                history: fetchedRecords.map(
-                  (r) => ({
-                    role: r.role || "Unknown",
-                    score: r.score || 0,
-                    feedback: r.feedback || "",
-                    weak_concepts:
-                      Array.isArray(r.weak_concepts) ? r.weak_concepts : [],
-                    date: r.created_at || new Date().toISOString(),
-                  }),
-                ),
+                history: fetchedRecords.map((r) => ({
+                  role: r.role || "Unknown",
+                  score: r.score || 0,
+                  feedback: r.feedback || "",
+                  weak_concepts: Array.isArray(r.weak_concepts)
+                    ? r.weak_concepts
+                    : [],
+                  date: r.created_at || new Date().toISOString(),
+                })),
 
                 role: firstRecord.role || "Professional Readiness",
               }),
@@ -167,19 +172,13 @@ const HistoryIntelligence: React.FC<
           );
 
           if (insightResponse.ok) {
-            const insightData =
-              await insightResponse.json();
+            const insightData = await insightResponse.json();
 
-            setCareerInsight(
-              insightData?.careerInsight || "",
-            );
+            setCareerInsight(insightData?.careerInsight || "");
           }
         }
       } catch (err) {
-        console.error(
-          "[DEBUG_HISTORY_ERROR]",
-          err,
-        );
+        console.error("[DEBUG_HISTORY_ERROR]", err);
       } finally {
         setLoading(false);
       }
@@ -192,25 +191,18 @@ const HistoryIntelligence: React.FC<
     if (records.length === 0) return null;
 
     const avgScore =
-      records.reduce(
-        (acc, r) => acc + (r.score || 0),
-        0,
-      ) / (records.length || 1);
+      records.reduce((acc, r) => acc + (r.score || 0), 0) /
+      (records.length || 1);
 
-    const bestRole =
-      records[0]?.role || "N/A";
+    const bestRole = records[0]?.role || "N/A";
 
-    const timelineData = [
-      ...records,
-    ]
-      .reverse()
-      .map((record) => ({
-        date: record.created_at ? new Date(
-          record.created_at,
-        ).toLocaleDateString() : "Unknown",
+    const timelineData = [...records].reverse().map((record) => ({
+      date: record.created_at
+        ? new Date(record.created_at).toLocaleDateString()
+        : "Unknown",
 
-        score: record.score || 0,
-      }));
+      score: record.score || 0,
+    }));
 
     return {
       avgScore: Math.round(avgScore),
@@ -219,13 +211,9 @@ const HistoryIntelligence: React.FC<
 
       timelineData,
 
-      totalInterviews:
-        records.length,
+      totalInterviews: records.length,
 
-      coachAdvice:
-        careerInsight ||
-        records[0]?.coach_advice ||
-        "",
+      coachAdvice: careerInsight || records[0]?.coach_advice || "",
     };
   }, [records, careerInsight]);
 
@@ -244,9 +232,7 @@ const HistoryIntelligence: React.FC<
   if (records.length === 0) {
     return (
       <div className="text-center py-20 premium-glass rounded-3xl border border-white/5">
-        <h3 className="text-xl font-bold text-white mb-2">
-          No History Yet
-        </h3>
+        <h3 className="text-xl font-bold text-white mb-2">No History Yet</h3>
       </div>
     );
   }
@@ -265,7 +251,8 @@ const HistoryIntelligence: React.FC<
         </h2>
 
         <p className="text-slate-500 max-w-2xl mx-auto">
-          Your historical session data synthesized into actionable career growth metrics.
+          Your historical session data synthesized into actionable career growth
+          metrics.
         </p>
       </div>
 
@@ -284,7 +271,8 @@ const HistoryIntelligence: React.FC<
             </h3>
 
             <p className="text-slate-400 mb-10 max-w-xl">
-              Your Salesforce mastery has improved through recent interview sessions.
+              Your Salesforce mastery has improved through recent interview
+              sessions.
             </p>
 
             <div className="grid grid-cols-2 gap-10 mb-10">
@@ -309,14 +297,9 @@ const HistoryIntelligence: React.FC<
               </div>
             </div>
 
-           <div className="w-full h-48 min-h-[192px]">
-              <ResponsiveContainer
-                width="100%"
-                height="100%"
-              >
-                <AreaChart
-                  data={stats.timelineData}
-                >
+            <div className="w-full h-48 min-h-[192px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={stats.timelineData}>
                   <defs>
                     <linearGradient
                       id="colorHistory"
@@ -325,17 +308,9 @@ const HistoryIntelligence: React.FC<
                       x2="0"
                       y2="1"
                     >
-                      <stop
-                        offset="5%"
-                        stopColor="#10b981"
-                        stopOpacity={0.4}
-                      />
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
 
-                      <stop
-                        offset="95%"
-                        stopColor="#10b981"
-                        stopOpacity={0}
-                      />
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                     </linearGradient>
                   </defs>
 
@@ -356,10 +331,7 @@ const HistoryIntelligence: React.FC<
           <div className="space-y-6">
             <div className="premium-glass rounded-3xl p-8 border border-white/5">
               <div className="flex items-center gap-3 mb-6">
-                <Sparkles
-                  className="text-cyan-400"
-                  size={18}
-                />
+                <Sparkles className="text-cyan-400" size={18} />
 
                 <h4 className="text-lg font-bold text-white">
                   AI Coach Insight
@@ -367,9 +339,7 @@ const HistoryIntelligence: React.FC<
               </div>
 
               <p className="text-slate-400 italic leading-relaxed">
-                "{stripHtml(
-                  stats.coachAdvice,
-                )}"
+                "{stripHtml(stats.coachAdvice)}"
               </p>
             </div>
 
@@ -401,14 +371,9 @@ const HistoryIntelligence: React.FC<
       {/* Session Archives */}
       <div className="space-y-6">
         <div className="flex items-center gap-3">
-          <History
-            className="text-slate-500"
-            size={18}
-          />
+          <History className="text-slate-500" size={18} />
 
-          <h3 className="text-2xl font-bold text-white">
-            Session Archives
-          </h3>
+          <h3 className="text-2xl font-bold text-white">Session Archives</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -416,17 +381,12 @@ const HistoryIntelligence: React.FC<
             <motion.button
               key={record.id}
               whileHover={{ y: -4 }}
-              onClick={() =>
-                onViewDetail(record)
-              }
+              onClick={() => onViewDetail(record)}
               className="text-left group premium-glass rounded-3xl p-6 border border-white/10"
             >
               <div className="flex justify-between items-start mb-6">
                 <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
-                  <Target
-                    className="text-slate-500"
-                    size={24}
-                  />
+                  <Target className="text-slate-500" size={24} />
                 </div>
 
                 <div className="text-right">
@@ -441,28 +401,20 @@ const HistoryIntelligence: React.FC<
               </div>
 
               <div className="space-y-4">
-                <h4 className="font-bold text-white text-lg">
-                  {record.role}
-                </h4>
+                <h4 className="font-bold text-white text-lg">{record.role}</h4>
 
                 <div className="flex items-center gap-2 text-xs text-slate-500">
                   <Calendar size={12} />
 
-                  {new Date(
-                    record.created_at,
-                  ).toLocaleDateString()}
+                  {new Date(record.created_at).toLocaleDateString()}
                 </div>
 
                 <p className="text-xs text-slate-400 line-clamp-2">
-                  {stripHtml(
-                    record.coach_advice,
-                  )}
+                  {stripHtml(record.coach_advice)}
                 </p>
 
                 <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-500 group-hover:text-cyan-400 transition-colors">
-                  <span>
-                    View Full Intelligence
-                  </span>
+                  <span>View Full Intelligence</span>
 
                   <ChevronRight size={14} />
                 </div>
