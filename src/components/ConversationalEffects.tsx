@@ -57,7 +57,7 @@ export const TypewriterText: React.FC<TypewriterTextProps> = ({
 }) => {
   const [displayedText, setDisplayedText] = useState(isStreaming ? '' : text);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!isStreaming) return;
