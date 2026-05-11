@@ -2,9 +2,11 @@ import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
-import { stripHtml } from "../utils/evaluation";
 
 import type { Answer, Role } from "../types";
+const stripHtml = (html: string = ""): string => {
+  return html.replace(/<[^>]*>?/gm, "");
+};
 
 import {
   History,
