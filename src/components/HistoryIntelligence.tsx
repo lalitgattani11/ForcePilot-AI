@@ -110,31 +110,53 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
         if (error) throw error;
 
-        const fetchedRecords = ((data as InterviewRecord[]) || []).map(
-          (record) => ({
+        const fetchedRecords = (Array.isArray(data) ? data : []).map(
+          (record: any) => ({
             ...record,
 
-            feedback: record.feedback || "",
+            id: String(record?.id || ""),
 
-            transcript: record.transcript || "",
+            created_at: String(record?.created_at || ""),
 
-            coach_advice: record.coach_advice || "",
+            role: String(record?.role || "Unknown"),
 
-            ai_verdict: record.ai_verdict || "",
+            difficulty: String(record?.difficulty || "Unknown"),
 
-            weak_concepts: Array.isArray(record.weak_concepts)
+            score: Number(record?.score || 0),
+
+            communication_score: Number(record?.communication_score || 0),
+
+            technical_score: Number(record?.technical_score || 0),
+
+            confidence_score: Number(record?.confidence_score || 0),
+
+            feedback: String(record?.feedback || ""),
+
+            transcript: String(record?.transcript || ""),
+
+            coach_advice: String(record?.coach_advice || ""),
+
+            ai_verdict: String(record?.ai_verdict || ""),
+
+            duration: Number(record?.duration || 0),
+
+            weak_concepts: Array.isArray(record?.weak_concepts)
               ? record.weak_concepts
               : [],
 
-            skill_matrix: Array.isArray(record.skill_matrix)
+            skill_matrix: Array.isArray(record?.skill_matrix)
               ? record.skill_matrix
               : [],
 
-            full_results: Array.isArray(record.full_results)
+            full_results: Array.isArray(record?.full_results)
               ? record.full_results
               : [],
 
-            behavior_analytics: record.behavior_analytics || {},
+            behavior_analytics:
+              typeof record?.behavior_analytics === "object" &&
+              record?.behavior_analytics !== null
+                ? record.behavior_analytics
+                : {},
           }),
         );
 
