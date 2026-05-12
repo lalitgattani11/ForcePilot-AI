@@ -65,7 +65,7 @@ const CustomTooltip = ({
   payload,
 }: {
   active?: boolean;
-  payload?: any[];
+  payload?: Array<{ payload: TimelineItem; value: number }>;
 }) => {
   if (active && payload && payload.length) {
     const data = payload[0]?.payload;
