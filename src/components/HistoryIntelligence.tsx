@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
+import AnalyticsDashboard from "./AnalyticsDashboard";
 
 import type { Answer, Role } from "../types";
 const stripHtml = (html?: unknown): string => {
@@ -10,20 +11,17 @@ const stripHtml = (html?: unknown): string => {
 
 import {
   History,
-  TrendingUp,
   Target,
   Calendar,
   ChevronRight,
   ChevronDown,
   Sparkles,
   Search,
-  Award,
   Zap,
+  Award,
+  TrendingUp,
   ArrowUpRight,
-  Activity,
 } from "lucide-react";
-
-import { ResponsiveContainer, AreaChart, Area} from "recharts";
 
 interface SkillMatrixItem {
   name: string;
@@ -88,8 +86,6 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
   const [loading, setLoading] = useState(true);
 
-  const [careerInsight, setCareerInsight] = useState("");
-
   // Filter State
   const [searchQuery, setSearchQuery] = useState("");
   const [filterRole, setFilterRole] = useState("all");
@@ -124,14 +120,10 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
         if (error) throw error;
 
         const fetchedRecords = (Array.isArray(data) ? data : []).map(
-          (record: any) => ({
+          (record: Record<string, unknown>) => ({
             ...record,
 
-            id: String(record?.id || ""),
-
-            created_at: String(record?.created_at || ""),
-
-            role: String(record?.role || "Unknown"),
+           id: String(record?.id || ""), created_at: String(record?.created_at || ""), user_id: String(record?.user_id || ""), role: String(record?.role || "Unknown") as Role,
 
             difficulty: String(record?.difficulty || "Unknown"),
 
@@ -154,64 +146,26 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
             duration: Number(record?.duration || 0),
 
             weak_concepts: Array.isArray(record?.weak_concepts)
-              ? record.weak_concepts
+              ? record.weak_concepts as WeakConceptItem[]
               : [],
 
             skill_matrix: Array.isArray(record?.skill_matrix)
-              ? record.skill_matrix
+              ? record.skill_matrix as SkillMatrixItem[]
               : [],
 
             full_results: Array.isArray(record?.full_results)
-              ? record.full_results
+              ? record.full_results as Answer[]
               : [],
 
             behavior_analytics:
               typeof record?.behavior_analytics === "object" &&
               record?.behavior_analytics !== null
-                ? record.behavior_analytics
+                ? record.behavior_analytics as BehaviorAnalytics
                 : {},
           }),
         );
 
         setRecords(Array.isArray(fetchedRecords) ? fetchedRecords : []);
-
-        if (Array.isArray(fetchedRecords) && fetchedRecords.length > 0) {
-          const API_URL = import.meta.env.VITE_API_URL;
-
-          const firstRecord = fetchedRecords[0];
-          if (!firstRecord) return;
-
-          const insightResponse = await fetch(
-            `${API_URL}/generate-career-insight`,
-            {
-              method: "POST",
-
-              headers: {
-                "Content-Type": "application/json",
-              },
-
-              body: JSON.stringify({
-                history: fetchedRecords.map((r) => ({
-                  role: r.role || "Unknown",
-                  score: r.score || 0,
-                  feedback: r.feedback || "",
-                  weak_concepts: Array.isArray(r.weak_concepts)
-                    ? r.weak_concepts
-                    : [],
-                  date: r.created_at || new Date().toISOString(),
-                })),
-
-                role: firstRecord.role || "Professional Readiness",
-              }),
-            },
-          );
-
-          if (insightResponse.ok) {
-            const insightData = await insightResponse.json();
-
-            setCareerInsight(insightData?.careerInsight || "");
-          }
-        }
       } catch (err) {
         console.error("[DEBUG_HISTORY_ERROR]", err);
       } finally {
@@ -305,52 +259,130 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
   const stats = useMemo(() => {
     if (records.length === 0) return null;
 
-    const avgScore =
-      records.reduce((acc, r) => acc + (r.score || 0), 0) /
-      (records.length || 1);
+    // 1. Multi-Dimensional Scoring (Weighted)
+    const dimensions = records.map(r => ({
+      tech: Number(r.technical_score || r.score || 0),
+      comm: Number(r.communication_score || r.score || 0),
+      conf: Number(r.confidence_score || r.score || 0),
+      duration: Number(r.duration || 0)
+    }));
 
-    const bestRole = records[0]?.role || "N/A";
+    const avgTech = dimensions.reduce((acc, d) => acc + d.tech, 0) / records.length;
+    const avgComm = dimensions.reduce((acc, d) => acc + d.comm, 0) / records.length;
+    const avgConf = dimensions.reduce((acc, d) => acc + d.conf, 0) / records.length;
 
+    // Weighted Performance Score: 50% Technical, 30% Communication, 20% Confidence
+    const weightedPerformance = (avgTech * 0.5) + (avgComm * 0.3) + (avgConf * 0.2);
+
+    // 2. Consistency & Discipline Analysis
+    const techVariance = dimensions.reduce((acc, d) => acc + Math.pow(d.tech - avgTech, 2), 0) / records.length;
+    const technicalConsistency = Math.max(0, Math.min(100, 100 - (Math.sqrt(techVariance) * 4)));
+    
+    const commVariance = dimensions.reduce((acc, d) => acc + Math.pow(d.comm - avgComm, 2), 0) / records.length;
+    const communicationStability = Math.max(0, Math.min(100, 100 - (Math.sqrt(commVariance) * 4)));
+
+    // Interview Discipline: Average question count vs standard, and session frequency
+    const avgDuration = dimensions.reduce((acc, d) => acc + d.duration, 0) / records.length;
+    const interviewDiscipline = Math.min(100, (avgDuration / 5) * 100); // Assuming 5 is standard
+
+    // 3. Recency-Weighted Topic Intelligence
+    const skillMap: Record<string, { total: number; count: number; weightTotal: number }> = {};
+    const weakMap: Record<string, { count: number; weightTotal: number }> = {};
+
+    records.forEach((record, index) => {
+      // Weight: 1.0 for oldest, up to 2.0 for most recent
+      const recencyWeight = 1 + (1 - (index / records.length));
+
+      (record.skill_matrix || []).forEach((skill) => {
+        if (!skill.name) return;
+        if (!skillMap[skill.name]) skillMap[skill.name] = { total: 0, count: 0, weightTotal: 0 };
+        skillMap[skill.name].total += Number(skill.value || 0) * recencyWeight;
+        skillMap[skill.name].count += 1;
+        skillMap[skill.name].weightTotal += recencyWeight;
+      });
+
+      (record.weak_concepts || []).forEach((weak) => {
+        if (!weak.name) return;
+        if (!weakMap[weak.name]) weakMap[weak.name] = { count: 0, weightTotal: 0 };
+        weakMap[weak.name].count += 1;
+        weakMap[weak.name].weightTotal += recencyWeight;
+      });
+    });
+
+    const strongestTopics = Object.entries(skillMap)
+      .map(([name, data]) => ({ 
+        name, 
+        avg: Math.round(data.total / data.weightTotal),
+        confidence: data.count >= 3 ? "High" : data.count >= 2 ? "Moderate" : "Low"
+      }))
+      .sort((a, b) => b.avg - a.avg)
+      .slice(0, 3);
+
+    const weakestTopics = Object.entries(weakMap)
+      .map(([name, data]) => ({ 
+        name, 
+        count: data.count,
+        confidence: data.count >= 3 ? "High" : "Moderate"
+      }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3);
+
+    // 4. Trend Intelligence (Recent vs Baseline)
     const timelineData = [...records].reverse().map((record) => ({
       date: record.created_at
-        ? new Date(record.created_at).toLocaleDateString()
+        ? new Date(record.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
         : "Unknown",
-
       score: record.score || 0,
     }));
 
-    // Calculate growth and momentum
-    const latestScore = records[0]?.score || 0;
-    const previousScore = records[1]?.score || 0;
-    const growth = previousScore ? latestScore - previousScore : 0;
-    
-    const readiness = avgScore >= 90 ? "Expert" : avgScore >= 80 ? "Professional" : avgScore >= 70 ? "Competent" : "Developing";
+    const recentDimensions = dimensions.slice(0, Math.min(3, records.length));
+    const recentAvg = recentDimensions.reduce((acc, d) => acc + d.tech, 0) / recentDimensions.length;
+    const baselineAvg = avgTech;
+    const growth = baselineAvg > 0 ? ((recentAvg - baselineAvg) / baselineAvg) * 100 : 0;
 
-    // Flagship Insights
-    const strongestCompetency = records.length > 0 
-      ? [...(records[0].skill_matrix || [])].sort((a, b) => b.value - a.value)[0]?.name || "N/A"
-      : "N/A";
-    
-    const signalStrength = Math.min(100, Math.round((avgScore * 0.7) + (records.length * 5)));
+    // 5. Readiness System
+    const signalStrength = Math.min(100, Math.round((weightedPerformance * 0.7) + (records.length * 5)));
+    const readiness = weightedPerformance >= 90 ? "Expert" : weightedPerformance >= 80 ? "Professional" : weightedPerformance >= 70 ? "Competent" : "Developing";
+
+    // Streak Calculation
+    const uniqueDates = records
+      .map((r) => new Date(r.created_at).toDateString())
+      .filter((v, i, a) => a.indexOf(v) === i);
+
+    let streak = 0;
+    if (uniqueDates.length > 0) {
+      const dateObjects = uniqueDates.map(d => new Date(d)).sort((a, b) => b.getTime() - a.getTime());
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      
+      const latestInterview = dateObjects[0];
+      const diffDays = (today.getTime() - latestInterview.getTime()) / (1000 * 3600 * 24);
+
+      if (diffDays <= 1) {
+        streak = 1;
+        for (let i = 1; i < dateObjects.length; i++) {
+          const prevDiff = (dateObjects[i-1].getTime() - dateObjects[i].getTime()) / (1000 * 3600 * 24);
+          if (prevDiff === 1) streak++;
+          else break;
+        }
+      }
+    }
 
     return {
-      avgScore: Math.round(avgScore),
-
-      bestRole,
-
+      avgScore: Math.round(weightedPerformance),
+      recentGrowth: Math.round(growth),
       timelineData,
-
       totalInterviews: records.length,
-
-      coachAdvice: careerInsight || records[0]?.coach_advice || "",
-      
-      growth,
       readiness,
-      latestScore,
-      strongestCompetency,
-      signalStrength
+      signalStrength,
+      strongestTopics,
+      weakestTopics,
+      streak,
+      consistency: Math.round(technicalConsistency),
+      stability: Math.round(communicationStability),
+      discipline: Math.round(interviewDiscipline)
     };
-  }, [records, careerInsight]);
+  }, [records]);
 
   if (loading) {
     return (
@@ -373,127 +405,11 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
   }
 
   return (
-    <div className="space-y-10">
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-300 text-xs tracking-[0.2em] uppercase">
-          <History size={14} />
-          Personal Archives
-        </div>
+    <div className="space-y-12">
+      <AnalyticsDashboard stats={stats} />
 
-        <h2 className="text-4xl font-black text-white">
-          Performance Intelligence
-        </h2>
-
-        <p className="text-slate-500 max-w-2xl mx-auto">
-          Your historical session data synthesized into actionable career growth
-          metrics.
-        </p>
-      </div>
-
-      {/* Top Stats: Unified Minimal Intelligence Dashboard */}
-      {stats && (
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
-          {/* Main Intelligence Card */}
-          <div className="xl:col-span-2 premium-glass rounded-[2rem] p-8 md:p-12 border border-white/5 bg-slate-950/20 relative overflow-hidden group">
-            <div className="relative z-10 space-y-10 md:space-y-16">
-              {/* Header: Minimal Sync */}
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-emerald-400/80">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                    Neural Intelligence Sync
-                  </div>
-                  <h3 className="text-4xl font-bold text-white tracking-tight">Career Command</h3>
-                </div>
-                
-                <div className="text-right">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Signal Strength</div>
-                  <div className="text-4xl font-black text-white">{stats.signalStrength}%</div>
-                </div>
-              </div>
-
-              {/* Inline Primary Metrics */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-y border-white/5">
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Efficiency</div>
-                  <div className="text-3xl font-black text-white">{stats.avgScore}%</div>
-                </div>
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Momentum</div>
-                  <div className={`text-3xl font-black ${stats.growth >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {stats.growth >= 0 ? '+' : ''}{stats.growth}%
-                  </div>
-                </div>
-                <div className="md:col-span-2">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Primary Vector</div>
-                  <div className="text-xl font-bold text-white truncate">{stats.bestRole}</div>
-                </div>
-              </div>
-
-              {/* Compact Neural Trend */}
-              <div className="space-y-6">
-                <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-600">
-                  <div className="flex items-center gap-2">
-                    <Activity size={12} />
-                    Velocity Profile
-                  </div>
-                  <span>v4.2.0</span>
-                </div>
-                <div className="w-full h-20 relative">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={stats.timelineData}>
-                      <defs>
-                        <linearGradient id="minimalGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.1} />
-                          <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <Area
-                        type="monotone"
-                        dataKey="score"
-                        stroke="#10b981"
-                        strokeWidth={2}
-                        fillOpacity={1}
-                        fill="url(#minimalGradient)"
-                        animationDuration={2000}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Side Intelligence Panel */}
-          <div className="flex flex-col gap-6 h-full">
-            {/* AI Coach Insight: Integrated Module */}
-            <div className="premium-glass rounded-[2rem] p-8 border border-white/5 bg-slate-950/20 flex-1">
-              <div className="flex items-center gap-3 mb-8">
-                <Sparkles className="text-cyan-400/50" size={16} />
-                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Coach Protocol</h4>
-              </div>
-              <p className="text-sm text-slate-300 italic leading-relaxed font-medium">
-                "{stripHtml(stats.coachAdvice)}"
-              </p>
-            </div>
-
-            {/* Compact Secondary Metrics Row */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="premium-glass rounded-[2rem] p-6 border border-white/5 bg-slate-950/20 text-center">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Readiness</div>
-                <div className="text-lg font-black text-cyan-400">{stats.readiness}</div>
-              </div>
-              <div className="premium-glass rounded-[2rem] p-6 border border-white/5 bg-slate-950/20 text-center">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Interviews</div>
-                <div className="text-3xl font-black text-white">{stats.totalInterviews}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        )}
-      {/* Session Archives */}
-      <div className="space-y-10 pt-10 border-t border-white/5">
+      {/* Session Archives Section */}
+      <div className="space-y-10 pt-16 border-t border-white/5">
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 mb-12">
           <div className="flex items-center gap-3 shrink-0">
             <History className="text-cyan-500" size={24} />
