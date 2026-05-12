@@ -103,11 +103,11 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onStart, onViewHistoryDetail 
         <div className="premium-glass rounded-[2rem] sm:rounded-[3rem] p-1 shadow-2xl reveal-2 max-w-5xl mx-auto">
           <div className="bg-slate-950/40 rounded-[1.9rem] sm:rounded-[2.9rem] p-6 sm:p-10 md:p-16 space-y-4 sm:space-y-12 border border-white/[0.02]">
             
-            {/* Top: Identity & Track */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-12">
+            {/* Top: Identity & Track Intelligence Unit */}
+            <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
               
-              {/* Identity */}
-              <div className="md:col-span-4 space-y-4 md:max-w-xs">
+              {/* Left Column: Identity Control */}
+              <div className="w-full lg:w-80 shrink-0 space-y-3">
                 <h3 className="meta-label">Identity</h3>
                 <input
                   type="text"
@@ -119,9 +119,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onStart, onViewHistoryDetail 
                 />
               </div>
 
-              {/* Track */}
-              <div className="md:col-span-8 space-y-4">
-                <h3 className="meta-label text-center">Interview Track</h3>
+              {/* Right Column: Track Intelligence Grid */}
+              <div className="flex-1 w-full space-y-3">
+                <h3 className="meta-label">Interview Track</h3>
                 
                 <div className="block sm:hidden">
                   <select
