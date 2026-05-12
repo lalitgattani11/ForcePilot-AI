@@ -21,7 +21,11 @@ import {
   Award,
   TrendingUp,
   ArrowUpRight,
+  Trash2,
+  AlertTriangle,
+  X,
 } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 
 interface SkillMatrixItem {
   name: string;
@@ -85,6 +89,10 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
   const [records, setRecords] = useState<InterviewRecord[]>([]);
 
   const [loading, setLoading] = useState(true);
+
+  // Delete State
+  const [sessionToDelete, setSessionToDelete] = useState<InterviewRecord | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Filter State
   const [searchQuery, setSearchQuery] = useState("");
@@ -175,6 +183,53 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
     fetchHistory();
   }, [user]);
+
+  const handleDelete = async () => {
+    if (!sessionToDelete || !user) return;
+    
+    setIsDeleting(true);
+    
+    // Capture state for potential rollback
+    const targetId = sessionToDelete.id;
+    const previousRecords = [...records];
+    
+    // Handle potential ID type mismatch (Supabase handles most, but being explicit is safer)
+    const idToUse = isNaN(Number(targetId)) ? targetId : Number(targetId);
+
+    try {
+      // 1. Attempt persistent deletion with verification
+      const { data, error } = await supabase
+        .from("interview_history")
+        .delete()
+        .eq("id", idToUse)
+        .eq("user_id", user.id)
+        .select();
+
+      if (error) {
+        console.error("[SUPABASE_DELETE_ERROR]", error);
+        throw error;
+      }
+
+      // 2. Validate row removal (catches silent RLS policy blocks)
+      if (!data || data.length === 0) {
+        console.warn("[DELETE_FAILURE] 0 rows affected. This usually indicates an RLS policy restriction or ID mismatch.", { targetId, idToUse, userId: user.id });
+        throw new Error("Cloud archive update failed. You may not have deletion permissions for this record.");
+      }
+
+      // 3. Update local state only after DB confirmation
+      setRecords((prev) => prev.filter((r) => r.id !== targetId));
+      setSessionToDelete(null);
+      
+      console.log("[DELETE_SUCCESS] Session permanently purged from archive.");
+    } catch (err: any) {
+      console.error("[DELETE_EXCEPTION]", err);
+      // Ensure local state remains accurate
+      setRecords(previousRecords);
+      alert(err.message || "Deletion failed. Please verify your connection or permissions.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   // Derived Data for Refactored UI
   const filteredRecords = useMemo(() => {
@@ -551,74 +606,96 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {featuredSessions.map(({ record, type }) => (
-                  <motion.button
-                    key={record.id}
-                    whileHover={{ y: -8, scale: 1.02 }}
-                    onClick={() => onViewDetail(record)}
-                    className="text-left relative group overflow-hidden premium-glass rounded-[2rem] p-8 border border-white/10 hover:border-cyan-500/30 transition-all"
-                  >
-                    {/* Type Badge */}
-                    <div
-                      className={`absolute top-0 right-0 px-6 py-2 rounded-bl-2xl text-[10px] font-black uppercase tracking-widest ${
-                        type === "latest"
-                          ? "bg-cyan-500/20 text-cyan-300"
-                          : type === "highest"
-                            ? "bg-emerald-500/20 text-emerald-300"
-                            : "bg-purple-500/20 text-purple-300"
-                      }`}
+                <AnimatePresence mode="popLayout">
+                  {featuredSessions.map(({ record, type }) => (
+                    <motion.div
+                      layout
+                      key={record.id}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                      className="relative"
                     >
-                      {type}
-                    </div>
-
-                    <div className="flex justify-between items-start mb-8">
-                      <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-cyan-500/10 transition-colors">
-                        {type === "latest" ? (
-                          <Zap className="text-cyan-400" size={28} />
-                        ) : type === "highest" ? (
-                          <Award className="text-emerald-400" size={28} />
-                        ) : (
-                          <TrendingUp className="text-purple-400" size={28} />
-                        )}
-                      </div>
-
-                      <div className="text-right">
-                        <div className="text-4xl font-black text-white">
-                          {record.score}%
+                      <motion.button
+                        whileHover={{ y: -8, scale: 1.02 }}
+                        onClick={() => onViewDetail(record)}
+                        className="w-full text-left relative group overflow-hidden premium-glass rounded-[2rem] p-8 border border-white/10 hover:border-cyan-500/30 transition-all"
+                      >
+                        {/* Type Badge */}
+                        <div
+                          className={`absolute top-0 right-0 px-6 py-2 rounded-bl-2xl text-[10px] font-black uppercase tracking-widest ${
+                            type === "latest"
+                              ? "bg-cyan-500/20 text-cyan-300"
+                              : type === "highest"
+                                ? "bg-emerald-500/20 text-emerald-300"
+                                : "bg-purple-500/20 text-purple-300"
+                          }`}
+                        >
+                          {type}
                         </div>
 
-                        <div className="text-[10px] uppercase tracking-widest text-slate-500">
-                          Efficiency
+                        {/* Premium Delete Action */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSessionToDelete(record);
+                          }}
+                          className="absolute bottom-6 right-6 p-3 rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-[#ff7b9c] hover:bg-[#16090d] hover:border-[#4b1d2b] transition-all opacity-40 group-hover:opacity-100 z-20 hover:shadow-[0_0_20px_rgba(255,123,156,0.15)]"
+                          title="Delete Session"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+
+                        <div className="flex justify-between items-start mb-8">
+                          <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-cyan-500/10 transition-colors">
+                            {type === "latest" ? (
+                              <Zap className="text-cyan-400" size={28} />
+                            ) : type === "highest" ? (
+                              <Award className="text-emerald-400" size={28} />
+                            ) : (
+                              <TrendingUp className="text-purple-400" size={28} />
+                            )}
+                          </div>
+
+                          <div className="text-right">
+                            <div className="text-4xl font-black text-white">
+                              {record.score}%
+                            </div>
+
+                            <div className="text-[10px] uppercase tracking-widest text-slate-500">
+                              Efficiency
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
 
-                    <div className="space-y-4">
-                      <h4 className="text-xl font-bold text-white leading-tight group-hover:text-cyan-400 transition-colors">
-                        {record.role}
-                      </h4>
+                        <div className="space-y-4">
+                          <h4 className="text-xl font-bold text-white leading-tight group-hover:text-cyan-400 transition-colors">
+                            {record.role}
+                          </h4>
 
-                      <div className="flex items-center gap-2 text-xs text-slate-500">
-                        <Calendar size={14} />
+                          <div className="flex items-center gap-2 text-xs text-slate-500">
+                            <Calendar size={14} />
 
-                        {new Date(record.created_at).toLocaleDateString(
-                          undefined,
-                          { month: "short", day: "numeric", year: "numeric" },
-                        )}
-                      </div>
+                            {new Date(record.created_at).toLocaleDateString(
+                              undefined,
+                              { month: "short", day: "numeric", year: "numeric" },
+                            )}
+                          </div>
 
-                      <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed italic">
-                        "{stripHtml(record.coach_advice)}"
-                      </p>
+                          <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed italic">
+                            "{stripHtml(record.coach_advice)}"
+                          </p>
 
-                      <div className="pt-6 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500 group-hover:text-cyan-400 transition-colors">
-                        <span>Analyze Session</span>
+                          <div className="pt-6 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500 group-hover:text-cyan-400 transition-colors">
+                            <span>Analyze Session</span>
 
-                        <ArrowUpRight size={16} />
-                      </div>
-                    </div>
-                  </motion.button>
-                ))}
+                            <ArrowUpRight size={16} />
+                          </div>
+                        </div>
+                      </motion.button>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </div>
           )}
@@ -632,64 +709,94 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
           <div className="premium-glass rounded-[2rem] border border-white/5 overflow-hidden">
             <div className="divide-y divide-white/5">
-              {timelineRecords.slice(0, visibleCount).map((record) => (
-                <motion.button
-                  key={record.id}
-                  onClick={() => onViewDetail(record)}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}
-                  className="w-full text-left px-8 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4 group transition-all"
-                >
-                  <div className="flex items-center gap-6 flex-1">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:text-cyan-400 group-hover:bg-cyan-500/5 transition-all">
-                      <Target size={20} />
-                    </div>
+              <AnimatePresence mode="popLayout">
+                {timelineRecords.slice(0, visibleCount).map((record) => (
+                  <motion.div
+                    layout
+                    key={record.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, x: -20, transition: { duration: 0.2 } }}
+                  >
+                    <motion.button
+                      onClick={() => onViewDetail(record)}
+                      whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}
+                      className="w-full text-left px-8 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4 group transition-all relative"
+                    >
+                      <div className="flex items-center gap-6 flex-1">
+                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:text-cyan-400 group-hover:bg-cyan-500/5 transition-all">
+                          <Target size={20} />
+                        </div>
 
-                    <div>
-                      <h4 className="font-bold text-white group-hover:text-cyan-400 transition-colors">
-                        {record.role}
-                      </h4>
+                        <div>
+                          <h4 className="font-bold text-white group-hover:text-cyan-400 transition-colors">
+                            {record.role}
+                          </h4>
 
-                      <div className="text-xs text-slate-500 flex items-center gap-2 mt-1">
-                        <Calendar size={12} />
+                          <div className="text-xs text-slate-500 flex items-center gap-2 mt-1">
+                            <Calendar size={12} />
 
-                        {new Date(record.created_at).toLocaleDateString()}
+                            {new Date(record.created_at).toLocaleDateString()}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
 
-                  <div className="flex items-center gap-8">
-                    <div className="text-center w-24">
-                      <div className="text-xl font-black text-white">
-                        {record.score}%
+                      <div className="flex items-center gap-8">
+                        {/* Delete Button for Timeline */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSessionToDelete(record);
+                          }}
+                          className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-slate-500 hover:text-[#ff7b9c] hover:bg-[#16090d] hover:border-[#4b1d2b] transition-all opacity-0 group-hover:opacity-100 hidden md:flex items-center justify-center hover:shadow-[0_0_15px_rgba(255,123,156,0.1)]"
+                          title="Delete Session"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+
+                        <div className="text-center w-24">
+                          <div className="text-xl font-black text-white">
+                            {record.score}%
+                          </div>
+
+                          <div className="text-[10px] uppercase tracking-widest text-slate-500">
+                            Score
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${
+                              record.score >= 90
+                                ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
+                                : record.score >= 80
+                                  ? "border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
+                                  : "border-slate-500/20 bg-slate-500/5 text-slate-400"
+                            }`}
+                          >
+                            {record.difficulty}
+                          </div>
+
+                          <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-slate-500 group-hover:border-cyan-500/50 group-hover:text-cyan-400 transition-all">
+                            <ChevronRight size={16} />
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="text-[10px] uppercase tracking-widest text-slate-500">
-                        Score
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${
-                          record.score >= 90
-                            ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
-                            : record.score >= 80
-                              ? "border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
-                              : "border-slate-500/20 bg-slate-500/5 text-slate-400"
-                        }`}
+                      {/* Mobile Delete Action */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSessionToDelete(record);
+                        }}
+                        className="absolute top-4 right-4 md:hidden p-2 text-slate-500 active:text-[#ff7b9c]"
                       >
-                        {record.difficulty}
-                      </div>
-
-                      <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-slate-500 group-hover:border-cyan-500/50 group-hover:text-cyan-400 transition-all">
-                        <ChevronRight size={16} />
-                      </div>
-                    </div>
-                  </div>
-                </motion.button>
-              ))}
+                        <Trash2 size={14} />
+                      </button>
+                    </motion.button>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
 
             {timelineRecords.length > visibleCount && (
@@ -711,6 +818,79 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Premium Confirmation Modal Overlay */}
+      <AnimatePresence>
+        {sessionToDelete && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 sm:p-0">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => !isDeleting && setSessionToDelete(null)}
+              className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl"
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-md premium-glass rounded-[2.5rem] border border-white/10 p-8 sm:p-12 shadow-2xl overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 p-8 opacity-5">
+                <Trash2 size={120} className="text-[#ff7b9c]" />
+              </div>
+
+              <div className="relative z-10 text-center space-y-8">
+                <div className="mx-auto w-20 h-20 rounded-[2rem] bg-[#16090d] border border-[#4b1d2b] flex items-center justify-center text-[#ff7b9c] shadow-[0_0_30px_rgba(255,123,156,0.1)]">
+                  <AlertTriangle size={36} />
+                </div>
+
+                <div className="space-y-3">
+                  <h3 className="text-2xl font-black text-white italic tracking-tight">
+                    Delete this interview session?
+                  </h3>
+                  <p className="text-sm text-slate-400 leading-relaxed font-medium">
+                    This action permanently removes the archived intelligence report. This cannot be undone.
+                  </p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                  <button
+                    disabled={isDeleting}
+                    onClick={() => setSessionToDelete(null)}
+                    className="flex-1 px-8 py-4 rounded-2xl bg-white/5 border border-white/10 text-white text-sm font-bold uppercase tracking-widest hover:bg-white/10 transition-all disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    disabled={isDeleting}
+                    onClick={handleDelete}
+                    className="flex-1 px-8 py-4 rounded-2xl bg-[#16090d] border border-[#4b1d2b] text-[#ff7b9c] text-sm font-black uppercase tracking-widest hover:bg-[#1d0c12] hover:border-[#7a2942] hover:shadow-[0_0_30px_rgba(255,123,156,0.15)] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    {isDeleting ? (
+                      <div className="h-4 w-4 border-2 border-[#ff7b9c]/30 border-t-[#ff7b9c] animate-spin rounded-full" />
+                    ) : (
+                      <>
+                        <Trash2 size={16} />
+                        Delete Session
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                disabled={isDeleting}
+                onClick={() => setSessionToDelete(null)}
+                className="absolute top-6 right-6 p-2 text-slate-500 hover:text-white transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
