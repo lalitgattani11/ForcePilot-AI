@@ -39,6 +39,12 @@ export interface EvaluationResult {
   feedback: string;
   missingPoints: string[];
   strengths: string[];
+  weaknesses?: string[];
+  idealAnswer?: string;
+  recruiterExpectation?: string;
+  improvementGuidance?: string;
+  communicationFeedback?: string;
+  confidenceAnalysis?: string;
   
   // New Analytics Metrics (Out of 10)
   technicalScore?: number;
@@ -49,6 +55,8 @@ export interface EvaluationResult {
   
   // The topic this question primarily tested
   topic?: string;
+
+  acknowledgment?: string;
 
   followUpQuestion?: string | null;
 

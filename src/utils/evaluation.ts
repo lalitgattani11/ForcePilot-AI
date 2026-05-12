@@ -134,6 +134,18 @@ export const evaluateAnswer = async (
 
       strengths: data.strengths ?? [],
 
+      weaknesses: data.weaknesses ?? [],
+
+      idealAnswer: data.idealAnswer ?? "",
+
+      recruiterExpectation: data.recruiterExpectation ?? "",
+
+      improvementGuidance: data.improvementGuidance ?? "",
+
+      communicationFeedback: data.communicationFeedback ?? "",
+
+      confidenceAnalysis: data.confidenceAnalysis ?? "",
+
       followUpQuestion: null,
 
       understanding_level,

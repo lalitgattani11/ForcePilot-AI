@@ -86,6 +86,9 @@ const [showHistoryDetail, setShowHistoryDetail] =
           selectedHistory.full_results || []
         }
         role={selectedHistory.role}
+        isHistory={true}
+        sessionDate={selectedHistory.created_at}
+        transcript={selectedHistory.transcript}
         onReset={() => {
           setShowHistoryDetail(false);
           setSelectedHistory(null);

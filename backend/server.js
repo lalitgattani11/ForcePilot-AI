@@ -731,6 +731,12 @@ RETURN ONLY JSON:
   "acknowledgment": "Neutral acknowledgment only",
   "missingPoints": ["Point"],
   "strengths": ["Point"],
+  "weaknesses": ["Point"],
+  "idealAnswer": "Recruiter-grade best practice answer",
+  "recruiterExpectation": "What the recruiter was specifically looking for",
+  "improvementGuidance": "How to answer better next time",
+  "communicationFeedback": "Feedback on tone and clarity",
+  "confidenceAnalysis": "Analysis of candidate confidence based on answer",
   "followUpQuestion": null
 }
 `;
