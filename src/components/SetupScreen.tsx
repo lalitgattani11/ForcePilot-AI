@@ -8,7 +8,6 @@ import {
   UserCheck,
   HeartHandshake,
   Zap,
-  History,
   BrainCircuit
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -245,14 +244,6 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onStart, onViewHistoryDetail 
       {user && (
         <section className="pt-12 sm:pt-24 border-t border-white/[0.05] reveal-4">
           <div className="max-w-6xl mx-auto px-4">
-            <div className="flex flex-col items-center text-center mb-16 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-slate-500">
-                <History size={14} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Personal Archives</span>
-              </div>
-              <h2 className="text-3xl font-black tracking-tight text-white">Performance Intelligence</h2>
-              <p className="text-sm text-slate-500 max-w-lg">Your historical session data synthesized into actionable career growth metrics.</p>
-            </div>
             <HistoryIntelligence onViewDetail={onViewHistoryDetail} />
           </div>
         </section>

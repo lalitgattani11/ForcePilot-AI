@@ -274,16 +274,45 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
     // Weighted Performance Score: 50% Technical, 30% Communication, 20% Confidence
     const weightedPerformance = (avgTech * 0.5) + (avgComm * 0.3) + (avgConf * 0.2);
 
-    // 2. Consistency & Discipline Analysis
+    // 2. Consistency & Confidence Analysis
     const techVariance = dimensions.reduce((acc, d) => acc + Math.pow(d.tech - avgTech, 2), 0) / records.length;
-    const technicalConsistency = Math.max(0, Math.min(100, 100 - (Math.sqrt(techVariance) * 4)));
+    const technicalConsistency = Math.sqrt(techVariance);
     
-    const commVariance = dimensions.reduce((acc, d) => acc + Math.pow(d.comm - avgComm, 2), 0) / records.length;
-    const communicationStability = Math.max(0, Math.min(100, 100 - (Math.sqrt(commVariance) * 4)));
+    // Qualitative mapping for consistency
+    const getConsistencyLabel = (variance: number) => {
+      if (records.length < 5) return "Limited Data";
+      if (variance < 5) return "Stable";
+      if (variance < 12) return "Improving Stability";
+      if (variance < 20) return "Building Consistency";
+      return "Inconsistent";
+    };
 
-    // Interview Discipline: Average question count vs standard, and session frequency
-    const avgDuration = dimensions.reduce((acc, d) => acc + d.duration, 0) / records.length;
-    const interviewDiscipline = Math.min(100, (avgDuration / 5) * 100); // Assuming 5 is standard
+    // Qualitative mapping for confidence
+    const getConfidenceLabel = (conf: number) => {
+      if (records.length < 3) return "Initial Signals";
+      if (conf >= 85) return "Exceptional";
+      if (conf >= 70) return "Strong";
+      if (conf >= 50) return "Moderate";
+      return "Needs Improvement";
+    };
+
+    // Qualitative mapping for technical performance
+    const getTechLabel = (score: number) => {
+      if (records.length < 3) return "Early Signals";
+      if (score >= 85) return "Architectural";
+      if (score >= 70) return "Professional";
+      if (score >= 50) return "Good Foundation";
+      return "Needs Improvement";
+    };
+
+    // Qualitative mapping for communication
+    const getCommLabel = (score: number) => {
+      if (records.length < 3) return "Early Signals";
+      if (score >= 85) return "Articulate";
+      if (score >= 70) return "Clear";
+      if (score >= 50) return "Improving";
+      return "Needs Improvement";
+    };
 
     // 3. Recency-Weighted Topic Intelligence
     const skillMap: Record<string, { total: number; count: number; weightTotal: number }> = {};
@@ -327,22 +356,21 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       .sort((a, b) => b.count - a.count)
       .slice(0, 3);
 
-    // 4. Trend Intelligence (Recent vs Baseline)
-    const timelineData = [...records].reverse().map((record) => ({
+    // 4. Trend Intelligence
+    const timelineData = [...records].reverse().map((record, idx) => ({
+      session: `Session ${idx + 1}`,
       date: record.created_at
         ? new Date(record.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
         : "Unknown",
-      score: record.score || 0,
+      score: Math.round(record.score || 0),
+      technical: Math.round(record.technical_score || 0),
+      communication: Math.round(record.communication_score || 0),
     }));
 
     const recentDimensions = dimensions.slice(0, Math.min(3, records.length));
-    const recentAvg = recentDimensions.reduce((acc, d) => acc + d.tech, 0) / recentDimensions.length;
+    const recentAvg = recentDimensions.length > 0 ? recentDimensions.reduce((acc, d) => acc + d.tech, 0) / recentDimensions.length : 0;
     const baselineAvg = avgTech;
     const growth = baselineAvg > 0 ? ((recentAvg - baselineAvg) / baselineAvg) * 100 : 0;
-
-    // 5. Readiness System
-    const signalStrength = Math.min(100, Math.round((weightedPerformance * 0.7) + (records.length * 5)));
-    const readiness = weightedPerformance >= 90 ? "Expert" : weightedPerformance >= 80 ? "Professional" : weightedPerformance >= 70 ? "Competent" : "Developing";
 
     // Streak Calculation
     const uniqueDates = records
@@ -368,19 +396,39 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       }
     }
 
+    // Data Confidence & Tier Logic
+    const count = records.length;
+    const intelligenceTier: 'calibration' | 'basic' | 'advanced' = 
+      count >= 10 ? 'advanced' : count >= 5 ? 'basic' : 'calibration';
+    
+    const dataConfidence = 
+      count >= 10 ? "High Confidence" : count >= 5 ? "Moderate Confidence" : "Initial Calibration";
+
+    // Qualitative labels for Readiness
+    const getReadinessLabel = (score: number) => {
+      if (score >= 90) return "Executive Ready";
+      if (score >= 80) return "Strong Candidate";
+      if (score >= 70) return "Promising";
+      return "Needs Improvement";
+    };
+
     return {
       avgScore: Math.round(weightedPerformance),
       recentGrowth: Math.round(growth),
       timelineData,
-      totalInterviews: records.length,
-      readiness,
-      signalStrength,
+      totalInterviews: count,
+      readiness: getReadinessLabel(weightedPerformance),
+      signalStrength: Math.round(weightedPerformance),
       strongestTopics,
       weakestTopics,
       streak,
-      consistency: Math.round(technicalConsistency),
-      stability: Math.round(communicationStability),
-      discipline: Math.round(interviewDiscipline)
+      dataConfidence,
+      intelligenceTier,
+      // Grounded qualitative metrics
+      techPerformance: getTechLabel(avgTech),
+      commClarity: getCommLabel(avgComm),
+      interviewConsistency: getConsistencyLabel(technicalConsistency),
+      responseConfidence: getConfidenceLabel(avgConf)
     };
   }, [records]);
 
