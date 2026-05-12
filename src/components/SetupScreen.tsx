@@ -115,7 +115,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onStart, onViewHistoryDetail 
                   placeholder="Candidate Name"
                   value={config.candidateName}
                   onChange={(e) => setConfig({ ...config, candidateName: e.target.value })}
-                  className="input-glass w-full"
+                  className="card-selector active w-full px-5 py-4 text-xs font-bold tracking-tight bg-transparent focus:outline-none"
                 />
               </div>
 

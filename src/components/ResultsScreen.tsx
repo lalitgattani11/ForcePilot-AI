@@ -68,18 +68,65 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
           return;
         }
 
-        const { error } = await supabase.from("interview_history").insert([
-          {
-            user_id: user.id,
-            role,
-            difficulty: "Unknown",
-            score: Math.round(metrics.avgScore),
-            feedback,
-            transcript,
-            duration: safeAnswers.length,
-            full_results: safeAnswers,
-          },
-        ]);
+       const safePayload = {
+  user_id: String(user.id),
+
+  role: String(role || "Unknown"),
+
+  difficulty: "Unknown",
+
+  score: Number(
+    Math.round(metrics.avgScore || 0),
+  ),
+
+  feedback: String(feedback || ""),
+
+  transcript: String(transcript || ""),
+
+  duration: Number(
+    safeAnswers.length || 0,
+  ),
+
+  communication_score: 0,
+
+  technical_score: 0,
+
+  confidence_score: 0,
+
+  coach_advice: "",
+
+  ai_verdict: "",
+
+  weak_concepts: [],
+
+  skill_matrix: [],
+
+  behavior_analytics: {},
+
+  full_results: safeAnswers.map(
+    (a) => ({
+      question: String(
+        a?.questionText || "",
+      ),
+
+      answer: String(
+        a?.userAnswer || "",
+      ),
+
+      score: Number(
+        a?.evaluation?.score || 0,
+      ),
+
+      feedback: String(
+        a?.evaluation?.feedback || "",
+      ),
+    }),
+  ),
+};
+
+const { error } = await supabase
+  .from("interview_history")
+  .insert([safePayload]);
         if (error) {
           console.error(error);
         } else {

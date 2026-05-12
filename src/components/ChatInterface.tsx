@@ -473,8 +473,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       initial={false}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
-      className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8 py-3 sm:py-5 min-h-[86vh]"
-      style={{ width: '100%' }}
+      className="w-full flex flex-col h-[calc(100vh-theme(spacing.20)-theme(spacing.4))] sm:h-[calc(100vh-theme(spacing.28)-theme(spacing.6))] lg:min-w-[1400px] max-w-[1600px] mx-auto overflow-hidden"
     >
       
       {/* Handshake Mask */}
@@ -502,10 +501,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       )}
 
       {/* Main Interface */}
-      <div className="h-full min-h-[86vh] flex flex-col premium-glass rounded-none sm:rounded-3xl overflow-hidden border border-white/10">
+      <div className="flex-1 flex flex-col premium-glass rounded-none sm:rounded-3xl overflow-hidden border border-white/10 min-h-0 mb-2">
         
-        {/* Header */}
-        <div className="px-4 sm:px-8 py-4 sm:py-6 border-b border-white/[0.05] flex justify-between items-center bg-white/[0.02]">
+        {/* Header (Shrink-0 to stay fixed) */}
+        <div className="shrink-0 px-4 sm:px-8 py-4 sm:py-6 border-b border-white/[0.05] flex justify-between items-center bg-white/[0.02]">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white text-slate-950 flex items-center justify-center shadow-sm">
               <Cpu size={18} className="sm:size-[20px]" />
@@ -539,8 +538,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </div>
         </div>
 
-        {/* Chat History */}
-        <div className="flex-grow overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 scrollbar-hide">
+        {/* Chat History (Flex-1 + Overflow-y-auto to scroll) */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 scroll-smooth 
+          scrollbar-thin scrollbar-thumb-emerald-500/20 scrollbar-track-transparent hover:scrollbar-thumb-emerald-500/40 
+          [&::-webkit-scrollbar]:w-1.5
+          [&::-webkit-scrollbar-track]:bg-transparent
+          [&::-webkit-scrollbar-thumb]:bg-emerald-500/10
+          [&::-webkit-scrollbar-thumb]:rounded-full
+          [&::-webkit-scrollbar-thumb]:border-transparent
+          hover:[&::-webkit-scrollbar-thumb]:bg-emerald-500/30
+          [&::-webkit-scrollbar-thumb]:shadow-[0_0_10px_rgba(16,185,129,0.1)]">
           <AnimatePresence initial={false}>
             {messages.map((msg) => (
               <motion.div
@@ -582,8 +589,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           <div ref={chatEndRef} />
         </div>
 
-        {/* Input Area */}
-        <div className="p-4 sm:p-8 border-t border-white/[0.05] bg-white/[0.01]">
+        {/* Input Area (Shrink-0 to stay pinned) */}
+        <div className="shrink-0 p-4 sm:p-8 border-t border-white/[0.05] bg-white/[0.01]">
           <div className="flex gap-3 sm:gap-4 items-end w-full mx-auto relative">
             <textarea
               value={manualInput}
