@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "../lib/supabase";
 import { RotateCcw, Brain } from "lucide-react";
@@ -21,14 +21,13 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
   sessionDate: _sessionDate = "",
   transcript: _transcript = "",
 }) => {
-  const [isLoading] = useState(true);
+  const isLoading = false;
 
   const safeAnswers = useMemo(
     () => (Array.isArray(answers) ? answers : []),
     [answers],
   );
 
-  useEffect(() => {}, []);
 
   const metrics = useMemo(() => {
     if (safeAnswers.length === 0) return null;
