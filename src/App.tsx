@@ -141,18 +141,19 @@ function App() {
                 } 
               />
               
-              <Route 
-                path="/interview" 
-                element={
-                  <ProtectedRoute>
-                    {config ? (
-                      <ChatInterface config={config} onComplete={completeInterview} />
-                    ) : (
-                      <Navigate to="/" replace />
-                    )}
-                  </ProtectedRoute>
-                } 
-              />
+              <Route
+  path="/interview"
+  element={
+    config ? (
+      <ChatInterface
+        config={config}
+        onComplete={completeInterview}
+      />
+    ) : (
+      <Navigate to="/" replace />
+    )
+  }
+/>
               
               <Route 
                 path="/results" 
