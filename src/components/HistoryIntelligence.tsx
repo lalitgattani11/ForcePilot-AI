@@ -83,7 +83,9 @@ interface HistoryIntelligenceProps {
 }
 
 const getSessionSlug = (role: string, id: string) => {
-  const cleanRole = role.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  const cleanRole = role
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
   return `${cleanRole}--${id}`;
 };
 
@@ -98,7 +100,8 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
   const [loading, setLoading] = useState(true);
 
   // Delete State
-  const [sessionToDelete, setSessionToDelete] = useState<InterviewRecord | null>(null);
+  const [sessionToDelete, setSessionToDelete] =
+    useState<InterviewRecord | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Filter State
@@ -138,7 +141,10 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
           (record: Record<string, unknown>) => ({
             ...record,
 
-           id: String(record?.id || ""), created_at: String(record?.created_at || ""), user_id: String(record?.user_id || ""), role: String(record?.role || "Unknown") as Role,
+            id: String(record?.id || ""),
+            created_at: String(record?.created_at || ""),
+            user_id: String(record?.user_id || ""),
+            role: String(record?.role || "Unknown") as Role,
 
             difficulty: String(record?.difficulty || "Unknown"),
 
@@ -161,21 +167,21 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
             duration: Number(record?.duration || 0),
 
             weak_concepts: Array.isArray(record?.weak_concepts)
-              ? record.weak_concepts as WeakConceptItem[]
+              ? (record.weak_concepts as WeakConceptItem[])
               : [],
 
             skill_matrix: Array.isArray(record?.skill_matrix)
-              ? record.skill_matrix as SkillMatrixItem[]
+              ? (record.skill_matrix as SkillMatrixItem[])
               : [],
 
             full_results: Array.isArray(record?.full_results)
-              ? record.full_results as Answer[]
+              ? (record.full_results as Answer[])
               : [],
 
             behavior_analytics:
               typeof record?.behavior_analytics === "object" &&
               record?.behavior_analytics !== null
-                ? record.behavior_analytics as BehaviorAnalytics
+                ? (record.behavior_analytics as BehaviorAnalytics)
                 : {},
           }),
         );
@@ -193,13 +199,13 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
   const handleDelete = async () => {
     if (!sessionToDelete || !user) return;
-    
+
     setIsDeleting(true);
-    
+
     // Capture state for potential rollback
     const targetId = sessionToDelete.id;
     const previousRecords = [...records];
-    
+
     // Handle potential ID type mismatch (Supabase handles most, but being explicit is safer)
     const idToUse = isNaN(Number(targetId)) ? targetId : Number(targetId);
 
@@ -219,20 +225,28 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
       // 2. Validate row removal (catches silent RLS policy blocks)
       if (!data || data.length === 0) {
-        console.warn("[DELETE_FAILURE] 0 rows affected. This usually indicates an RLS policy restriction or ID mismatch.", { targetId, idToUse, userId: user.id });
-        throw new Error("Cloud archive update failed. You may not have deletion permissions for this record.");
+        console.warn(
+          "[DELETE_FAILURE] 0 rows affected. This usually indicates an RLS policy restriction or ID mismatch.",
+          { targetId, idToUse, userId: user.id },
+        );
+        throw new Error(
+          "Cloud archive update failed. You may not have deletion permissions for this record.",
+        );
       }
 
       // 3. Update local state only after DB confirmation
       setRecords((prev) => prev.filter((r) => r.id !== targetId));
       setSessionToDelete(null);
-      
+
       console.log("[DELETE_SUCCESS] Session permanently purged from archive.");
     } catch (err: unknown) {
       console.error("[DELETE_EXCEPTION]", err);
       // Ensure local state remains accurate
       setRecords(previousRecords);
-      const message = err instanceof Error ? err.message : "Deletion failed. Please verify your connection or permissions.";
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Deletion failed. Please verify your connection or permissions.";
       alert(message);
     } finally {
       setIsDeleting(false);
@@ -242,40 +256,61 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
   // Derived Data for Refactored UI
   const filteredRecords = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
-    
+
     return records.filter((r) => {
       // 1. Basic Fields
-      const basicMatch = 
+      const basicMatch =
         r.role.toLowerCase().includes(query) ||
         r.ai_verdict.toLowerCase().includes(query) ||
         stripHtml(r.coach_advice).toLowerCase().includes(query) ||
         r.difficulty.toLowerCase().includes(query);
 
       // 2. Date Match
-      const formattedDate = new Date(r.created_at).toLocaleDateString().toLowerCase();
+      const formattedDate = new Date(r.created_at)
+        .toLocaleDateString()
+        .toLowerCase();
       const dateMatch = formattedDate.includes(query);
 
       // 3. Deep Transcript Match
-      const transcriptMatch = (r.transcript || "").toLowerCase().includes(query);
+      const transcriptMatch = (r.transcript || "")
+        .toLowerCase()
+        .includes(query);
 
       // 4. Topic & Question Match (from full_results)
-      const resultsMatch = (r.full_results || []).some(res => {
+      const resultsMatch = (r.full_results || []).some((res: Answer) => {
         const resObj = res as unknown as Record<string, unknown>;
-        const q = String(res.question || resObj.questionText || "");
-        const topic = String(res.topic || resObj.displayTopic || "");
-        const feedback = String(res.feedback || resObj.displayFeedback || "");
-        
-        return q.toLowerCase().includes(query) || 
-               topic.toLowerCase().includes(query) || 
-               feedback.toLowerCase().includes(query);
+
+        const q = String(resObj.questionText || resObj.question || "");
+
+        const topic = String(resObj.displayTopic || resObj.topic || "");
+
+        const feedback = String(
+          resObj.displayFeedback || resObj.feedback || "",
+        );
+
+        return (
+          q.toLowerCase().includes(query) ||
+          topic.toLowerCase().includes(query) ||
+          feedback.toLowerCase().includes(query)
+        );
       });
 
       // 5. Concept Match (Legacy fallbacks)
-      const conceptMatch = 
-        (r.skill_matrix || []).some(s => s.name.toLowerCase().includes(query)) ||
-        (r.weak_concepts || []).some(w => w.name.toLowerCase().includes(query));
+      const conceptMatch =
+        (r.skill_matrix || []).some((s) =>
+          s.name.toLowerCase().includes(query),
+        ) ||
+        (r.weak_concepts || []).some((w) =>
+          w.name.toLowerCase().includes(query),
+        );
 
-      const matchesSearch = query === "" || basicMatch || dateMatch || transcriptMatch || resultsMatch || conceptMatch;
+      const matchesSearch =
+        query === "" ||
+        basicMatch ||
+        dateMatch ||
+        transcriptMatch ||
+        resultsMatch ||
+        conceptMatch;
 
       const matchesRole = filterRole === "all" || r.role === filterRole;
       const matchesDifficulty =
@@ -333,7 +368,9 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
             (full) => full.id === r.id,
           );
           const previousRecord = records[indexInFullRecords + 1];
-          const improvement = previousRecord ? r.score - previousRecord.score : 0;
+          const improvement = previousRecord
+            ? r.score - previousRecord.score
+            : 0;
           return { record: r, improvement };
         })
         .sort((a, b) => b.improvement - a.improvement);
@@ -353,21 +390,26 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
     if (records.length === 0) return null;
 
     // 1. Multi-Dimensional Scoring (Weighted)
-    const dimensions = records.map(r => ({
+    const dimensions = records.map((r) => ({
       tech: Number(r.technical_score || r.score || 0),
       comm: Number(r.communication_score || r.score || 0),
       conf: Number(r.confidence_score || r.score || 0),
-      duration: Number(r.duration || 0)
+      duration: Number(r.duration || 0),
     }));
 
-    const avgTech = dimensions.reduce((acc, d) => acc + d.tech, 0) / records.length;
-    const avgComm = dimensions.reduce((acc, d) => acc + d.comm, 0) / records.length;
-    const avgConf = dimensions.reduce((acc, d) => acc + d.conf, 0) / records.length;
+    const avgTech =
+      dimensions.reduce((acc, d) => acc + d.tech, 0) / records.length;
+    const avgComm =
+      dimensions.reduce((acc, d) => acc + d.comm, 0) / records.length;
+    const avgConf =
+      dimensions.reduce((acc, d) => acc + d.conf, 0) / records.length;
 
     // 2. Consistency & Confidence Analysis
-    const techVariance = dimensions.reduce((acc, d) => acc + Math.pow(d.tech - avgTech, 2), 0) / records.length;
+    const techVariance =
+      dimensions.reduce((acc, d) => acc + Math.pow(d.tech - avgTech, 2), 0) /
+      records.length;
     const technicalConsistency = Math.sqrt(techVariance);
-    
+
     // Qualitative mapping for consistency
     const getConsistencyLabel = (variance: number) => {
       if (records.length < 5) return "Limited Data";
@@ -405,21 +447,31 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
     };
 
     // 3. Grounded Topic Extraction
-    const skillMap: Record<string, { total: number; count: number; weightTotal: number }> = {};
+    const skillMap: Record<
+      string,
+      { total: number; count: number; weightTotal: number }
+    > = {};
     const weakMap: Record<string, { count: number; weightTotal: number }> = {};
 
     records.forEach((record, index) => {
       // Weight: 1.0 for oldest, up to 1.5 for most recent (Subtler recency)
-      const recencyWeight = 1 + (0.5 * (1 - (index / records.length)));
+      const recencyWeight = 1 + 0.5 * (1 - index / records.length);
 
       // Extract from full_results (Production-grade source)
-      if (Array.isArray(record.full_results) && record.full_results.length > 0) {
-        record.full_results.forEach(res => {
+      if (
+        Array.isArray(record.full_results) &&
+        record.full_results.length > 0
+      ) {
+        record.full_results.forEach((res) => {
           const resObj = res as unknown as Record<string, unknown>;
-          const topic = res.topic || String(resObj.displayTopic || "General");
-          const score = Number(res.score || resObj.displayScore || 0);
-          
-          if (!skillMap[topic]) skillMap[topic] = { total: 0, count: 0, weightTotal: 0 };
+          const topic = String(
+            resObj.displayTopic || resObj.topic || "General",
+          );
+
+          const score = Number(resObj.displayScore || resObj.score || 0);
+
+          if (!skillMap[topic])
+            skillMap[topic] = { total: 0, count: 0, weightTotal: 0 };
           skillMap[topic].total += score * recencyWeight;
           skillMap[topic].count += 1;
           skillMap[topic].weightTotal += recencyWeight;
@@ -434,15 +486,18 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
         // Fallback to legacy skill_matrix if full_results missing
         (record.skill_matrix || []).forEach((skill) => {
           if (!skill.name) return;
-          if (!skillMap[skill.name]) skillMap[skill.name] = { total: 0, count: 0, weightTotal: 0 };
-          skillMap[skill.name].total += Number(skill.value || 0) * recencyWeight;
+          if (!skillMap[skill.name])
+            skillMap[skill.name] = { total: 0, count: 0, weightTotal: 0 };
+          skillMap[skill.name].total +=
+            Number(skill.value || 0) * recencyWeight;
           skillMap[skill.name].count += 1;
           skillMap[skill.name].weightTotal += recencyWeight;
         });
 
         (record.weak_concepts || []).forEach((weak) => {
           if (!weak.name) return;
-          if (!weakMap[weak.name]) weakMap[weak.name] = { count: 0, weightTotal: 0 };
+          if (!weakMap[weak.name])
+            weakMap[weak.name] = { count: 0, weightTotal: 0 };
           weakMap[weak.name].count += 1;
           weakMap[weak.name].weightTotal += recencyWeight;
         });
@@ -450,35 +505,46 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
     });
 
     const strongestTopics = Object.entries(skillMap)
-      .map(([name, data]) => ({ 
-        name, 
+      .map(([name, data]) => ({
+        name,
         avg: Math.round(data.total / data.weightTotal),
-        confidence: data.count >= 3 ? "High" : data.count >= 2 ? "Moderate" : "Initial"
+        confidence:
+          data.count >= 3 ? "High" : data.count >= 2 ? "Moderate" : "Initial",
       }))
       .sort((a, b) => b.avg - a.avg)
-      .filter(t => t.name !== "General" && t.name !== "Technical Assessment")
+      .filter((t) => t.name !== "General" && t.name !== "Technical Assessment")
       .slice(0, 3);
 
     const weakestTopics = Object.entries(weakMap)
-      .map(([name, data]) => ({ 
-        name, 
+      .map(([name, data]) => ({
+        name,
         count: data.count,
-        confidence: data.count >= 2 ? "Consistent" : "Occasional"
+        confidence: data.count >= 2 ? "Consistent" : "Occasional",
       }))
       .sort((a, b) => b.count - a.count)
-      .filter(t => t.name !== "General" && t.name !== "Technical Assessment")
+      .filter((t) => t.name !== "General" && t.name !== "Technical Assessment")
       .slice(0, 3);
 
     // 4. Trend Intelligence (Grounded & Chronological)
     const timelineData = [...records]
-      .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+      .sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      )
       .map((record) => {
         const date = new Date(record.created_at);
-        const dayMonth = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-        
+        const dayMonth = date.toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric",
+        });
+
         return {
           session: dayMonth, // X-axis marker
-          fullDate: date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }),
+          fullDate: date.toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          }),
           role: record.role,
           score: Math.round(record.score || 0),
           technical: Math.round(record.technical_score || 0),
@@ -487,9 +553,15 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       });
 
     const recentRecords = records.slice(0, Math.min(3, records.length));
-    const recentAvg = recentRecords.length > 0 ? recentRecords.reduce((acc, r) => acc + r.score, 0) / recentRecords.length : 0;
-    const baselineAvg = records.reduce((acc, r) => acc + r.score, 0) / records.length;
-    const growth = baselineAvg > 0 ? ((recentAvg - baselineAvg) / baselineAvg) * 100 : 0;
+    const recentAvg =
+      recentRecords.length > 0
+        ? recentRecords.reduce((acc, r) => acc + r.score, 0) /
+          recentRecords.length
+        : 0;
+    const baselineAvg =
+      records.reduce((acc, r) => acc + r.score, 0) / records.length;
+    const growth =
+      baselineAvg > 0 ? ((recentAvg - baselineAvg) / baselineAvg) * 100 : 0;
 
     // Streak Calculation (Realistic)
     const uniqueDates = records
@@ -498,17 +570,24 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
     let streak = 0;
     if (uniqueDates.length > 0) {
-      const dateObjects = uniqueDates.map(d => new Date(d)).sort((a, b) => b.getTime() - a.getTime());
+      const dateObjects = uniqueDates
+        .map((d) => new Date(d))
+        .sort((a, b) => b.getTime() - a.getTime());
       const today = new Date();
-      today.setHours(0,0,0,0);
-      
+      today.setHours(0, 0, 0, 0);
+
       const latestInterview = dateObjects[0];
-      const diffDays = Math.floor((today.getTime() - latestInterview.getTime()) / (1000 * 3600 * 24));
+      const diffDays = Math.floor(
+        (today.getTime() - latestInterview.getTime()) / (1000 * 3600 * 24),
+      );
 
       if (diffDays <= 1) {
         streak = 1;
         for (let i = 1; i < dateObjects.length; i++) {
-          const prevDiff = Math.floor((dateObjects[i-1].getTime() - dateObjects[i].getTime()) / (1000 * 3600 * 24));
+          const prevDiff = Math.floor(
+            (dateObjects[i - 1].getTime() - dateObjects[i].getTime()) /
+              (1000 * 3600 * 24),
+          );
           if (prevDiff === 1) streak++;
           else break;
         }
@@ -517,11 +596,15 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
     // Data Confidence & Tier Logic (Recruiter-friendly)
     const count = records.length;
-    const intelligenceTier: 'calibration' | 'basic' | 'advanced' = 
-      count >= 8 ? 'advanced' : count >= 3 ? 'basic' : 'calibration';
-    
-    const dataConfidence = 
-      count >= 8 ? "Reliable Trends" : count >= 3 ? "Building Consistency" : "Initial Assessment";
+    const intelligenceTier: "calibration" | "basic" | "advanced" =
+      count >= 8 ? "advanced" : count >= 3 ? "basic" : "calibration";
+
+    const dataConfidence =
+      count >= 8
+        ? "Reliable Trends"
+        : count >= 3
+          ? "Building Consistency"
+          : "Initial Assessment";
 
     // Qualitative labels for Readiness
     const getReadinessLabel = (score: number) => {
@@ -547,7 +630,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       techPerformance: getTechLabel(avgTech),
       commClarity: getCommLabel(avgComm),
       interviewConsistency: getConsistencyLabel(technicalConsistency),
-      responseConfidence: getConfidenceLabel(avgConf)
+      responseConfidence: getConfidenceLabel(avgConf),
     };
   }, [records]);
 
@@ -609,15 +692,24 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                 onChange={(e) => setFilterRole(e.target.value)}
                 className="appearance-none bg-white/5 border border-white/10 rounded-2xl py-3 pl-4 pr-10 text-[13px] sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
               >
-                <option value="all" className="bg-[#0f172a] text-white">All Roles</option>
+                <option value="all" className="bg-[#0f172a] text-white">
+                  All Roles
+                </option>
 
                 {uniqueRoles.map((role) => (
-                  <option key={role} value={role} className="bg-[#0f172a] text-white">
+                  <option
+                    key={role}
+                    value={role}
+                    className="bg-[#0f172a] text-white"
+                  >
                     {role}
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors" size={14} />
+              <ChevronDown
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors"
+                size={14}
+              />
             </div>
 
             <div className="relative group w-full md:min-w-[180px] md:flex-1 md:flex-initial">
@@ -626,15 +718,24 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                 onChange={(e) => setFilterDifficulty(e.target.value)}
                 className="appearance-none bg-white/5 border border-white/10 rounded-2xl py-3 pl-4 pr-10 text-[13px] sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
               >
-                <option value="all" className="bg-[#0f172a] text-white">All Difficulties</option>
+                <option value="all" className="bg-[#0f172a] text-white">
+                  All Difficulties
+                </option>
 
                 {uniqueDifficulties.map((diff) => (
-                  <option key={diff} value={diff} className="bg-[#0f172a] text-white">
+                  <option
+                    key={diff}
+                    value={diff}
+                    className="bg-[#0f172a] text-white"
+                  >
                     {diff}
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors" size={14} />
+              <ChevronDown
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors"
+                size={14}
+              />
             </div>
 
             <div className="relative group w-full md:min-w-[180px] md:flex-1 md:flex-initial">
@@ -643,17 +744,30 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                 onChange={(e) => setFilterScore(e.target.value)}
                 className="appearance-none bg-white/5 border border-white/10 rounded-2xl py-3 pl-4 pr-10 text-[13px] sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
               >
-                <option value="all" className="bg-[#0f172a] text-white">All Scores</option>
+                <option value="all" className="bg-[#0f172a] text-white">
+                  All Scores
+                </option>
 
-                <option value="exceptional" className="bg-[#0f172a] text-white">Exceptional (90+)</option>
+                <option value="exceptional" className="bg-[#0f172a] text-white">
+                  Exceptional (90+)
+                </option>
 
-                <option value="strong" className="bg-[#0f172a] text-white">Strong (80-89)</option>
+                <option value="strong" className="bg-[#0f172a] text-white">
+                  Strong (80-89)
+                </option>
 
-                <option value="developing" className="bg-[#0f172a] text-white">Developing (70-79)</option>
+                <option value="developing" className="bg-[#0f172a] text-white">
+                  Developing (70-79)
+                </option>
 
-                <option value="needs-work" className="bg-[#0f172a] text-white">Needs Work (&lt;70)</option>
+                <option value="needs-work" className="bg-[#0f172a] text-white">
+                  Needs Work (&lt;70)
+                </option>
               </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors" size={14} />
+              <ChevronDown
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors"
+                size={14}
+              />
             </div>
           </div>
         </div>
@@ -677,14 +791,21 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                       key={record.id}
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                      exit={{
+                        opacity: 0,
+                        scale: 0.9,
+                        transition: { duration: 0.2 },
+                      }}
                       className="relative"
                     >
                       <motion.button
                         whileHover={{ y: -8, scale: 1.02 }}
                         onClick={() => {
                           if (onViewDetail) onViewDetail(record);
-                          else navigate(`/session/${getSessionSlug(record.role, record.id)}`);
+                          else
+                            navigate(
+                              `/session/${getSessionSlug(record.role, record.id)}`,
+                            );
                         }}
                         className="w-full text-left relative group overflow-hidden premium-glass rounded-[2rem] p-8 border border-white/10 hover:border-cyan-500/30 transition-all"
                       >
@@ -720,7 +841,10 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                             ) : type === "highest" ? (
                               <Award className="text-emerald-400" size={28} />
                             ) : (
-                              <TrendingUp className="text-purple-400" size={28} />
+                              <TrendingUp
+                                className="text-purple-400"
+                                size={28}
+                              />
                             )}
                           </div>
 
@@ -745,7 +869,11 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
                             {new Date(record.created_at).toLocaleDateString(
                               undefined,
-                              { month: "short", day: "numeric", year: "numeric" },
+                              {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              },
                             )}
                           </div>
 
@@ -788,9 +916,14 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                     <motion.button
                       onClick={() => {
                         if (onViewDetail) onViewDetail(record);
-                        else navigate(`/session/${getSessionSlug(record.role, record.id)}`);
+                        else
+                          navigate(
+                            `/session/${getSessionSlug(record.role, record.id)}`,
+                          );
                       }}
-                      whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}
+                      whileHover={{
+                        backgroundColor: "rgba(255, 255, 255, 0.02)",
+                      }}
                       className="w-full text-left px-8 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4 group transition-all relative"
                     >
                       <div className="flex items-center gap-6 flex-1">
@@ -882,8 +1015,13 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
             {timelineRecords.length === 0 && (
               <div className="p-20 text-center space-y-3">
-                <div className="text-white font-bold italic">No interview sessions matched your search.</div>
-                <p className="text-xs text-slate-500 max-w-xs mx-auto">Try searching for a specific role, technical concept, or interview track.</p>
+                <div className="text-white font-bold italic">
+                  No interview sessions matched your search.
+                </div>
+                <p className="text-xs text-slate-500 max-w-xs mx-auto">
+                  Try searching for a specific role, technical concept, or
+                  interview track.
+                </p>
               </div>
             )}
           </div>
@@ -901,7 +1039,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
               onClick={() => !isDeleting && setSessionToDelete(null)}
               className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl"
             />
-            
+
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -922,7 +1060,8 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                     Delete this interview session?
                   </h3>
                   <p className="text-sm text-slate-400 leading-relaxed font-medium">
-                    This action permanently removes the archived intelligence report. This cannot be undone.
+                    This action permanently removes the archived intelligence
+                    report. This cannot be undone.
                   </p>
                 </div>
 
