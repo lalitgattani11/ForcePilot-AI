@@ -8,7 +8,9 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import type { InterviewConfig, Answer } from "./types";
 import { useAuth } from "./context/AuthContext";
 import UserMenu from "./components/UserMenu";
+import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import "./App.css";
+
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
@@ -195,6 +197,8 @@ function App() {
             </div>
           </div>
         ) : null}
+
+        <PWAInstallPrompt />
       </div>
     </ErrorBoundary>
   );
