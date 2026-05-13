@@ -681,62 +681,62 @@ app.post("/evaluate", async (req, res) => {
     }
 
     const prompt = `
-You are a Salesforce interviewer.
+You are an elite, senior technical recruiter and Salesforce Architect.
 
-ROLE:
-${role}
+ROLE CONTEXT: ${role}
+DIFFICULTY: ${difficulty}
+PERSONA: ${persona.style}
 
-DIFFICULTY:
-${difficulty}
-
-PERSONALITY:
-${persona.style}
-
-QUESTION:
+CANDIDATE QUESTION:
 ${question}
 
 CANDIDATE ANSWER:
 ${answer}
 
 ==================================================
+CRITICAL INSTRUCTIONS FOR PRODUCTION-GRADE EVALUATION:
 
-RULES:
+1. SCORING REALISM (1.0 to 10.0):
+   - You MUST score with decimals (e.g., 7.4, 6.8, 4.2). DO NOT use flat numbers (5.0, 7.0) unless absolutely perfect or completely empty.
+   - Punish generic, short, or filler-heavy answers severely (scores 2.0 - 4.5).
+   - High scores (8.5+) require deep technical accuracy, specific Salesforce limits/governors, and structured reasoning.
 
-- Evaluate technically
-- No coaching tone
-- No teaching tone
-- No motivational tone
-- Keep acknowledgment neutral
+2. FEEDBACK TONE:
+   - Sound like a senior human interviewer, not a robotic AI.
+   - Ban generic AI jargon ("Neural intelligence calibration", "Developing trajectory").
+   - Reference specific things the candidate said in their answer.
+   - If the answer is too short, state: "Response lacked the depth required for this role level."
 
-ALLOWED ACKNOWLEDGMENTS:
-- "Alright."
-- "Okay."
-- "Understood."
-- "Got it."
-- "Hmm."
+3. DIMENSIONS:
+   - score: Overall composite out of 10.
+   - technicalScore: Accuracy of Salesforce concepts, limits, and architecture.
+   - communicationScore: Clarity, structure, and absence of filler words.
+   - practicalReasoningScore: Evidence of real-world use-cases and logical flow.
+   - roleSpecificScore: Alignment with ${role} expectations.
+   - conceptCoverageScore: Did they hit the core requirement of the specific question?
 
 ==================================================
 
-RETURN ONLY JSON:
+RETURN ONLY VALID JSON MATCHING THIS EXACT SCHEMA:
 
 {
-  "score": number,
-  "technicalScore": number,
-  "communicationScore": number,
-  "practicalReasoningScore": number,
-  "roleSpecificScore": number,
-  "conceptCoverageScore": number,
+  "score": 6.8,
+  "technicalScore": 7.2,
+  "communicationScore": 6.5,
+  "practicalReasoningScore": 6.0,
+  "roleSpecificScore": 6.5,
+  "conceptCoverageScore": 7.0,
   "topic": "Short category",
-  "feedback": "Internal technical feedback",
-  "acknowledgment": "Neutral acknowledgment only",
-  "missingPoints": ["Point"],
-  "strengths": ["Point"],
-  "weaknesses": ["Point"],
-  "idealAnswer": "Recruiter-grade best practice answer",
-  "recruiterExpectation": "What the recruiter was specifically looking for",
-  "improvementGuidance": "How to answer better next time",
-  "communicationFeedback": "Feedback on tone and clarity",
-  "confidenceAnalysis": "Analysis of candidate confidence based on answer",
+  "feedback": "Internal technical feedback mentioning specific candidate phrasing",
+  "acknowledgment": "Okay.",
+  "missingPoints": ["Specific limit or concept missed"],
+  "strengths": ["Specific accurate thing they said"],
+  "weaknesses": ["Specific structural or technical flaw"],
+  "idealAnswer": "Recruiter-grade best practice answer with depth",
+  "recruiterExpectation": "What the recruiter was specifically looking for (e.g. mention of Bulk API)",
+  "improvementGuidance": "Actionable technical advice for the candidate",
+  "communicationFeedback": "Feedback on tone, filler words, and clarity",
+  "confidenceAnalysis": "Analysis based on answer length and decisiveness",
   "followUpQuestion": null
 }
 `;

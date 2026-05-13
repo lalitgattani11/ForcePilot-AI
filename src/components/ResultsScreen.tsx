@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { 
   RotateCcw, 
@@ -22,8 +23,8 @@ import type { Answer, Role, EvaluationResult } from "../types";
 import { ALL_QUESTIONS } from "../mockData";
 
 interface ResultsScreenProps {
-  answers: Answer[];
-  role: Role;
+  answers?: Answer[];
+  role?: Role;
   onReset: () => void;
   isHistory?: boolean;
   sessionDate?: string;
@@ -50,30 +51,92 @@ interface NormalizedAnswer extends Answer {
 }
 
 const ResultsScreen: React.FC<ResultsScreenProps> = ({
-  answers = [],
-  role,
+  answers: propAnswers,
+  role: propRole,
   onReset,
-  isHistory = false,
-  sessionDate = "",
-  transcript = "",
+  isHistory: propIsHistory = false,
+  sessionDate: propSessionDate = "",
+  transcript: propTranscript = "",
 }) => {
-  const [isLoading, setIsLoading] = useState(!isHistory);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  
+  const [sessionData, setSessionData] = useState<{
+    answers: Answer[];
+    role: Role;
+    date: string;
+    transcript: string;
+    isHistory: boolean;
+  } | null>(propAnswers ? {
+    answers: propAnswers,
+    role: propRole || "Salesforce Admin",
+    date: propSessionDate,
+    transcript: propTranscript,
+    isHistory: propIsHistory
+  } : null);
+
+  const [isLoading, setIsLoading] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
 
-  // Artificial delay for cinematic effect on new sessions
   useEffect(() => {
-    if (!isHistory) {
-      const timer = setTimeout(() => setIsLoading(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [isHistory]);
+    const fetchSession = async () => {
+      if (!id) {
+        // Handle direct /results (current session)
+        if (propAnswers) {
+          setIsLoading(true);
+          const timer = setTimeout(() => setIsLoading(false), 2000);
+          return () => clearTimeout(timer);
+        } else {
+          navigate("/");
+          return;
+        }
+      }
 
-  // --- DATA RESTORATION & NORMALIZATION LAYER ---
+      try {
+        // Extract UUID from slug if present (format: slug--uuid)
+        const sessionId = id.includes('--') ? id.split('--').pop() : id;
+
+        const { data, error } = await supabase
+          .from("interview_history")
+          .select("*")
+          .eq("id", sessionId)
+          .single();
+
+        if (error) throw error;
+        if (!data) throw new Error("Session not found");
+
+        setSessionData({
+          answers: data.full_results || [],
+          role: data.role as Role,
+          date: data.created_at,
+          transcript: data.transcript,
+          isHistory: true
+        });
+      } catch (err) {
+        console.error("Failed to fetch session:", err);
+        navigate("/");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSession();
+  }, [id, propAnswers, navigate]);
+
+  const { answers, role, sessionDate, transcript, isHistory } = sessionData || {
+    answers: [],
+    role: "Salesforce Admin" as Role,
+    sessionDate: "",
+    transcript: "",
+    isHistory: false
+  };
+
+  // --- DATA RESTORATION & NORMALIZATION LAYER (PRODUCTION-GRADE) ---
   const normalizedAnswers: NormalizedAnswer[] = useMemo(() => {
     let base = Array.isArray(answers) ? [...answers] : [];
     
-    // 1. Transcript restoration for legacy/malformed data (hardened)
-    if ((base.length === 0 || (!base[0]?.questionText && !(base[0] as any)?.question)) && transcript && transcript.trim()) {
+    // 1. Transcript restoration for legacy/malformed data (defensive parsing)
+    if ((base.length === 0 || (!base[0]?.questionText && !(base[0] as unknown as Record<string, unknown>)?.question)) && transcript && transcript.trim()) {
       try {
         const blocks = transcript.split(/\n\n+/);
         const restored = blocks.map((block, idx) => {
@@ -92,14 +155,9 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
             return {
               questionId: `restored-${idx}`,
               questionText: q || "Question",
-              userAnswer: a || "No response provided.",
+              userAnswer: a || "",
               timeTaken: 0,
-              evaluation: {
-                score: 5,
-                feedback: "Restored from session transcript.",
-                strengths: [],
-                missingPoints: []
-              }
+              evaluation: {}
             } as Answer;
           }
           return null;
@@ -107,19 +165,20 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
 
         if (restored.length > 0) base = restored;
       } catch (err) {
-        console.warn("[RESTORE] Failed to parse transcript", err);
+        console.warn("[RESTORE] Failed to parse transcript safely", err);
       }
     }
 
-    // 2. Map and Enrich Data (Fallbacks for Ideal Answers & Metadata)
+    // 2. Map and Enrich Data (Deterministic, Grounded Derivation)
     return base.map(item => {
-      const historical = item as any;
-      const evalData: EvaluationResult = item.evaluation || historical || {};
+      const historical = item as unknown as Record<string, unknown>;
+      const evalData: EvaluationResult = item.evaluation || (historical as unknown as EvaluationResult) || {};
       
       const qText = item.questionText || historical.question || "Question";
-      const uAnswer = item.userAnswer || historical.answer || "No response provided.";
+      const uAnswerRaw = item.userAnswer || historical.answer || "";
+      const uAnswer = uAnswerRaw.trim() ? uAnswerRaw : "No response provided.";
       
-      // Attempt to find ideal answer from mock data if missing
+      // Look up ideal answer for baseline comparison
       let ideal = evalData.idealAnswer || "";
       if (!ideal && qText !== "Question") {
         const match = ALL_QUESTIONS.find(q => 
@@ -128,28 +187,120 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
         );
         if (match) ideal = match.idealAnswer;
       }
-      
       if (!ideal && qText !== "Question") {
-        ideal = `A professional ${role} response would involve explaining the core concept, its practical application in Salesforce, and any relevant best practices or governor limits.`;
+        ideal = `A professional ${role} response should thoroughly explain the technical architecture, best practices, and real-world implementation nuances of this concept.`;
       }
+
+      // --- ENTERPRISE-GRADE DERIVATION ENGINE ---
+      const cleanAnswer = uAnswer.toLowerCase().replace(/[^\w\s]/gi, '');
+      const cleanIdeal = ideal.toLowerCase().replace(/[^\w\s]/gi, '');
+      const answerTokens = cleanAnswer.split(/\s+/).filter(w => w.length > 0);
+      const wordCount = answerTokens.length;
+      
+      const insufficientData = wordCount < 10 || uAnswer === "No response provided.";
+
+      // 1. Technical Depth (Salesforce / Enterprise Context)
+      // Detect industry/Salesforce specific terminology beyond simple word matches
+      const sfTerms = new Set(['object', 'record', 'trigger', 'flow', 'apex', 'soql', 'sosl', 'lwc', 'aura', 'integration', 'api', 'security', 'profile', 'permission', 'sharing', 'role', 'hierarchy', 'architecture', 'limit', 'governor', 'async', 'batch', 'future', 'queueable', 'test', 'deployment', 'metadata', 'sandbox']);
+      let sfTermHits = 0;
+      answerTokens.forEach(w => { if (sfTerms.has(w)) sfTermHits++; });
+      
+      // Keyword overlap with ideal answer
+      const idealWords = new Set(cleanIdeal.match(/\b[a-z]{5,}\b/g) || []);
+      const answerWords = new Set(cleanAnswer.match(/\b[a-z]{5,}\b/g) || []);
+      let techMatches = 0;
+      idealWords.forEach(w => { if (answerWords.has(w)) techMatches++; });
+      
+      const techBaseScore = idealWords.size > 0 ? (techMatches / Math.min(12, idealWords.size)) : 0;
+      // Bonus for domain specific terms
+      const techDomainBonus = Math.min(0.3, sfTermHits * 0.05);
+      const techCoverage = Math.min(1, techBaseScore + techDomainBonus);
+
+      // 2. Communication Clarity
+      const fillers = (cleanAnswer.match(/\b(um|uh|like|you know|basically|just|actually|sort of|kind of|i guess|maybe|probably)\b/g) || []).length;
+      const fillerPenalty = wordCount > 0 ? Math.min(0.4, (fillers / wordCount) * 2.5) : 0;
+      
+      // Reward concise, structured sentences (avg words per sentence)
+      const sentences = uAnswer.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+      const avgWordsPerSentence = sentences > 0 ? wordCount / sentences : 0;
+      const sentenceStructurePenalty = (avgWordsPerSentence > 35 || avgWordsPerSentence < 5) ? 0.15 : 0;
+      
+      const lengthCompleteness = Math.min(1, wordCount / 50); // 50 words is optimal explanation depth
+      const commScoreDerivation = Math.max(0.1, lengthCompleteness - fillerPenalty - sentenceStructurePenalty);
+
+      // 3. Problem Solving & Reasoning
+      const reasoningConnectors = (cleanAnswer.match(/\b(because|therefore|however|example|scenario|instance|if|then|leads|results|mean|why|how|approach|solution|first|second|finally|consequently|although)\b/g) || []).length;
+      const reasoningDensity = wordCount > 0 ? (reasoningConnectors / wordCount) : 0;
+      // Optimal reasoning density is ~1 connector per 12 words (0.08)
+      const reasonScoreDerivation = Math.min(1, reasoningDensity / 0.08) * lengthCompleteness;
+
+      // Safe Fallback Logic
+      // Only override if the backend provided obvious placeholder data (0, 2.5, 5, null)
+      const isPlaceholder = (val: unknown) => val == null || Number(val) === 5 || Number(val) === 0 || Number(val) === 2.5;
+
+      let finalTech, finalComm, finalReason, finalScore;
+
+      if (insufficientData) {
+        finalTech = 0;
+        finalComm = 0;
+        finalReason = 0;
+        finalScore = 0;
+      } else {
+        // Map 0-1 range to 1-10 enterprise scale, avoiding artificial rounding
+        const derivedTech = 1 + (techCoverage * 9);
+        const derivedComm = 1 + (commScoreDerivation * 9);
+        const derivedReason = 1 + (reasonScoreDerivation * 9);
+
+        finalTech = !isPlaceholder(evalData.technicalScore) ? Number(evalData.technicalScore) : derivedTech;
+        finalComm = !isPlaceholder(evalData.communicationScore) ? Number(evalData.communicationScore) : derivedComm;
+        finalReason = !isPlaceholder(evalData.roleSpecificScore) ? Number(evalData.roleSpecificScore) : derivedReason;
+        
+        const derivedTotal = (finalTech * 0.45) + (finalComm * 0.25) + (finalReason * 0.30);
+        finalScore = !isPlaceholder(evalData.score) ? Number(evalData.score) : derivedTotal;
+      }
+
+      // Generate Grounded Strengths and Weaknesses
+      const dynamicStrengths = [];
+      const dynamicWeaknesses = [];
+      
+      if (insufficientData) {
+        dynamicWeaknesses.push("The answer was too short to really judge your technical knowledge or reasoning.");
+      } else {
+        if (techCoverage > 0.65) dynamicStrengths.push("Good use of technical terms and a solid grasp of how the platform works.");
+        else if (techCoverage > 0.4) dynamicStrengths.push("You covered the basics, but could have gone into more detail.");
+        else dynamicWeaknesses.push("You missed some key technical terms and concepts for this topic.");
+
+        if (sfTermHits >= 3) dynamicStrengths.push("You did a great job using Salesforce-specific language in your explanation.");
+
+        if (fillerPenalty > 0.15) dynamicWeaknesses.push("Too many filler words made the delivery feel a bit less professional.");
+        else if (commScoreDerivation > 0.7) dynamicStrengths.push("Your explanation was clear, direct, and easy to follow.");
+
+        if (reasonScoreDerivation > 0.6) dynamicStrengths.push("Nice job walking through the logic and cause-and-effect in your answer.");
+        else if (reasonScoreDerivation < 0.3 && lengthCompleteness > 0.5) dynamicWeaknesses.push("The explanation felt a bit flat—try adding more 'why' or a specific example.");
+        
+        if (sentenceStructurePenalty > 0) dynamicWeaknesses.push("Some of the sentences were a bit hard to follow, which made the explanation less clear.");
+      }
+
+      if (dynamicStrengths.length === 0 && !insufficientData) dynamicStrengths.push("You tried to answer the question directly.");
+      if (dynamicWeaknesses.length === 0 && !insufficientData) dynamicWeaknesses.push("No major issues with how you structured your answer.");
 
       return {
         ...item,
         displayQuestion: String(qText),
         displayAnswer: String(uAnswer),
         displayIdeal: String(ideal),
-        displayScore: Number(evalData.score ?? historical.score ?? 5),
-        displayFeedback: String(evalData.feedback ?? historical.feedback ?? "Analysis unavailable."),
-        displayTopic: String(evalData.topic || historical.topic || "General Intelligence"),
-        displayStrengths: Array.isArray(evalData.strengths) ? evalData.strengths : [],
-        displayWeaknesses: Array.isArray(evalData.weaknesses) ? evalData.weaknesses : [],
-        displayGuidance: String(evalData.improvementGuidance || ""),
-        displayExpectation: String(evalData.recruiterExpectation || ""),
-        displayComms: String(evalData.communicationFeedback || ""),
-        displayConfidence: String(evalData.confidenceAnalysis || ""),
-        techScore: Number(evalData.technicalScore ?? evalData.score ?? 5),
-        commScore: Number(evalData.communicationScore ?? evalData.score ?? 5),
-        reasonScore: Number(evalData.roleSpecificScore ?? evalData.score ?? 5),
+        displayScore: finalScore,
+        displayFeedback: insufficientData ? "The response was too short to give proper feedback." : String(evalData.feedback ?? historical.feedback ?? "Analyzed based on your technical accuracy and how you structured the explanation."),
+        displayTopic: String(evalData.topic || historical.topic || "Technical Assessment"),
+        displayStrengths: Array.isArray(evalData.strengths) && evalData.strengths.length > 0 ? evalData.strengths : dynamicStrengths,
+        displayWeaknesses: Array.isArray(evalData.weaknesses) && evalData.weaknesses.length > 0 ? evalData.weaknesses : dynamicWeaknesses,
+        displayGuidance: insufficientData ? "Try to give more detailed answers next time so we can provide better coaching." : String(evalData.improvementGuidance || (finalScore < 6 ? "To improve, define the concept first, explain why it's used, and give a real Salesforce example." : "Great depth—keep providing this level of detail in your responses.")),
+        displayExpectation: String(evalData.recruiterExpectation || "I'm looking for clear technical definitions paired with real-world examples."),
+        displayComms: insufficientData ? "N/A" : String(evalData.communicationFeedback || (fillerPenalty > 0.15 ? "Try to avoid using too many 'um's or 'like's—pausing for a second is usually better." : "Clear and professional delivery.")),
+        displayConfidence: insufficientData ? "N/A" : String(evalData.confidenceAnalysis || (finalScore > 7 ? "You sounded confident and really knew the topic." : "Your answer felt a bit hesitant. Working on concise definitions will help.")),
+        techScore: finalTech,
+        commScore: finalComm,
+        reasonScore: finalReason,
       };
     });
   }, [answers, transcript, role]);
@@ -161,25 +312,49 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
     let technicalScore = 0;
     let communicationScore = 0;
     let roleSpecificScore = 0;
+    let validAnswersCount = 0;
 
     normalizedAnswers.forEach((ans) => {
-      totalScore += ans.displayScore;
-      technicalScore += ans.techScore;
-      communicationScore += ans.commScore;
-      roleSpecificScore += ans.reasonScore;
+      // Exclude skipped or empty answers from dragging down the average unfairly if they are anomalies,
+      // but if the entire interview is short, the score will reflect it.
+      if (ans.displayScore > 0) {
+        totalScore += ans.displayScore;
+        technicalScore += ans.techScore;
+        communicationScore += ans.commScore;
+        roleSpecificScore += ans.reasonScore;
+        validAnswersCount++;
+      }
     });
 
-    const count = normalizedAnswers.length;
+    const count = validAnswersCount > 0 ? validAnswersCount : 1; // Prevent division by zero
     const avgScore = totalScore / count;
+    const avgTech = technicalScore / count;
+    const avgComm = communicationScore / count;
+    const avgReason = roleSpecificScore / count;
+
+    // Grounded recruiter-grade verdict generation
+    let verdict;
+    if (validAnswersCount === 0) {
+      verdict = "Not enough data for a full verdict yet. Try giving more detailed answers in your next session.";
+    } else if (avgScore >= 8.2) {
+      verdict = `Excellent work. You showed a strong technical grasp of ${role} concepts and structured your answers well. You're ready for advanced roles and client-facing work.`;
+    } else if (avgScore >= 6.5) {
+      verdict = `Good performance overall. Your communication was clear, but some technical explanations needed more depth or real-world examples to really stand out at a senior level.`;
+    } else if (avgScore >= 4.5) {
+      verdict = `You have a decent start on the basics, but your technical answers were often too brief. Focus on explaining the 'how' and 'why' behind Salesforce features in more detail.`;
+    } else {
+      verdict = `Your answers were incomplete or missing key technical details. I'd recommend spending more time on the fundamentals and practicing how to explain them clearly.`;
+    }
 
     return {
       avgScore: Math.round(avgScore * 10) / 10,
-      technicalScore: Math.round((technicalScore / count) * 10) / 10,
-      communicationScore: Math.round((communicationScore / count) * 10) / 10,
-      roleSpecificScore: Math.round((roleSpecificScore / count) * 10) / 10,
-      readiness: avgScore >= 8 ? "Executive Ready" : avgScore >= 6.5 ? "Strong Candidate" : avgScore >= 5 ? "Developing" : "Needs Work",
+      technicalScore: Math.round(avgTech * 10) / 10,
+      communicationScore: Math.round(avgComm * 10) / 10,
+      roleSpecificScore: Math.round(avgReason * 10) / 10,
+      readiness: validAnswersCount === 0 ? "Incomplete Data" : avgScore >= 8.2 ? "Executive Ready" : avgScore >= 6.5 ? "Strong Candidate" : avgScore >= 4.5 ? "Developing" : "Needs Work",
+      verdict
     };
-  }, [normalizedAnswers]);
+  }, [normalizedAnswers, role]);
 
   useEffect(() => {
     const saveInterview = async () => {
@@ -271,13 +446,15 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
         animate={{ opacity: 1, y: 0 }}
         className="relative overflow-hidden premium-glass rounded-[2.5rem] border border-white/10 p-8 sm:p-12"
       >
-        <div className="absolute top-0 right-0 p-8 opacity-10">
-          <Sparkles size={120} className="text-emerald-500" />
+        {/* Decorative Sparkle - Refined for mobile balance */}
+        <div className="absolute top-0 right-0 p-4 sm:p-8 opacity-5 sm:opacity-10 pointer-events-none">
+          <Sparkles size={80} className="text-emerald-500 block sm:hidden" />
+          <Sparkles size={120} className="text-emerald-500 hidden sm:block" />
         </div>
 
-        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
+        <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-12 sm:gap-8">
+          <div className="space-y-6 sm:space-y-4 w-full sm:w-auto">
+            <div className="flex flex-wrap items-center gap-3">
               <div className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-black uppercase tracking-widest text-emerald-400">
                 Session Intelligence
               </div>
@@ -289,14 +466,14 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
               )}
             </div>
             
-            <h1 className="text-4xl sm:text-6xl font-black text-white italic tracking-tighter leading-tight">
+            <h1 className="text-4xl sm:text-6xl font-black text-white italic tracking-tighter leading-tight break-words">
               {role}
             </h1>
             
-            <div className="flex flex-wrap gap-6 pt-2">
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-4 sm:gap-6 pt-2">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-emerald-400 border border-white/10">
-                  <ShieldCheck size={20} />
+                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-emerald-400 border border-white/10 shrink-0">
+                  <Target size={20} />
                 </div>
                 <div>
                   <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Readiness</div>
@@ -305,8 +482,8 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-cyan-400 border border-white/10">
-                  <Target size={20} />
+                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-cyan-400 border border-white/10 shrink-0">
+                  <ShieldCheck size={20} />
                 </div>
                 <div>
                   <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Efficiency</div>
@@ -316,15 +493,16 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
             </div>
           </div>
 
-          <div className="relative">
-            <div className="text-[120px] sm:text-[160px] font-black text-white/5 leading-none absolute -top-12 -right-8 select-none italic">
+          <div className="relative w-full sm:w-auto flex justify-center sm:justify-end mt-4 sm:mt-0 py-6 sm:py-0">
+            {/* Background decorative number - Repositioned and subtler on mobile */}
+            <div className="text-[80px] sm:text-[160px] font-black text-white/[0.03] sm:text-white/5 leading-none absolute -top-6 sm:-top-12 -right-0 sm:-right-8 select-none italic pointer-events-none transition-all">
               {Math.round((metrics.avgScore || 0) * 10)}
             </div>
-            <div className="flex flex-col items-end">
-              <div className="text-7xl sm:text-8xl font-black text-emerald-500 italic leading-none">
+            <div className="flex flex-col items-center sm:items-end relative">
+              <div className="text-7xl sm:text-8xl font-black text-emerald-500 italic leading-none drop-shadow-[0_0_30px_rgba(16,185,129,0.15)]">
                 {Math.round((metrics.avgScore || 0) * 10)}<span className="text-3xl sm:text-4xl">%</span>
               </div>
-              <div className="text-[10px] font-black text-emerald-500/50 uppercase tracking-[0.4em] mt-2 mr-2">
+              <div className="text-[10px] font-black text-emerald-500/50 uppercase tracking-[0.4em] mt-3 sm:mt-2 sm:mr-2">
                 Recruiter Score
               </div>
             </div>
@@ -349,7 +527,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
             {[
               { label: 'Technical depth', score: metrics.technicalScore, color: 'emerald' },
               { label: 'Communication', score: metrics.communicationScore, color: 'cyan' },
-              { label: 'Reasoning', score: metrics.roleSpecificScore, color: 'violet' }
+              { label: 'Problem Solving', score: metrics.roleSpecificScore, color: 'violet' }
             ].map((dim, i) => (
               <div key={i} className="space-y-4">
                 <div className="flex justify-between items-end">
@@ -381,9 +559,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
           <Trophy className="mx-auto text-emerald-400 mb-2" size={32} />
           <h3 className="text-lg font-black text-white italic">Verdict</h3>
           <p className="text-sm text-slate-400 leading-relaxed italic">
-            "{metrics.avgScore >= 8 ? "This candidate demonstrates exceptional technical maturity and is ready for high-stakes leadership roles." : 
-              metrics.avgScore >= 6 ? "Strong performance with clear technical foundations. Ready for professional environments with minor coaching." :
-              "Developing professional. Focused reinforcement on core Salesforce architectural concepts is recommended."}"
+            "{metrics.verdict}"
           </p>
         </motion.div>
       </div>
@@ -410,25 +586,25 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
                 {/* Header Strip */}
                 <button
                   onClick={() => setExpandedIndex(isExpanded ? null : index)}
-                  className="w-full text-left p-6 sm:p-8 flex items-center justify-between gap-6"
+                  className="w-full text-left p-5 sm:p-8 flex items-center justify-between gap-4 sm:gap-6"
                 >
-                  <div className="flex items-center gap-6">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-lg transition-colors ${answer.displayScore >= 8 ? 'bg-emerald-500/10 text-emerald-400' : answer.displayScore >= 6 ? 'bg-cyan-500/10 text-cyan-400' : 'bg-slate-500/10 text-slate-400'}`}>
+                  <div className="flex items-center gap-4 sm:gap-6 min-w-0 flex-1">
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center font-black text-base sm:text-lg shrink-0 transition-colors ${answer.displayScore >= 8 ? 'bg-emerald-500/10 text-emerald-400' : answer.displayScore >= 6 ? 'bg-cyan-500/10 text-cyan-400' : 'bg-slate-500/10 text-slate-400'}`}>
                       {index + 1}
                     </div>
-                    <div>
-                      <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 flex items-center gap-2">
-                        {answer.displayTopic}
-                        <div className="w-1 h-1 rounded-full bg-slate-700" />
-                        Score: {Math.round(answer.displayScore * 10)}%
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <span className="truncate max-w-[120px] sm:max-w-none">{answer.displayTopic}</span>
+                        <div className="hidden xs:block w-1 h-1 rounded-full bg-slate-700" />
+                        <span>Score: {Math.round(answer.displayScore * 10)}%</span>
                       </div>
-                      <h4 className="text-lg font-bold text-white line-clamp-1 group-hover:text-emerald-400 transition-colors">
+                      <h4 className="text-sm sm:text-lg font-bold text-white group-hover:text-emerald-400 transition-colors leading-tight break-words line-clamp-2 sm:line-clamp-1">
                         {answer.displayQuestion}
                       </h4>
                     </div>
                   </div>
-                  <div className={`w-10 h-10 rounded-full border border-white/5 flex items-center justify-center text-slate-500 transition-all ${isExpanded ? 'rotate-180 bg-white/5 text-white' : ''}`}>
-                    <ChevronDown size={20} />
+                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/5 flex items-center justify-center text-slate-500 shrink-0 transition-all ${isExpanded ? 'rotate-180 bg-white/5 text-white' : ''}`}>
+                    <ChevronDown size={18} />
                   </div>
                 </button>
 
@@ -467,13 +643,13 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
 
                         {/* Ideal Answer Section */}
                         {answer.displayIdeal && (
-                          <div className="space-y-4 bg-emerald-500/[0.02] border border-emerald-500/10 rounded-2xl p-6 sm:p-8">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <Trophy className="text-emerald-400" size={18} />
-                                <h5 className="text-sm font-black text-white uppercase tracking-widest italic">Recruiter's Ideal Response</h5>
+                          <div className="space-y-4 bg-emerald-500/[0.02] border border-emerald-500/10 rounded-2xl p-5 sm:p-8">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                              <div className="flex items-center gap-2 sm:gap-3">
+                                <Trophy className="text-emerald-400 shrink-0" size={16} />
+                                <h5 className="text-[11px] sm:text-sm font-black text-white uppercase tracking-widest italic leading-tight">Recruiter's Ideal Response</h5>
                               </div>
-                              <div className="px-3 py-1 rounded-full bg-emerald-500/20 text-[9px] font-black text-emerald-400 uppercase tracking-widest">
+                              <div className="self-start sm:self-auto px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-emerald-500/20 text-[8px] sm:text-[9px] font-black text-emerald-400 uppercase tracking-widest border border-emerald-500/10">
                                 Best Practice
                               </div>
                             </div>

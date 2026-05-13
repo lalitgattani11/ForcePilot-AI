@@ -1,5 +1,6 @@
 import AuthButton from "./components/AuthButton";
 import { useState, useEffect } from "react";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import SetupScreen from "./components/SetupScreen";
 import ChatInterface from "./components/ChatInterface";
 import ResultsScreen from "./components/ResultsScreen";
@@ -9,19 +10,21 @@ import { useAuth } from "./context/AuthContext";
 import UserMenu from "./components/UserMenu";
 import "./App.css";
 
-type Phase = "setup" | "interview" | "results";
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useAuth();
+  
+  if (loading) return null;
+  if (!user) return <Navigate to="/" replace />;
+  
+  return <>{children}</>;
+};
 
 function App() {
   const { user } = useAuth();
-  const [phase, setPhase] = useState<Phase>("setup");
+  const navigate = useNavigate();
+  
   const [config, setConfig] = useState<InterviewConfig | null>(null);
   const [answers, setAnswers] = useState<Answer[]>([]);
-  const [selectedHistory, setSelectedHistory] =
-  useState<any>(null);
-
-const [showHistoryDetail, setShowHistoryDetail] =
-  useState(false);
-
   const [showCreatorTag, setShowCreatorTag] = useState(false);
 
   useEffect(() => {
@@ -40,10 +43,7 @@ const [showHistoryDetail, setShowHistoryDetail] =
     };
 
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -62,41 +62,24 @@ const [showHistoryDetail, setShowHistoryDetail] =
 
   const startInterview = (config: InterviewConfig) => {
     setConfig(config);
-    setPhase("interview");
+    navigate("/interview");
   };
 
   const completeInterview = (finalAnswers: Answer[]) => {
     setAnswers(finalAnswers || []);
-    setPhase("results");
+    navigate("/results");
   };
 
   const resetInterview = () => {
-    setPhase("setup");
     setConfig(null);
     setAnswers([]);
+    navigate("/");
   };
-  if (
-  showHistoryDetail &&
-  selectedHistory
-) {
-  return (
-    <ErrorBoundary>
-      <ResultsScreen
-        answers={
-          selectedHistory.full_results || []
-        }
-        role={selectedHistory.role}
-        isHistory={true}
-        sessionDate={selectedHistory.created_at}
-        transcript={selectedHistory.transcript}
-        onReset={() => {
-          setShowHistoryDetail(false);
-          setSelectedHistory(null);
-        }}
-      />
-    </ErrorBoundary>
-  );
-}
+
+  const getSessionSlug = (role: string, id: string) => {
+    const cleanRole = role.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    return `${cleanRole}--${id}`;
+  };
 
   return (
     <ErrorBoundary>
@@ -112,8 +95,11 @@ const [showHistoryDetail, setShowHistoryDetail] =
         <header className="fixed top-0 left-0 right-0 z-50 border-b border-cyan-500/10 bg-black/70 backdrop-blur-md sm:backdrop-blur-2xl">
           <div className="max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
             {/* Left Side Branding */}
-            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-              <div className="flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 rounded-xl sm:rounded-2xl bg-cyan-500/10 border border-cyan-400/20 shadow-[0_0_15px_rgba(34,211,238,0.1)] sm:shadow-[0_0_30px_rgba(34,211,238,0.18)] transition-transform sm:hover:scale-105 duration-500 will-change-transform">
+            <div 
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2 sm:gap-3 min-w-0 cursor-pointer group"
+            >
+              <div className="flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 rounded-xl sm:rounded-2xl bg-cyan-500/10 border border-cyan-400/20 shadow-[0_0_15px_rgba(34,211,238,0.1)] sm:shadow-[0_0_30px_rgba(34,211,238,0.18)] transition-transform sm:group-hover:scale-105 duration-500 will-change-transform">
                 <span className="font-bold text-base sm:text-lg tracking-tighter text-cyan-400">
                   F
                 </span>
@@ -142,39 +128,68 @@ const [showHistoryDetail, setShowHistoryDetail] =
         {/* Main Content */}
         <main className="relative z-10 pt-20 sm:pt-28 pb-4 min-h-[86vh] overflow-x-hidden">
           <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8 min-h-[86vh]">
-            {phase === "setup" && (
-              <SetupScreen
-  onStart={startInterview}
-  onViewHistoryDetail={(record) => {
-    setSelectedHistory(record);
-    setShowHistoryDetail(true);
-  }}
-/>
-            )}
-
-            {phase === "interview" && config && (
-              <ChatInterface config={config} onComplete={completeInterview} />
-            )}
-
-            {phase === "results" && config && (
-              <ResultsScreen
-                answers={answers}
-                role={config.role}
-                onReset={resetInterview}
+            <Routes>
+              <Route 
+                path="/" 
+                element={
+                  <SetupScreen 
+                    onStart={startInterview} 
+                    onViewHistoryDetail={(record) => navigate(`/session/${getSessionSlug(record.role, record.id)}`)} 
+                  />
+                } 
               />
-            )}
+              
+              <Route 
+                path="/interview" 
+                element={
+                  <ProtectedRoute>
+                    {config ? (
+                      <ChatInterface config={config} onComplete={completeInterview} />
+                    ) : (
+                      <Navigate to="/" replace />
+                    )}
+                  </ProtectedRoute>
+                } 
+              />
+              
+              <Route 
+                path="/results" 
+                element={
+                  <ProtectedRoute>
+                    {answers.length > 0 && config ? (
+                      <ResultsScreen 
+                        answers={answers} 
+                        role={config.role} 
+                        onReset={resetInterview} 
+                      />
+                    ) : (
+                      <Navigate to="/" replace />
+                    )}
+                  </ProtectedRoute>
+                } 
+              />
+              
+              <Route 
+                path="/session/:id" 
+                element={
+                  <ProtectedRoute>
+                    <ResultsScreen 
+                      answers={[]} 
+                      role="Salesforce Admin" // Fallback, will be updated by internal fetch
+                      onReset={() => navigate("/")} 
+                    />
+                  </ProtectedRoute>
+                } 
+              />
 
-            {!["setup", "interview", "results"].includes(phase) && (
-              <div className="flex items-center justify-center min-h-[40vh] text-slate-500 text-xs font-medium">
-                Error: Invalid phase detected.
-              </div>
-            )}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
           </div>
         </main>
 
         {/* Floating Creator Branding */}
         {showCreatorTag ? (
-          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0 z-50">
+          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0 z-50 hidden md:block">
             <div className="rounded-full border border-cyan-400/20 bg-black/80 px-4 py-2 text-xs text-cyan-200/80 backdrop-blur-sm sm:backdrop-blur-xl">
               Engineered by Lalit Gattani
             </div>

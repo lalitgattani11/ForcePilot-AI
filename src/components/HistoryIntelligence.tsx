@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import AnalyticsDashboard from "./AnalyticsDashboard";
@@ -78,13 +79,19 @@ interface InterviewRecord {
 }
 
 interface HistoryIntelligenceProps {
-  onViewDetail: (record: InterviewRecord) => void;
+  onViewDetail?: (record: InterviewRecord) => void;
 }
+
+const getSessionSlug = (role: string, id: string) => {
+  const cleanRole = role.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  return `${cleanRole}--${id}`;
+};
 
 const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
   onViewDetail,
 }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [records, setRecords] = useState<InterviewRecord[]>([]);
 
@@ -221,11 +228,12 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       setSessionToDelete(null);
       
       console.log("[DELETE_SUCCESS] Session permanently purged from archive.");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("[DELETE_EXCEPTION]", err);
       // Ensure local state remains accurate
       setRecords(previousRecords);
-      alert(err.message || "Deletion failed. Please verify your connection or permissions.");
+      const message = err instanceof Error ? err.message : "Deletion failed. Please verify your connection or permissions.";
+      alert(message);
     } finally {
       setIsDeleting(false);
     }
@@ -233,11 +241,41 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
   // Derived Data for Refactored UI
   const filteredRecords = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim();
+    
     return records.filter((r) => {
-      const matchesSearch =
-        r.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        r.ai_verdict.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        stripHtml(r.coach_advice).toLowerCase().includes(searchQuery.toLowerCase());
+      // 1. Basic Fields
+      const basicMatch = 
+        r.role.toLowerCase().includes(query) ||
+        r.ai_verdict.toLowerCase().includes(query) ||
+        stripHtml(r.coach_advice).toLowerCase().includes(query) ||
+        r.difficulty.toLowerCase().includes(query);
+
+      // 2. Date Match
+      const formattedDate = new Date(r.created_at).toLocaleDateString().toLowerCase();
+      const dateMatch = formattedDate.includes(query);
+
+      // 3. Deep Transcript Match
+      const transcriptMatch = (r.transcript || "").toLowerCase().includes(query);
+
+      // 4. Topic & Question Match (from full_results)
+      const resultsMatch = (r.full_results || []).some(res => {
+        const resObj = res as unknown as Record<string, unknown>;
+        const q = String(res.question || resObj.questionText || "");
+        const topic = String(res.topic || resObj.displayTopic || "");
+        const feedback = String(res.feedback || resObj.displayFeedback || "");
+        
+        return q.toLowerCase().includes(query) || 
+               topic.toLowerCase().includes(query) || 
+               feedback.toLowerCase().includes(query);
+      });
+
+      // 5. Concept Match (Legacy fallbacks)
+      const conceptMatch = 
+        (r.skill_matrix || []).some(s => s.name.toLowerCase().includes(query)) ||
+        (r.weak_concepts || []).some(w => w.name.toLowerCase().includes(query));
+
+      const matchesSearch = query === "" || basicMatch || dateMatch || transcriptMatch || resultsMatch || conceptMatch;
 
       const matchesRole = filterRole === "all" || r.role === filterRole;
       const matchesDifficulty =
@@ -326,9 +364,6 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
     const avgComm = dimensions.reduce((acc, d) => acc + d.comm, 0) / records.length;
     const avgConf = dimensions.reduce((acc, d) => acc + d.conf, 0) / records.length;
 
-    // Weighted Performance Score: 50% Technical, 30% Communication, 20% Confidence
-    const weightedPerformance = (avgTech * 0.5) + (avgComm * 0.3) + (avgConf * 0.2);
-
     // 2. Consistency & Confidence Analysis
     const techVariance = dimensions.reduce((acc, d) => acc + Math.pow(d.tech - avgTech, 2), 0) / records.length;
     const technicalConsistency = Math.sqrt(techVariance);
@@ -369,65 +404,94 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       return "Needs Improvement";
     };
 
-    // 3. Recency-Weighted Topic Intelligence
+    // 3. Grounded Topic Extraction
     const skillMap: Record<string, { total: number; count: number; weightTotal: number }> = {};
     const weakMap: Record<string, { count: number; weightTotal: number }> = {};
 
     records.forEach((record, index) => {
-      // Weight: 1.0 for oldest, up to 2.0 for most recent
-      const recencyWeight = 1 + (1 - (index / records.length));
+      // Weight: 1.0 for oldest, up to 1.5 for most recent (Subtler recency)
+      const recencyWeight = 1 + (0.5 * (1 - (index / records.length)));
 
-      (record.skill_matrix || []).forEach((skill) => {
-        if (!skill.name) return;
-        if (!skillMap[skill.name]) skillMap[skill.name] = { total: 0, count: 0, weightTotal: 0 };
-        skillMap[skill.name].total += Number(skill.value || 0) * recencyWeight;
-        skillMap[skill.name].count += 1;
-        skillMap[skill.name].weightTotal += recencyWeight;
-      });
+      // Extract from full_results (Production-grade source)
+      if (Array.isArray(record.full_results) && record.full_results.length > 0) {
+        record.full_results.forEach(res => {
+          const resObj = res as unknown as Record<string, unknown>;
+          const topic = res.topic || String(resObj.displayTopic || "General");
+          const score = Number(res.score || resObj.displayScore || 0);
+          
+          if (!skillMap[topic]) skillMap[topic] = { total: 0, count: 0, weightTotal: 0 };
+          skillMap[topic].total += score * recencyWeight;
+          skillMap[topic].count += 1;
+          skillMap[topic].weightTotal += recencyWeight;
 
-      (record.weak_concepts || []).forEach((weak) => {
-        if (!weak.name) return;
-        if (!weakMap[weak.name]) weakMap[weak.name] = { count: 0, weightTotal: 0 };
-        weakMap[weak.name].count += 1;
-        weakMap[weak.name].weightTotal += recencyWeight;
-      });
+          if (score < 6.5) {
+            if (!weakMap[topic]) weakMap[topic] = { count: 0, weightTotal: 0 };
+            weakMap[topic].count += 1;
+            weakMap[topic].weightTotal += recencyWeight;
+          }
+        });
+      } else {
+        // Fallback to legacy skill_matrix if full_results missing
+        (record.skill_matrix || []).forEach((skill) => {
+          if (!skill.name) return;
+          if (!skillMap[skill.name]) skillMap[skill.name] = { total: 0, count: 0, weightTotal: 0 };
+          skillMap[skill.name].total += Number(skill.value || 0) * recencyWeight;
+          skillMap[skill.name].count += 1;
+          skillMap[skill.name].weightTotal += recencyWeight;
+        });
+
+        (record.weak_concepts || []).forEach((weak) => {
+          if (!weak.name) return;
+          if (!weakMap[weak.name]) weakMap[weak.name] = { count: 0, weightTotal: 0 };
+          weakMap[weak.name].count += 1;
+          weakMap[weak.name].weightTotal += recencyWeight;
+        });
+      }
     });
 
     const strongestTopics = Object.entries(skillMap)
       .map(([name, data]) => ({ 
         name, 
         avg: Math.round(data.total / data.weightTotal),
-        confidence: data.count >= 3 ? "High" : data.count >= 2 ? "Moderate" : "Low"
+        confidence: data.count >= 3 ? "High" : data.count >= 2 ? "Moderate" : "Initial"
       }))
       .sort((a, b) => b.avg - a.avg)
+      .filter(t => t.name !== "General" && t.name !== "Technical Assessment")
       .slice(0, 3);
 
     const weakestTopics = Object.entries(weakMap)
       .map(([name, data]) => ({ 
         name, 
         count: data.count,
-        confidence: data.count >= 3 ? "High" : "Moderate"
+        confidence: data.count >= 2 ? "Consistent" : "Occasional"
       }))
       .sort((a, b) => b.count - a.count)
+      .filter(t => t.name !== "General" && t.name !== "Technical Assessment")
       .slice(0, 3);
 
-    // 4. Trend Intelligence
-    const timelineData = [...records].reverse().map((record, idx) => ({
-      session: `Session ${idx + 1}`,
-      date: record.created_at
-        ? new Date(record.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
-        : "Unknown",
-      score: Math.round(record.score || 0),
-      technical: Math.round(record.technical_score || 0),
-      communication: Math.round(record.communication_score || 0),
-    }));
+    // 4. Trend Intelligence (Grounded & Chronological)
+    const timelineData = [...records]
+      .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+      .map((record) => {
+        const date = new Date(record.created_at);
+        const dayMonth = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        
+        return {
+          session: dayMonth, // X-axis marker
+          fullDate: date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }),
+          role: record.role,
+          score: Math.round(record.score || 0),
+          technical: Math.round(record.technical_score || 0),
+          communication: Math.round(record.communication_score || 0),
+        };
+      });
 
-    const recentDimensions = dimensions.slice(0, Math.min(3, records.length));
-    const recentAvg = recentDimensions.length > 0 ? recentDimensions.reduce((acc, d) => acc + d.tech, 0) / recentDimensions.length : 0;
-    const baselineAvg = avgTech;
+    const recentRecords = records.slice(0, Math.min(3, records.length));
+    const recentAvg = recentRecords.length > 0 ? recentRecords.reduce((acc, r) => acc + r.score, 0) / recentRecords.length : 0;
+    const baselineAvg = records.reduce((acc, r) => acc + r.score, 0) / records.length;
     const growth = baselineAvg > 0 ? ((recentAvg - baselineAvg) / baselineAvg) * 100 : 0;
 
-    // Streak Calculation
+    // Streak Calculation (Realistic)
     const uniqueDates = records
       .map((r) => new Date(r.created_at).toDateString())
       .filter((v, i, a) => a.indexOf(v) === i);
@@ -439,41 +503,41 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       today.setHours(0,0,0,0);
       
       const latestInterview = dateObjects[0];
-      const diffDays = (today.getTime() - latestInterview.getTime()) / (1000 * 3600 * 24);
+      const diffDays = Math.floor((today.getTime() - latestInterview.getTime()) / (1000 * 3600 * 24));
 
       if (diffDays <= 1) {
         streak = 1;
         for (let i = 1; i < dateObjects.length; i++) {
-          const prevDiff = (dateObjects[i-1].getTime() - dateObjects[i].getTime()) / (1000 * 3600 * 24);
+          const prevDiff = Math.floor((dateObjects[i-1].getTime() - dateObjects[i].getTime()) / (1000 * 3600 * 24));
           if (prevDiff === 1) streak++;
           else break;
         }
       }
     }
 
-    // Data Confidence & Tier Logic
+    // Data Confidence & Tier Logic (Recruiter-friendly)
     const count = records.length;
     const intelligenceTier: 'calibration' | 'basic' | 'advanced' = 
-      count >= 10 ? 'advanced' : count >= 5 ? 'basic' : 'calibration';
+      count >= 8 ? 'advanced' : count >= 3 ? 'basic' : 'calibration';
     
     const dataConfidence = 
-      count >= 10 ? "High Confidence" : count >= 5 ? "Moderate Confidence" : "Initial Calibration";
+      count >= 8 ? "Reliable Trends" : count >= 3 ? "Building Consistency" : "Initial Assessment";
 
     // Qualitative labels for Readiness
     const getReadinessLabel = (score: number) => {
-      if (score >= 90) return "Executive Ready";
-      if (score >= 80) return "Strong Candidate";
-      if (score >= 70) return "Promising";
-      return "Needs Improvement";
+      if (score >= 85) return "Highly Ready";
+      if (score >= 70) return "Strong Candidate";
+      if (score >= 50) return "Solid Foundation";
+      return "Needs Development";
     };
 
     return {
-      avgScore: Math.round(weightedPerformance),
+      avgScore: Math.round(baselineAvg),
       recentGrowth: Math.round(growth),
       timelineData,
       totalInterviews: count,
-      readiness: getReadinessLabel(weightedPerformance),
-      signalStrength: Math.round(weightedPerformance),
+      readiness: getReadinessLabel(baselineAvg),
+      signalStrength: Math.round(baselineAvg),
       strongestTopics,
       weakestTopics,
       streak,
@@ -514,7 +578,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       {/* Session Archives Section */}
       <div className="space-y-10 pt-16 border-t border-white/5">
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 mb-12">
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center justify-center sm:justify-start gap-3 shrink-0 w-full xl:w-auto">
             <History className="text-cyan-500" size={24} />
 
             <h3 className="text-3xl font-black text-white italic">
@@ -535,15 +599,15 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                 placeholder="Search history..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-white/5 border border-white/10 rounded-2xl py-3 pl-12 pr-6 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all w-full"
+                className="bg-white/5 border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-[13px] sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all w-full"
               />
             </div>
 
-            <div className="relative group w-full md:min-w-[180px] flex-1 md:flex-initial">
+            <div className="relative group w-full md:min-w-[180px] md:flex-1 md:flex-initial">
               <select
                 value={filterRole}
                 onChange={(e) => setFilterRole(e.target.value)}
-                className="appearance-none bg-white/5 border border-white/10 rounded-2xl py-3 pl-5 pr-12 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
+                className="appearance-none bg-white/5 border border-white/10 rounded-2xl py-3 pl-4 pr-10 text-[13px] sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
               >
                 <option value="all" className="bg-[#0f172a] text-white">All Roles</option>
 
@@ -556,11 +620,11 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
               <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors" size={14} />
             </div>
 
-            <div className="relative group w-full md:min-w-[180px] flex-1 md:flex-initial">
+            <div className="relative group w-full md:min-w-[180px] md:flex-1 md:flex-initial">
               <select
                 value={filterDifficulty}
                 onChange={(e) => setFilterDifficulty(e.target.value)}
-                className="appearance-none bg-white/5 border border-white/10 rounded-2xl py-3 pl-5 pr-12 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
+                className="appearance-none bg-white/5 border border-white/10 rounded-2xl py-3 pl-4 pr-10 text-[13px] sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
               >
                 <option value="all" className="bg-[#0f172a] text-white">All Difficulties</option>
 
@@ -573,11 +637,11 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
               <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors" size={14} />
             </div>
 
-            <div className="relative group w-full md:min-w-[180px] flex-1 md:flex-initial">
+            <div className="relative group w-full md:min-w-[180px] md:flex-1 md:flex-initial">
               <select
                 value={filterScore}
                 onChange={(e) => setFilterScore(e.target.value)}
-                className="appearance-none bg-white/5 border border-white/10 rounded-2xl py-3 pl-5 pr-12 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
+                className="appearance-none bg-white/5 border border-white/10 rounded-2xl py-3 pl-4 pr-10 text-[13px] sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
               >
                 <option value="all" className="bg-[#0f172a] text-white">All Scores</option>
 
@@ -618,7 +682,10 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                     >
                       <motion.button
                         whileHover={{ y: -8, scale: 1.02 }}
-                        onClick={() => onViewDetail(record)}
+                        onClick={() => {
+                          if (onViewDetail) onViewDetail(record);
+                          else navigate(`/session/${getSessionSlug(record.role, record.id)}`);
+                        }}
                         className="w-full text-left relative group overflow-hidden premium-glass rounded-[2rem] p-8 border border-white/10 hover:border-cyan-500/30 transition-all"
                       >
                         {/* Type Badge */}
@@ -719,7 +786,10 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                     exit={{ opacity: 0, x: -20, transition: { duration: 0.2 } }}
                   >
                     <motion.button
-                      onClick={() => onViewDetail(record)}
+                      onClick={() => {
+                        if (onViewDetail) onViewDetail(record);
+                        else navigate(`/session/${getSessionSlug(record.role, record.id)}`);
+                      }}
                       whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}
                       className="w-full text-left px-8 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4 group transition-all relative"
                     >
@@ -811,8 +881,9 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
             )}
 
             {timelineRecords.length === 0 && (
-              <div className="p-20 text-center text-slate-500 italic">
-                No sessions found matching your criteria.
+              <div className="p-20 text-center space-y-3">
+                <div className="text-white font-bold italic">No interview sessions matched your search.</div>
+                <p className="text-xs text-slate-500 max-w-xs mx-auto">Try searching for a specific role, technical concept, or interview track.</p>
               </div>
             )}
           </div>
