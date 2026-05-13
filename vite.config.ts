@@ -15,10 +15,13 @@ export default defineConfig({
         name: 'ForcePilot AI',
         short_name: 'ForcePilot',
         description: 'AI Salesforce Interview Intelligence Platform',
+
         theme_color: '#020617',
         background_color: '#020617',
+
         display: 'standalone',
         orientation: 'portrait',
+
         start_url: '/',
 
         icons: [
@@ -32,8 +35,22 @@ export default defineConfig({
             sizes: '512x512',
             type: 'image/png'
           }
+        ],
+
+        screenshots: [
+          {
+            src: '/screenshots/desktop.png',
+            sizes: '1280x720',
+            type: 'image/png',
+            form_factor: 'wide'
+          },
+          {
+            src: '/screenshots/mobile.png',
+            sizes: '390x844',
+            type: 'image/png'
+          }
         ]
       }
     })
-  ],
+  ]
 })
