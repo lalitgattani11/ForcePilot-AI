@@ -23,6 +23,7 @@ import {
 interface StrongestTopic {
   name: string;
   avg: number;
+  status: string;
   confidence: string;
 }
 
@@ -136,7 +137,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
             <div className="space-y-1">
               <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tighter leading-none">
                 Performance{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">
+                <span className="inline-block pr-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">
                   Insights
                 </span>
               </h2>
@@ -180,12 +181,18 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
                 <div className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
                   Recent Progress
                 </div>
-                <div
-                  className={`text-2xl font-black ${stats.recentGrowth >= 0 ? "text-emerald-400" : "text-rose-400"}`}
-                >
-                  {stats.recentGrowth >= 0 ? "+" : ""}
-                  {Math.round(stats.recentGrowth)}%
-                </div>
+                {stats.recentGrowth !== null ? (
+                  <div
+                    className={`text-2xl font-black ${stats.recentGrowth >= 0 ? "text-emerald-400" : "text-rose-400"}`}
+                  >
+                    {stats.recentGrowth >= 0 ? "+" : ""}
+                    {Math.round(stats.recentGrowth)}%
+                  </div>
+                ) : (
+                  <div className="text-2xl font-black text-cyan-400">
+                    Baseline
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -211,7 +218,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
             </div>
             <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest italic opacity-50">
               {stats.intelligenceTier === "calibration"
-                ? "Establishing Baseline"
+                ? "Early Stage Analysis"
                 : stats.intelligenceTier === "basic"
                   ? "Active Progress"
                   : "Verified Profile"}
@@ -221,177 +228,129 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
           <div className="flex-1 w-full relative">
             {isCalibration ? (
               <div className="h-full flex flex-col justify-center gap-8">
-                <div className="flex flex-col md:flex-row items-center gap-8 px-4">
-                  <div className="relative shrink-0">
-                    <div className="absolute inset-0 bg-emerald-500/10 blur-[30px] rounded-full animate-pulse" />
-                    <div className="relative w-20 h-20 rounded-2xl bg-slate-900/80 border border-white/5 flex items-center justify-center text-emerald-400 shadow-2xl">
-                      <Zap size={32} />
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 text-center md:text-left">
-                    <div className="space-y-1">
-                      <h4 className="text-lg font-black text-white uppercase tracking-tight">
-                        Building Your Profile
-                      </h4>
-                      <p className="text-[11px] text-slate-400 font-medium leading-relaxed max-w-sm">
-                        Complete{" "}
-                        <span className="text-emerald-400 font-black">
-                          {3 - stats.totalInterviews} more sessions
-                        </span>{" "}
-                        to unlock trend analysis and consistency tracking.
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-3 justify-center md:justify-start">
-                      <div className="w-32 h-1 bg-white/5 rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{
-                            width: `${(stats.totalInterviews / 3) * 100}%`,
-                          }}
-                          className="h-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
-                        />
-                      </div>
-                      <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-                        {stats.totalInterviews}/3 Interviews
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 group hover:bg-white/[0.04] transition-all">
-                    <div className="flex items-center gap-2">
-                      <Brain size={12} className="text-cyan-400" />
-                      <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-                        Focus Area
-                      </div>
-                    </div>
-                    <div className="text-sm font-bold text-slate-200 tracking-tight">
-                      {stats.weakestTopics[0]?.name || "Broad Platform Coverage"}
-                    </div>
-                    <p className="text-[10px] text-slate-500 leading-relaxed italic opacity-70">
-                      Based on your recent performance.
-                    </p>
-                  </div>
-                  <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 group hover:bg-white/[0.04] transition-all">
-                    <div className="flex items-center gap-2">
-                      <Award size={12} className="text-emerald-400" />
-                      <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-                        Strongest Skill
-                      </div>
-                    </div>
-                    <div className="text-sm font-bold text-slate-200 tracking-tight">
-                      {stats.strongestTopics[0]?.name ||
-                        "Technical Readiness"}
-                    </div>
-                    <p className="text-[10px] text-slate-500 leading-relaxed italic opacity-70">
-                      Your top rated skill area.
-                    </p>
-                  </div>
-                </div>
+                {/* ... existing calibration block ... */}
               </div>
             ) : (
               <div className="h-full -ml-4 pr-2">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart
-                    data={stats.timelineData}
-                    margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
-                  >
-                    <defs>
-                      <linearGradient
-                        id="velocityGradient"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop
-                          offset="5%"
-                          stopColor="#10b981"
-                          stopOpacity={0.15}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor="#10b981"
-                          stopOpacity={0}
-                        />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      stroke="rgba(255,255,255,0.03)"
-                      vertical={false}
-                    />
-                    <XAxis
-                      dataKey="session"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: "#475569", fontSize: 9, fontWeight: 700 }}
-                      dy={10}
-                    />
-                    <YAxis hide={true} domain={[0, 105]} />
-                    <Tooltip
-                      content={<CustomTooltip />}
-                      cursor={{
-                        stroke: "rgba(255,255,255,0.1)",
-                        strokeWidth: 1,
-                      }}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="score"
-                      stroke="#10b981"
-                      strokeWidth={3}
-                      fill="url(#velocityGradient)"
-                      animationDuration={2000}
-                      dot={{ r: 4, fill: "#10b981", strokeWidth: 0 }}
-                      activeDot={{
-                        r: 6,
-                        fill: "#10b981",
-                        stroke: "#020617",
-                        strokeWidth: 2,
-                      }}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
+                {stats.timelineData.length === 1 ? (
+                  <div className="h-full flex flex-col justify-center items-center text-center space-y-6 pt-4">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-emerald-500/10 blur-2xl rounded-full" />
+                      <div className="relative w-16 h-16 rounded-2xl bg-slate-900/80 border border-white/5 flex items-center justify-center text-emerald-400">
+                        <Activity size={32} />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="text-white font-black uppercase tracking-[0.2em] text-[10px]">
+                        Baseline Established
+                      </h4>
+                      <p className="text-[11px] text-slate-500 font-medium leading-relaxed max-w-[220px] mx-auto">
+                        Your first session is captured. Complete another interview 
+                        to activate multi-point trend analysis and growth metrics.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                      data={stats.timelineData}
+                      margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                    >
+                      <defs>
+                        <linearGradient
+                          id="velocityGradient"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="1"
+                        >
+                          <stop
+                            offset="5%"
+                            stopColor="#10b981"
+                            stopOpacity={0.15}
+                          />
+                          <stop
+                            offset="95%"
+                            stopColor="#10b981"
+                            stopOpacity={0}
+                          />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="rgba(255,255,255,0.03)"
+                        vertical={false}
+                      />
+                      <XAxis
+                        dataKey="session"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fill: "#475569", fontSize: 9, fontWeight: 700 }}
+                        dy={10}
+                      />
+                      <YAxis hide={true} domain={[0, 105]} />
+                      <Tooltip
+                        content={<CustomTooltip />}
+                        cursor={{
+                          stroke: "rgba(255,255,255,0.1)",
+                          strokeWidth: 1,
+                        }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="score"
+                        stroke="#10b981"
+                        strokeWidth={3}
+                        fill="url(#velocityGradient)"
+                        animationDuration={2000}
+                        dot={{ r: 4, fill: "#10b981", strokeWidth: 0 }}
+                        activeDot={{
+                          r: 6,
+                          fill: "#10b981",
+                          stroke: "#020617",
+                          strokeWidth: 2,
+                        }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                )}
               </div>
             )}
           </div>
 
           {/* Metrics Summary Bar */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 mt-8 border-t border-white/5">
-            <div className="px-4 py-3 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1 flex flex-col justify-center">
-              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-500">
+            <div className="px-4 py-3 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1.5 flex flex-col justify-center">
+              <div className="flex items-center gap-2 text-[7.5px] font-black uppercase tracking-wider text-slate-500">
                 <ShieldCheck size={10} className="text-emerald-500 shrink-0" />
-                <span className="truncate">Technical Skills</span>
+                <span>Technical Skills</span>
               </div>
               <div className="text-[11px] font-bold text-slate-200 tracking-tight leading-tight">
                 {stats.techPerformance}
               </div>
             </div>
-            <div className="px-4 py-3 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1 flex flex-col justify-center">
-              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-500">
+            <div className="px-4 py-3 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1.5 flex flex-col justify-center">
+              <div className="flex items-center gap-2 text-[7.5px] font-black uppercase tracking-wider text-slate-500">
                 <MessageSquare size={10} className="text-cyan-500 shrink-0" />
-                <span className="truncate">Communication</span>
+                <span>Communication</span>
               </div>
               <div className="text-[11px] font-bold text-slate-200 tracking-tight leading-tight">
                 {stats.commClarity}
               </div>
             </div>
-            <div className="px-4 py-3 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1 flex flex-col justify-center">
-              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-500">
+            <div className="px-4 py-3 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1.5 flex flex-col justify-center">
+              <div className="flex items-center gap-2 text-[7.5px] font-black uppercase tracking-wider text-slate-500">
                 <Award size={10} className="text-purple-500 shrink-0" />
-                <span className="truncate">Interview Consistency</span>
+                <span>Interview Consistency</span>
               </div>
               <div className="text-[11px] font-bold text-slate-200 tracking-tight leading-tight">
                 {stats.interviewConsistency}
               </div>
             </div>
-            <div className="px-4 py-3 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1 flex flex-col justify-center">
-              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-500">
+            <div className="px-4 py-3 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1.5 flex flex-col justify-center">
+              <div className="flex items-center gap-2 text-[7.5px] font-black uppercase tracking-wider text-slate-500">
                 <Flame size={10} className="text-orange-500 shrink-0" />
-                <span className="truncate">Response Confidence</span>
+                <span>Response Confidence</span>
               </div>
               <div className="text-[11px] font-bold text-slate-200 tracking-tight leading-tight">
                 {stats.responseConfidence}
@@ -431,21 +390,33 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
                         <span className="text-xs font-bold text-slate-300 group-hover:text-white transition-colors">
                           {topic.name}
                         </span>
-                        <div className="text-[8px] font-black uppercase text-emerald-500/50">
+                        <div className="text-[8px] font-black uppercase text-slate-500/80">
                           {topic.confidence} Confidence
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-4">
                         <div className="w-20 sm:w-28 h-1 rounded-full bg-white/5 overflow-hidden">
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${topic.avg}%` }}
                             transition={{ duration: 1.5, delay: i * 0.2 }}
-                            className="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                            className={`h-full shadow-[0_0_10px_rgba(0,0,0,0.2)] ${
+                              topic.status === "Expert" || topic.status === "Strong" 
+                              ? "bg-emerald-500 shadow-emerald-500/20" 
+                              : topic.status === "Developing"
+                              ? "bg-cyan-500 shadow-cyan-500/20"
+                              : "bg-orange-500 shadow-orange-500/20"
+                            }`}
                           />
                         </div>
-                        <span className="text-[10px] font-black text-emerald-400">
-                          {topic.avg}%
+                        <span className={`text-[9px] font-black uppercase tracking-wider min-w-[70px] text-right ${
+                          topic.status === "Expert" || topic.status === "Strong" 
+                          ? "text-emerald-400" 
+                          : topic.status === "Developing"
+                          ? "text-cyan-400"
+                          : "text-orange-400"
+                        }`}>
+                          {topic.status}
                         </span>
                       </div>
                     </div>

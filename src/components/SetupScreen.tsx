@@ -81,7 +81,11 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onStart, onViewHistoryDetail 
           </div>
 
           <h1 className="hero-title">
-            The future of <br className="hidden sm:block" /> <span className="text-emerald-500 italic">Salesforce</span> mastery.
+            The future of <br className="hidden sm:block" />{" "}
+            <span className="inline-block pr-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] italic">
+              Salesforce
+            </span>{" "}
+            mastery.
           </h1>
           
           <p className="sub-title mx-auto text-slate-400 max-w-xl">

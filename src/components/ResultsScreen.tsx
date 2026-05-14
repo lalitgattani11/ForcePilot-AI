@@ -431,6 +431,21 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
           "No major issues with how you structured your answer.",
         );
 
+      const deliveryStatus = insufficientData
+        ? "Incomplete Response"
+        : wordCount < 25
+          ? "Needs More Detail"
+          : commScoreDerivation > 0.75
+            ? "Well Structured"
+            : "Moderate Clarity";
+
+      const deliveryDetails = String(
+        evalData.communicationFeedback ||
+          (fillerPenalty > 0.15
+            ? "Try to avoid using too many filler words to maintain professional clarity."
+            : "Clear and followed a logical technical progression."),
+      );
+
       return {
         ...item,
         displayQuestion: String(qText),
@@ -467,25 +482,12 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
           evalData.recruiterExpectation ||
             "I'm looking for clear technical definitions paired with real-world examples.",
         ),
-        displayComms: insufficientData
-          ? "N/A"
-          : String(
-              evalData.communicationFeedback ||
-                (fillerPenalty > 0.15
-                  ? "Try to avoid using too many 'um's or 'like's—pausing for a second is usually better."
-                  : "Clear and professional delivery."),
-            ),
-        displayConfidence: insufficientData
-          ? "N/A"
-          : String(
-              evalData.confidenceAnalysis ||
-                (finalScore > 7
-                  ? "You sounded confident and really knew the topic."
-                  : "Your answer felt a bit hesitant. Working on concise definitions will help."),
-            ),
+        displayComms: `${deliveryStatus} — ${deliveryDetails}`,
+        displayConfidence: "", // Deprecated
         techScore: finalTech,
         commScore: finalComm,
         reasonScore: finalReason,
+        completenessScore: lengthCompleteness * 10,
       };
     });
   }, [answers, transcript, role]);
@@ -493,74 +495,105 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
   const metrics = useMemo(() => {
     if (normalizedAnswers.length === 0) return null;
 
-    let totalScore = 0;
-    let technicalScore = 0;
-    let communicationScore = 0;
-    let roleSpecificScore = 0;
+    let totalTechnical = 0;
+    let totalCommunication = 0;
+    let totalReasoning = 0;
+    let totalCompleteness = 0;
     let validAnswersCount = 0;
 
     normalizedAnswers.forEach((ans) => {
-      // Exclude skipped or empty answers from dragging down the average unfairly if they are anomalies,
-      // but if the entire interview is short, the score will reflect it.
       if (ans.displayScore > 0) {
-        totalScore += ans.displayScore;
-        technicalScore += ans.techScore;
-        communicationScore += ans.commScore;
-        roleSpecificScore += ans.reasonScore;
+        totalTechnical += ans.techScore;
+        totalCommunication += ans.commScore;
+        totalReasoning += ans.reasonScore;
+        totalCompleteness += ans.completenessScore;
         validAnswersCount++;
       }
     });
 
-    const count = validAnswersCount > 0 ? validAnswersCount : 1; // Prevent division by zero
-    const rawAvgScore = totalScore / count;
-    const rawAvgTech = technicalScore / count;
-    const rawAvgComm = communicationScore / count;
-    const rawAvgReason = roleSpecificScore / count;
+    const count = validAnswersCount > 0 ? validAnswersCount : 1;
+    
+    // Component Averages (0-10 scale)
+    const avgTech = totalTechnical / count;
+    const avgComm = totalCommunication / count;
+    const avgReason = totalReasoning / count;
+    const avgCompleteness = totalCompleteness / count;
 
-    // Apply normalization to keep UX motivating (realistic SaaS scale)
-    const normalize = (val: number) => {
-      if (val <= 0) return 0;
-      // Formula: 35% baseline + (raw score * 6.5 multiplier) 
-      // This maps 0-10 to 35-100 (clamped at 95 for realism)
-      const mapped = 35 + val * 6.5;
-      return Math.min(95, Math.round(mapped));
-    };
+    // Consistency Score (0-10 scale)
+    // Based on score variance - rewarding stable performance
+    const sessionScores = normalizedAnswers.map(a => a.displayScore);
+    const meanScore = sessionScores.reduce((a, b) => a + b, 0) / sessionScores.length;
+    const variance = sessionScores.reduce((a, b) => a + Math.pow(b - meanScore, 2), 0) / sessionScores.length;
+    const stdDev = Math.sqrt(variance);
+    // Lower variance = higher consistency. 10 is perfect stability.
+    const consistencyScore = Math.max(0, 10 - (stdDev * 1.5));
 
-    const finalAvg = normalize(rawAvgScore);
-    const finalTech = normalize(rawAvgTech);
-    const finalComm = normalize(rawAvgComm);
-    const finalReason = normalize(rawAvgReason);
+    // Weighted Composite Score (Maps to 0-100%)
+    // 40% Technical, 20% Reasoning, 20% Communication, 10% Completeness, 10% Consistency
+    const compositeRaw = (
+      (avgTech * 4.0) + 
+      (avgReason * 2.0) + 
+      (avgComm * 2.0) + 
+      (avgCompleteness * 1.0) + 
+      (consistencyScore * 1.0)
+    );
+
+    // Final Calibration: Ensure believable SaaS scale
+    // Clamping to 95 for realism (100% is rare in professional interviews)
+    // Floor at 0 for catastrophic failure, but normal weak performance will sit at ~35+
+    const finalScore = Math.min(95, Math.round(compositeRaw));
+
+    // Aggregate Intelligence: Recurring Gaps & Improvements
+    const allWeaknesses = normalizedAnswers.flatMap(a => a.displayWeaknesses);
+    const allStrengths = normalizedAnswers.flatMap(a => a.displayStrengths);
+    
+    const recurringGaps = allWeaknesses.filter(w => w.toLowerCase().includes("recurring") || w.toLowerCase().includes("repeated"));
+    const improvements = allStrengths.filter(s => s.toLowerCase().includes("improvement") || s.toLowerCase().includes("improved"));
 
     // Grounded recruiter-grade verdict generation
     let verdict;
     if (validAnswersCount === 0) {
       verdict =
-        "Not enough data for a full verdict yet. Try giving more detailed answers in your next session.";
-    } else if (finalAvg >= 82) {
-      verdict = `Excellent work. You showed a strong technical grasp of ${role} concepts and structured your answers well. You're ready for advanced roles and client-facing work.`;
-    } else if (finalAvg >= 65) {
-      verdict = `Good performance overall. Your communication was clear, but some technical explanations needed more depth or real-world examples to really stand out at a senior level.`;
-    } else if (finalAvg >= 45) {
-      verdict = `You have a decent start on the basics, but your technical answers were often too brief. Focus on explaining the 'how' and 'why' behind Salesforce features in more detail.`;
+        "Insufficient evidence for a technical verdict. Technical depth was too low to establish a performance baseline.";
     } else {
-      verdict = `Your answers were incomplete or missing key technical details. I'd recommend spending more time on the fundamentals and practicing how to explain them clearly.`;
+      const baseVerdict = finalScore >= 85 
+        ? `Exceptional technical mastery. Candidate demonstrates senior-level understanding of ${role} architecture and platform limits.`
+        : finalScore >= 70
+        ? `Strong professional competency. Good technical logic in ${role} concepts, though some implementation nuances remained unexplored.`
+        : finalScore >= 50
+        ? `Moderate technical proficiency. Core foundations in ${role} are present, but response depth lacks the precision required for complex scenarios.`
+        : `Technical baseline not met. Significant gaps in core ${role} concepts and practical implementation logic.`;
+
+      const gapNote = recurringGaps.length > 0 
+        ? `\n\nNote: Recurring gaps identified in ${recurringGaps.slice(0, 2).join(", ")}.`
+        : "";
+      
+      const improvementNote = improvements.length > 0
+        ? `\n\nPositive: Observed concept improvement in ${improvements[0]}.`
+        : "";
+
+      verdict = `${baseVerdict}${gapNote}${improvementNote}`;
     }
 
     return {
-      avgScore: finalAvg,
-      technicalScore: finalTech,
-      communicationScore: finalComm,
-      roleSpecificScore: finalReason,
+      avgScore: finalScore,
+      technicalScore: Math.round(avgTech * 10),
+      communicationScore: Math.round(avgComm * 10),
+      roleSpecificScore: Math.round(avgReason * 10),
+      completenessScore: Math.round(avgCompleteness * 10),
+      consistencyScore: Math.round(consistencyScore * 10),
       readiness:
         validAnswersCount === 0
           ? "Incomplete Data"
-          : finalAvg >= 82
+          : finalScore >= 85
             ? "Executive Ready"
-            : finalAvg >= 65
+            : finalScore >= 70
               ? "Strong Candidate"
-              : finalAvg >= 45
-                ? "Developing"
-                : "Needs Work",
+              : finalScore >= 50
+                ? "Moderate"
+                : finalScore >= 35
+                  ? "Needs Improvement"
+                  : "Needs Improvement",
       verdict,
     };
   }, [normalizedAnswers, role]);
@@ -601,6 +634,12 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
           confidence_score: Number(metrics.avgScore),
           coach_advice: String(normalizedAnswers[0]?.displayFeedback || ""),
           ai_verdict: String(metrics.readiness),
+          behavior_analytics: {
+            completeness: metrics.completenessScore,
+            consistency: metrics.consistencyScore,
+            technical: metrics.technicalScore,
+            communication: metrics.communicationScore,
+          },
           full_results: normalizedAnswers.map((a) => ({
             question: String(a.displayQuestion),
             answer: String(a.displayAnswer),
@@ -613,7 +652,6 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
             recruiterExpectation: String(a.displayExpectation),
             improvementGuidance: String(a.displayGuidance),
             communicationFeedback: String(a.displayComms),
-            confidenceAnalysis: String(a.displayConfidence),
             technicalScore: Number(a.techScore),
             communicationScore: Number(a.commScore),
             roleSpecificScore: Number(a.reasonScore),
@@ -716,7 +754,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
                 </div>
                 <div>
                   <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">
-                    Efficiency
+                    Evaluation Index
                   </div>
                   <div className="text-sm font-black text-white">
                     {metrics.avgScore}%
@@ -785,13 +823,13 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
                   <span
                     className={`text-lg font-black ${dim.color === "emerald" ? "text-emerald-400" : dim.color === "cyan" ? "text-cyan-400" : "text-violet-400"}`}
                   >
-                    {Math.round((dim.score || 0) * 10)}%
+                    {Math.round(dim.score || 0)}%
                   </span>
                 </div>
                 <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
-                    animate={{ width: `${Math.round((dim.score || 0) * 10)}%` }}
+                    animate={{ width: `${Math.round(dim.score || 0)}%` }}
                     transition={{ duration: 1, delay: 0.5 + i * 0.1 }}
                     className={`h-full rounded-full ${dim.color === "emerald" ? "bg-emerald-500" : dim.color === "cyan" ? "bg-cyan-500" : "bg-violet-500"}`}
                   />
@@ -809,8 +847,8 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
         >
           <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
           <Trophy className="mx-auto text-emerald-400 mb-2" size={32} />
-          <h3 className="text-lg font-black text-white italic">Verdict</h3>
-          <p className="text-sm text-slate-400 leading-relaxed italic">
+          <h3 className="text-lg font-black text-white italic">Technical Verdict</h3>
+          <p className="text-sm text-slate-400 leading-relaxed italic whitespace-pre-line">
             "{metrics.verdict}"
           </p>
         </motion.div>
@@ -850,7 +888,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <span className="truncate max-w-[120px] sm:max-w-none">
+                        <span className="max-w-[120px] sm:max-w-none">
                           {answer.displayTopic}
                         </span>
                         <div className="hidden xs:block w-1 h-1 rounded-full bg-slate-700" />
@@ -884,7 +922,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
                           <div className="space-y-4">
                             <div className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest">
                               <Sparkles size={12} className="text-cyan-400" />
-                              Recruiter Question
+                              Technical Question
                             </div>
                             <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 text-slate-200 text-sm leading-relaxed italic">
                               "{answer.displayQuestion}"
@@ -914,14 +952,14 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
                                   size={16}
                                 />
                                 <h5 className="text-[11px] sm:text-sm font-black text-white uppercase tracking-widest italic leading-tight">
-                                  Recruiter's Ideal Response
+                                  Technical Expectations
                                 </h5>
                               </div>
                               <div className="self-start sm:self-auto px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-emerald-500/20 text-[8px] sm:text-[9px] font-black text-emerald-400 uppercase tracking-widest border border-emerald-500/10">
                                 Best Practice
                               </div>
                             </div>
-                            <div className="text-sm text-slate-300 leading-relaxed font-medium">
+                            <div className="text-sm text-slate-300 leading-relaxed font-medium whitespace-pre-line">
                               {answer.displayIdeal}
                             </div>
                             {answer.displayExpectation && (
@@ -988,9 +1026,8 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
 
                         {/* Guidance & Coaching */}
                         {(answer.displayGuidance ||
-                          answer.displayComms ||
-                          answer.displayConfidence) && (
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                          answer.displayComms) && (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                             {answer.displayGuidance && (
                               <div className="space-y-3">
                                 <div className="flex items-center gap-2 text-[10px] font-black text-cyan-400 uppercase tracking-widest">
@@ -1008,16 +1045,6 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
                                 </div>
                                 <p className="text-xs text-slate-400 leading-relaxed">
                                   {answer.displayComms}
-                                </p>
-                              </div>
-                            )}
-                            {answer.displayConfidence && (
-                              <div className="space-y-3">
-                                <div className="flex items-center gap-2 text-[10px] font-black text-amber-400 uppercase tracking-widest">
-                                  <Zap size={12} /> Confidence
-                                </div>
-                                <p className="text-xs text-slate-400 leading-relaxed">
-                                  {answer.displayConfidence}
                                 </p>
                               </div>
                             )}

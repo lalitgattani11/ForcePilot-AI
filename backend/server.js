@@ -616,6 +616,31 @@ app.post(
 
 
 /* ==================================================
+   SALESFORCE DOMAIN INTELLIGENCE
+================================================== */
+
+const ROLE_EXPECTATIONS = {
+  "Salesforce Admin": [
+    "Security: Profiles vs Permission Sets, OWD, Sharing Rules, FLS",
+    "Data: Relationships (Lookup vs Master-Detail), Objects, Fields, Roll-ups",
+    "Automation: Flow (Triggered vs Autolaunched), Validation Rules, Approval Processes",
+    "Analytics: Reports, Dashboards, Folders, Summary vs Matrix",
+  ],
+  "Salesforce Apex Developer": [
+    "Core: Governor Limits, Bulkification, Collections (List, Set, Map)",
+    "Logic: Triggers, Handlers, Static Variables (Recursion), Async (Queueable, Future, Batch)",
+    "Database: SOQL (Selective Queries), SOSL, DML, Database methods",
+    "Testing: @isTest, @testSetup, System.runAs, Coverage",
+  ],
+  "Salesforce LWC Developer": [
+    "Architecture: Shadow DOM, Composition, Component Lifecycle",
+    "Data: @wire service, Imperative Apex, LMS, PubSub",
+    "Communication: Events (Bubbling, Composed), @api properties",
+    "Security: LWS (Lightning Web Security), Locker Service",
+  ],
+};
+
+/* ==================================================
    EVALUATE ANSWER
 ================================================== */
 
@@ -627,11 +652,14 @@ app.post("/evaluate", async (req, res) => {
     role,
     difficulty,
     personality,
+    previousEvaluations = [],
   } = req.body;
 
   const persona =
     PERSONALITIES[personality] ||
     PERSONALITIES["Professional"];
+
+  const roleConcepts = ROLE_EXPECTATIONS[role] || ROLE_EXPECTATIONS["Salesforce Admin"];
 
   try {
 
@@ -687,6 +715,14 @@ ROLE CONTEXT: ${role}
 DIFFICULTY: ${difficulty}
 PERSONA: ${persona.style}
 
+TECHNICAL EXPECTATIONS FOR THIS ROLE:
+${roleConcepts.join("\n")}
+
+SESSION HISTORY (ADAPTIVE MEMORY):
+${previousEvaluations.length > 0 
+  ? previousEvaluations.map(e => `- Topic: ${e.topic} | Score: ${e.score} | Gaps: ${e.weaknesses?.join(", ")}`).join("\n")
+  : "First question of the session."}
+
 CANDIDATE QUESTION:
 ${question}
 
@@ -696,24 +732,25 @@ ${answer}
 ==================================================
 CRITICAL INSTRUCTIONS FOR PRODUCTION-GRADE EVALUATION:
 
-1. SCORING REALISM (1.0 to 10.0):
-   - You MUST score with decimals (e.g., 7.4, 6.8, 4.2). DO NOT use flat numbers (5.0, 7.0) unless absolutely perfect or completely empty.
-   - Punish generic, short, or filler-heavy answers severely (scores 2.0 - 4.5).
-   - High scores (8.5+) require deep technical accuracy, specific Salesforce limits/governors, and structured reasoning.
+1. DOMAIN-AWARE CONCEPT MAPPING:
+   - Identify which Salesforce concepts (e.g., FLS, Bulkification, @api) are required for this specific question.
+   - Map the candidate's answer against these concepts.
+   - explicitly detect missing concepts.
 
-2. FEEDBACK TONE:
-   - Sound like a senior human interviewer, not a robotic AI.
-   - Ban generic AI jargon ("Neural intelligence calibration", "Developing trajectory").
-   - Reference specific things the candidate said in their answer.
-   - If the answer is too short, state: "Response lacked the depth required for this role level."
+2. EVIDENCE-BASED ANALYSIS:
+   - Identify exactly what the candidate said and compare it against the technical requirements.
+   - Reference specific candidate phrasing in your feedback.
+   - If they miss a concept (e.g. they didn't mention 'Profile' when discussing 'Permission Sets'), explicitly state that gap.
+   - Ban generic AI jargon ("Neural intelligence calibration", "Developing trajectory") and motivational filler.
 
-3. DIMENSIONS:
-   - score: Overall composite out of 10.
-   - technicalScore: Accuracy of Salesforce concepts, limits, and architecture.
-   - communicationScore: Clarity, structure, and absence of filler words.
-   - practicalReasoningScore: Evidence of real-world use-cases and logical flow.
-   - roleSpecificScore: Alignment with ${role} expectations.
-   - conceptCoverageScore: Did they hit the core requirement of the specific question?
+3. ADAPTIVE INTELLIGENCE:
+   - If the candidate repeats a technical gap from earlier in the session, note it as a "Recurring Gap."
+   - If they show improvement in a previously weak area, acknowledge the "Concept Improvement."
+
+4. SCORING REALISM (1.0 to 10.0):
+   - You MUST score with decimals (e.g., 7.4, 6.8, 4.2).
+   - High scores (8.5+) require deep technical accuracy and structured reasoning.
+   - Punish generic or short answers severely (2.0 - 4.5).
 
 ==================================================
 
@@ -727,16 +764,16 @@ RETURN ONLY VALID JSON MATCHING THIS EXACT SCHEMA:
   "roleSpecificScore": 6.5,
   "conceptCoverageScore": 7.0,
   "topic": "Short category",
-  "feedback": "Internal technical feedback mentioning specific candidate phrasing",
+  "feedback": "Evidence-based technical analysis referencing what the candidate explicitly said vs what they missed.",
   "acknowledgment": "Okay.",
-  "missingPoints": ["Specific limit or concept missed"],
-  "strengths": ["Specific accurate thing they said"],
-  "weaknesses": ["Specific structural or technical flaw"],
-  "idealAnswer": "Recruiter-grade best practice answer with depth",
-  "recruiterExpectation": "What the recruiter was specifically looking for (e.g. mention of Bulk API)",
-  "improvementGuidance": "Actionable technical advice for the candidate",
-  "communicationFeedback": "Feedback on tone, filler words, and clarity",
-  "confidenceAnalysis": "Analysis based on answer length and decisiveness",
+  "missingPoints": ["Explicit technical concept or limit missed"],
+  "strengths": ["Specific accurate technical statement made"],
+  "weaknesses": ["Grounded technical gap (e.g. 'Failed to mention governor limits')"],
+  "idealAnswer": "Short bulleted list of technical requirements (e.g. • Feature A • Limit B • Use case C)",
+  "recruiterExpectation": "Concise summary of what a senior reviewer expects for this level",
+  "improvementGuidance": "Actionable technical focus areas",
+  "communicationFeedback": "Direct notes on clarity and structure",
+  "confidenceAnalysis": "Direct assessment based on answer decisiveness",
   "followUpQuestion": null
 }
 `;

@@ -156,6 +156,6 @@ export const getQuestionsForInterview = (role: Role, difficulty: Difficulty): Qu
 export const generateOverallFeedback = (avgScore: number, difficulty: Difficulty): string => {
   if (avgScore >= 8.5) return `Exceptional performance for a ${difficulty} tier. Systems logic is architectural-grade.`;
   if (avgScore >= 7) return `Strong ${difficulty} performance. Solid technical grasp with minor implementation gaps.`;
-  if (avgScore >= 5) return `Developing ${difficulty} candidate. Foundations are clear but require more practical rigor.`;
-  return `Insufficient technical depth for ${difficulty} requirements. Focused practice on core platform concepts recommended.`;
+  if (avgScore >= 5) return `Moderate ${difficulty} performance. Foundations are clear but require more practical rigor.`;
+  return `Needs Improvement. Insufficient technical depth for ${difficulty} requirements. Focused practice on core platform concepts recommended.`;
 };

@@ -70,6 +70,7 @@ export const evaluateAnswer = async (
   role: string,
   difficulty: Difficulty,
   personality: string,
+  previousEvaluations: EvaluationResult[] = [],
 ): Promise<
   EvaluationResult & {
     acknowledgment?: string;
@@ -91,6 +92,12 @@ export const evaluateAnswer = async (
         role,
         difficulty,
         personality,
+        previousEvaluations: previousEvaluations.map(e => ({
+          topic: e.topic,
+          score: e.score,
+          weaknesses: e.weaknesses,
+          strengths: e.strengths
+        }))
       }),
     });
 

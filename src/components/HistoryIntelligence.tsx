@@ -44,6 +44,10 @@ interface BehaviorAnalytics {
   style?: string;
   confidence?: string;
   observation?: string;
+  completeness?: number;
+  consistency?: number;
+  technical?: number;
+  communication?: number;
 }
 
 interface InterviewRecord {
@@ -141,14 +145,30 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
         const fetchedRecords = (Array.isArray(data) ? data : []).map(
           (record: Record<string, unknown>) => {
             const rawScore = Number(record?.score || 0);
+            const behavior = (record?.behavior_analytics as BehaviorAnalytics) || {};
             
             // Apply normalization for consistent historical display
-            // (Only if it looks like a raw 0-10 score, i.e., <= 10)
             const normalize = (val: number) => {
               if (val <= 0) return 0;
-              if (val > 10) return Math.round(val); // Already normalized
-              const mapped = 35 + val * 6.5;
-              return Math.min(95, Math.round(mapped));
+              // If already normalized (>10), keep it
+              if (val > 10) return Math.round(val);
+              
+              // NEW Realism Logic: 
+              // If we have granular behavior analytics, reconstruct the composite
+              if (behavior.technical != null && behavior.communication != null) {
+                const tech = Number(behavior.technical) || 0;
+                const comm = Number(behavior.communication) || 0;
+                const comp = Number(behavior.completeness) || 0;
+                const cons = Number(behavior.consistency) || 0;
+                
+                // Composite: 40% Tech, 20% reasoning (legacy raw), 20% Comm, 10% Comp, 10% Cons
+                const composite = (tech * 0.4) + (rawScore * 2) + (comm * 0.2) + (comp * 0.1) + (cons * 0.1);
+                return Math.min(95, Math.round(composite));
+              }
+
+              // Fallback for Legacy Data: Direct 0-10 to 0-100% mapping
+              // (4/10 technically correct = 40%)
+              return Math.min(95, Math.round(val * 10));
             };
 
             const normalizedScore = normalize(rawScore);
@@ -178,11 +198,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
               full_results: Array.isArray(record?.full_results)
                 ? (record.full_results as Answer[])
                 : [],
-              behavior_analytics:
-                typeof record?.behavior_analytics === "object" &&
-                record?.behavior_analytics !== null
-                  ? (record.behavior_analytics as BehaviorAnalytics)
-                  : {},
+              behavior_analytics: behavior,
               focus: (() => {
                 const results = Array.isArray(record?.full_results) ? (record.full_results as any[]) : [];
                 if (results.length > 0) {
@@ -446,16 +462,16 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
     // Qualitative mapping for consistency
     const getConsistencyLabel = (variance: number) => {
-      if (records.length < 5) return "Limited Data";
+      if (records.length === 1) return "Early Stage";
+      if (records.length < 3) return "Moderate";
       if (variance < 5) return "Stable";
-      if (variance < 12) return "Improving Stability";
-      if (variance < 20) return "Building Consistency";
-      return "Inconsistent";
+      if (variance < 12) return "Improving";
+      if (variance < 20) return "Building";
+      return "Variable";
     };
 
     // Qualitative mapping for confidence
     const getConfidenceLabel = (conf: number) => {
-      if (records.length < 3) return "Initial Signals";
       if (conf >= 85) return "Exceptional";
       if (conf >= 70) return "Strong";
       if (conf >= 50) return "Moderate";
@@ -464,20 +480,18 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
     // Qualitative mapping for technical performance
     const getTechLabel = (score: number) => {
-      if (records.length < 3) return "Early Signals";
       if (score >= 85) return "Architectural";
       if (score >= 70) return "Professional";
-      if (score >= 50) return "Good Foundation";
+      if (score >= 50) return "Foundation";
       return "Needs Improvement";
     };
 
     // Qualitative mapping for communication
     const getCommLabel = (score: number) => {
-      if (records.length < 3) return "Early Signals";
       if (score >= 85) return "Articulate";
       if (score >= 70) return "Clear";
       if (score >= 50) return "Improving";
-      return "Needs Improvement";
+      return "Moderate";
     };
 
     // 3. Grounded Topic Extraction
@@ -486,23 +500,65 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       { total: number; count: number; weightTotal: number }
     > = {};
     const weakMap: Record<string, { count: number; weightTotal: number }> = {};
+    
+    // Behavioral Stats
+    let totalWords = 0;
+    let totalAnswers = 0;
+    let lowDepthCount = 0;
+    let totalReasoning = 0;
 
     records.forEach((record, index) => {
-      // Weight: 1.0 for oldest, up to 1.5 for most recent (Subtler recency)
       const recencyWeight = 1 + 0.5 * (1 - index / records.length);
 
-      // Extract from full_results (Production-grade source)
       if (
         Array.isArray(record.full_results) &&
         record.full_results.length > 0
       ) {
         record.full_results.forEach((res) => {
           const resObj = res as unknown as Record<string, unknown>;
-          const topic = String(
-            resObj.displayTopic || resObj.topic || "General",
-          );
+          
+          // Enhanced Salesforce Topic Extraction
+          let topic = String(resObj.displayTopic || resObj.topic || "");
+          if (!topic || topic === "General" || topic === "Technical Assessment") {
+            const q = String(resObj.questionText || resObj.question || "").toLowerCase();
+            
+            // Security & Governance
+            if (q.includes("profile") || q.includes("permission set") || q.includes("permission-set")) topic = "Profiles & Permissions";
+            else if (q.includes("owd") || q.includes("sharing rule") || q.includes("record-level")) topic = "Record Security";
+            else if (q.includes("security") || q.includes("mfa") || q.includes("shield")) topic = "Security Model";
+            
+            // Automation & Logic
+            else if (q.includes("flow")) topic = "Flow Automation";
+            else if (q.includes("validation rule")) topic = "Validation Rules";
+            else if (q.includes("approval process")) topic = "Process Automation";
+            
+            // Apex & Backend
+            else if (q.includes("trigger")) topic = "Trigger Logic";
+            else if (q.includes("soql") || q.includes("sosl")) topic = "SOQL & SOSL";
+            else if (q.includes("governor limit") || q.includes("bulkification")) topic = "Governor Limits";
+            else if (q.includes("apex")) topic = "Apex Logic";
+            
+            // Frontend & UI
+            else if (q.includes("lwc") || q.includes("component") || q.includes("shadow dom")) topic = "LWC Architecture";
+            
+            // Core Data
+            else if (q.includes("lookup") || q.includes("master-detail") || q.includes("junction")) topic = "Data Modeling";
+            else if (q.includes("object") || q.includes("field") || q.includes("layout")) topic = "Platform Fundamentals";
+            
+            else topic = "General Administration";
+          }
 
           const score = Number(resObj.displayScore || resObj.score || 0);
+          const reasoning = Number(resObj.practicalReasoningScore || score);
+          const answer = String(resObj.userAnswer || "");
+          
+          if (answer.trim()) {
+            const words = answer.split(/\s+/).length;
+            totalWords += words;
+            totalAnswers++;
+            if (words < 25) lowDepthCount++;
+          }
+          totalReasoning += reasoning;
 
           if (!skillMap[topic])
             skillMap[topic] = { total: 0, count: 0, weightTotal: 0 };
@@ -517,36 +573,48 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
           }
         });
       } else {
-        // Fallback to legacy skill_matrix if full_results missing
+        // Fallback to legacy skill_matrix
         (record.skill_matrix || []).forEach((skill) => {
           if (!skill.name) return;
-          if (!skillMap[skill.name])
-            skillMap[skill.name] = { total: 0, count: 0, weightTotal: 0 };
-          skillMap[skill.name].total +=
+          const mappedName = skill.name === "General" ? "Platform Fundamentals" : skill.name;
+          if (!skillMap[mappedName])
+            skillMap[mappedName] = { total: 0, count: 0, weightTotal: 0 };
+          skillMap[mappedName].total +=
             Number(skill.value || 0) * recencyWeight;
-          skillMap[skill.name].count += 1;
-          skillMap[skill.name].weightTotal += recencyWeight;
+          skillMap[mappedName].count += 1;
+          skillMap[mappedName].weightTotal += recencyWeight;
         });
 
         (record.weak_concepts || []).forEach((weak) => {
           if (!weak.name) return;
-          if (!weakMap[weak.name])
-            weakMap[weak.name] = { count: 0, weightTotal: 0 };
-          weakMap[weak.name].count += 1;
-          weakMap[weak.name].weightTotal += recencyWeight;
+          const mappedName = weak.name === "General" ? "Platform Fundamentals" : weak.name;
+          if (!weakMap[mappedName])
+            weakMap[mappedName] = { count: 0, weightTotal: 0 };
+          weakMap[mappedName].count += 1;
+          weakMap[mappedName].weightTotal += recencyWeight;
         });
       }
     });
 
+    const getTopicStatus = (score: number) => {
+      if (score >= 85) return "Expert";
+      if (score >= 70) return "Strong";
+      if (score >= 50) return "Developing";
+      return "Critical Gap";
+    };
+
     let strongestTopics = Object.entries(skillMap)
-      .map(([name, data]) => ({
-        name,
-        avg: Math.round(data.total / data.weightTotal),
-        confidence:
-          data.count >= 3 ? "High" : data.count >= 2 ? "Moderate" : "Initial",
-      }))
+      .map(([name, data]) => {
+        const avg = Math.round(data.total / data.weightTotal);
+        return {
+          name,
+          avg,
+          status: getTopicStatus(avg),
+          confidence:
+            data.count >= 3 ? "High" : data.count >= 2 ? "Moderate" : "Initial",
+        };
+      })
       .sort((a, b) => b.avg - a.avg)
-      .filter((t) => t.name !== "General" && t.name !== "Technical Assessment")
       .slice(0, 3);
 
     let weakestTopics = Object.entries(weakMap)
@@ -556,25 +624,35 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
         confidence: data.count >= 2 ? "Consistent" : "Occasional",
       }))
       .sort((a, b) => b.count - a.count)
-      .filter((t) => t.name !== "General" && t.name !== "Technical Assessment")
       .slice(0, 3);
 
-    // Heuristic fallback for only 2 sessions to prevent empty placeholders
-    if (records.length >= 2) {
-      if (strongestTopics.length === 0) {
-        strongestTopics = [
-          { name: "Salesforce Fundamentals", avg: 72, confidence: "Initial" },
-          { name: "Technical Readiness", avg: 68, confidence: "Initial" },
-          { name: "Platform Concepts", avg: 65, confidence: "Initial" },
-        ];
+    // Inject Behavioral Insights if topics are sparse or if they are significant
+    const avgWords = totalAnswers > 0 ? totalWords / totalAnswers : 0;
+    const avgReasoning = totalAnswers > 0 ? totalReasoning / totalAnswers : 0;
+
+    if (lowDepthCount > totalAnswers * 0.4 || avgWords < 35) {
+      if (!weakestTopics.find(t => t.name === "Response Depth")) {
+        weakestTopics.unshift({ name: "Response Depth", count: 1, confidence: "Instructional" });
       }
-      if (weakestTopics.length === 0) {
-        weakestTopics = [
-          { name: "Communication Clarity", count: 1, confidence: "Occasional" },
-          { name: "Response Depth", count: 1, confidence: "Occasional" },
-          { name: "Scenario Explanation", count: 1, confidence: "Occasional" },
-        ];
+    }
+
+    if (avgReasoning < 6.5 && totalAnswers > 0) {
+      if (!weakestTopics.find(t => t.name === "Scenario Explanation")) {
+        weakestTopics.push({ name: "Scenario Explanation", count: 1, confidence: "Guidance" });
       }
+    }
+
+    // Ensure we always have something to show
+    if (strongestTopics.length === 0) {
+      strongestTopics = [
+        { name: "Platform Fundamentals", avg: Math.round(avgTech), status: getTopicStatus(avgTech), confidence: "Initial" },
+        { name: "Communication", avg: Math.round(avgComm), status: getTopicStatus(avgComm), confidence: "Initial" }
+      ];
+    }
+
+    if (weakestTopics.length === 0) {
+      if (avgTech < 75) weakestTopics.push({ name: "Technical Accuracy", count: 1, confidence: "Guidance" });
+      if (avgComm < 75) weakestTopics.push({ name: "Professional Tone", count: 1, confidence: "Guidance" });
     }
 
     // 4. Trend Intelligence (Grounded & Chronological)
@@ -612,8 +690,12 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
         : 0;
     const baselineAvg =
       records.reduce((acc, r) => acc + r.score, 0) / records.length;
+    
+    // Only calculate growth if we have more than one session
     const growth =
-      baselineAvg > 0 ? ((recentAvg - baselineAvg) / baselineAvg) * 100 : 0;
+      records.length > 1 && baselineAvg > 0 
+        ? ((recentAvg - baselineAvg) / baselineAvg) * 100 
+        : null;
 
     // Streak Calculation (Realistic)
     const uniqueDates = records
@@ -649,21 +731,21 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
     // Data Confidence & Tier Logic (Recruiter-friendly)
     const count = records.length;
     const intelligenceTier: "calibration" | "basic" | "advanced" =
-      count >= 8 ? "advanced" : count >= 3 ? "basic" : "calibration";
+      count >= 8 ? "advanced" : count >= 1 ? "basic" : "calibration";
 
     const dataConfidence =
       count >= 8
-        ? "Reliable Trends"
+        ? "Verified Profile"
         : count >= 3
-          ? "Building Consistency"
-          : "Initial Assessment";
+          ? "Stable Pattern"
+          : "Active Analysis";
 
     // Qualitative labels for Readiness
     const getReadinessLabel = (score: number) => {
       if (score >= 85) return "Highly Ready";
       if (score >= 70) return "Strong Candidate";
-      if (score >= 50) return "Solid Foundation";
-      return "Needs Development";
+      if (score >= 50) return "Moderate";
+      return "Needs Improvement";
     };
 
     return {
@@ -809,7 +891,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                 </option>
 
                 <option value="developing" className="bg-[#0f172a] text-white">
-                  Developing (70-79)
+                  Moderate (70-79)
                 </option>
 
                 <option value="needs-work" className="bg-[#0f172a] text-white">

@@ -247,13 +247,18 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       setStatus("ANALYZING");
 
       try {
+        const prevEvals = answersRef.current
+          .map(a => a.evaluation)
+          .filter((e): e is EvaluationResult => !!e);
+
         const evalResult =
           await evaluateAnswer(
             currentQuestion,
             cleanedResponse,
             config.role,
             config.difficulty,
-            config.personality
+            config.personality,
+            prevEvals
           );
 
         const newAnswer: Answer = {
