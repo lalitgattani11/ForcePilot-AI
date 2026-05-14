@@ -169,10 +169,10 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
           <div className="flex items-center gap-10 lg:pr-4">
             <div className="space-y-0.5 text-center">
               <div className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
-                Overall Performance
+                OVERALL READINESS
               </div>
               <div className="text-5xl font-black text-white tracking-tighter">
-                {stats.avgScore}
+                {stats.avgScore}%
               </div>
             </div>
             {!isCalibration && (

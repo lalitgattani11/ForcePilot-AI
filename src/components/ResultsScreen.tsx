@@ -512,39 +512,53 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
     });
 
     const count = validAnswersCount > 0 ? validAnswersCount : 1; // Prevent division by zero
-    const avgScore = totalScore / count;
-    const avgTech = technicalScore / count;
-    const avgComm = communicationScore / count;
-    const avgReason = roleSpecificScore / count;
+    const rawAvgScore = totalScore / count;
+    const rawAvgTech = technicalScore / count;
+    const rawAvgComm = communicationScore / count;
+    const rawAvgReason = roleSpecificScore / count;
+
+    // Apply normalization to keep UX motivating (realistic SaaS scale)
+    const normalize = (val: number) => {
+      if (val <= 0) return 0;
+      // Formula: 35% baseline + (raw score * 6.5 multiplier) 
+      // This maps 0-10 to 35-100 (clamped at 95 for realism)
+      const mapped = 35 + val * 6.5;
+      return Math.min(95, Math.round(mapped));
+    };
+
+    const finalAvg = normalize(rawAvgScore);
+    const finalTech = normalize(rawAvgTech);
+    const finalComm = normalize(rawAvgComm);
+    const finalReason = normalize(rawAvgReason);
 
     // Grounded recruiter-grade verdict generation
     let verdict;
     if (validAnswersCount === 0) {
       verdict =
         "Not enough data for a full verdict yet. Try giving more detailed answers in your next session.";
-    } else if (avgScore >= 8.2) {
+    } else if (finalAvg >= 82) {
       verdict = `Excellent work. You showed a strong technical grasp of ${role} concepts and structured your answers well. You're ready for advanced roles and client-facing work.`;
-    } else if (avgScore >= 6.5) {
+    } else if (finalAvg >= 65) {
       verdict = `Good performance overall. Your communication was clear, but some technical explanations needed more depth or real-world examples to really stand out at a senior level.`;
-    } else if (avgScore >= 4.5) {
+    } else if (finalAvg >= 45) {
       verdict = `You have a decent start on the basics, but your technical answers were often too brief. Focus on explaining the 'how' and 'why' behind Salesforce features in more detail.`;
     } else {
       verdict = `Your answers were incomplete or missing key technical details. I'd recommend spending more time on the fundamentals and practicing how to explain them clearly.`;
     }
 
     return {
-      avgScore: Math.round(avgScore * 10) / 10,
-      technicalScore: Math.round(avgTech * 10) / 10,
-      communicationScore: Math.round(avgComm * 10) / 10,
-      roleSpecificScore: Math.round(avgReason * 10) / 10,
+      avgScore: finalAvg,
+      technicalScore: finalTech,
+      communicationScore: finalComm,
+      roleSpecificScore: finalReason,
       readiness:
         validAnswersCount === 0
           ? "Incomplete Data"
-          : avgScore >= 8.2
+          : finalAvg >= 82
             ? "Executive Ready"
-            : avgScore >= 6.5
+            : finalAvg >= 65
               ? "Strong Candidate"
-              : avgScore >= 4.5
+              : finalAvg >= 45
                 ? "Developing"
                 : "Needs Work",
       verdict,
@@ -574,15 +588,17 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
 
         const safePayload = {
           user_id: String(user.id),
-          role: String(role || "Unknown"),
-          difficulty: String(normalizedAnswers[0]?.displayTopic || "Unknown"),
-          score: Number(Math.round(metrics.avgScore)),
+          role: (!role || String(role).toLowerCase() === "unknown") ? "Professional Readiness" : String(role),
+          difficulty: (!normalizedAnswers[0]?.displayTopic || String(normalizedAnswers[0].displayTopic).toLowerCase() === "unknown") 
+            ? "Initial Assessment" 
+            : String(normalizedAnswers[0].displayTopic),
+          score: Number(metrics.avgScore),
           feedback: String(feedbackText || ""),
           transcript: String(transcriptText || ""),
           duration: Number(normalizedAnswers.length || 0),
-          communication_score: Number(Math.round(metrics.communicationScore)),
-          technical_score: Number(Math.round(metrics.technicalScore)),
-          confidence_score: Number(Math.round(metrics.avgScore)),
+          communication_score: Number(metrics.communicationScore),
+          technical_score: Number(metrics.technicalScore),
+          confidence_score: Number(metrics.avgScore),
           coach_advice: String(normalizedAnswers[0]?.displayFeedback || ""),
           ai_verdict: String(metrics.readiness),
           full_results: normalizedAnswers.map((a) => ({
@@ -703,7 +719,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
                     Efficiency
                   </div>
                   <div className="text-sm font-black text-white">
-                    {Math.round((metrics.avgScore || 0) * 10)}%
+                    {metrics.avgScore}%
                   </div>
                 </div>
               </div>
@@ -713,15 +729,15 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
           <div className="relative w-full sm:w-auto flex justify-center sm:justify-end mt-4 sm:mt-0 py-6 sm:py-0">
             {/* Background decorative number - Repositioned and subtler on mobile */}
             <div className="text-[80px] sm:text-[160px] font-black text-white/[0.03] sm:text-white/5 leading-none absolute -top-6 sm:-top-12 -right-0 sm:-right-8 select-none italic pointer-events-none transition-all">
-              {Math.round((metrics.avgScore || 0) * 10)}
+              {metrics.avgScore}
             </div>
             <div className="flex flex-col items-center sm:items-end relative">
               <div className="text-7xl sm:text-8xl font-black text-emerald-500 italic leading-none drop-shadow-[0_0_30px_rgba(16,185,129,0.15)]">
-                {Math.round((metrics.avgScore || 0) * 10)}
+                {metrics.avgScore}
                 <span className="text-3xl sm:text-4xl">%</span>
               </div>
               <div className="text-[10px] font-black text-emerald-500/50 uppercase tracking-[0.4em] mt-3 sm:mt-2 sm:mr-2">
-                Recruiter Score
+                OVERALL READINESS
               </div>
             </div>
           </div>
