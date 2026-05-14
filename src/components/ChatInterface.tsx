@@ -521,13 +521,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </div>
           </div>
 
-          <div className="hidden sm:flex flex-col items-end gap-2">
+          <div className="flex flex-col items-end gap-1.5 sm:gap-2">
              <div className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Progress</div>
-             <div className="flex gap-1">
+             <div className="flex gap-0.5 sm:gap-1">
                 {Array.from({ length: TOTAL_QUESTIONS_GOAL }).map((_, i) => (
                   <div 
                     key={i} 
-                    className={`w-4 h-1 rounded-full transition-all ${
+                    className={`w-2.5 sm:w-4 h-1 rounded-full transition-all ${
                       i < answers.length ? 'bg-emerald-500' : 
                       i === answers.length ? 'bg-white/20 animate-pulse' : 'bg-white/5'
                     }`} 
