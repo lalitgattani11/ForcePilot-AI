@@ -8,7 +8,6 @@ import {
   ShieldCheck,
   MessageSquare,
   Award,
-  Zap,
 } from "lucide-react";
 import {
   ResponsiveContainer,

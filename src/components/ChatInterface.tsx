@@ -26,6 +26,7 @@ import type {
   Answer,
   Message,
   Question,
+  EvaluationResult,
 } from "../types";
 
 import {

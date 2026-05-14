@@ -750,7 +750,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
     return {
       avgScore: Math.round(baselineAvg),
-      recentGrowth: Math.round(growth),
+      recentGrowth: Math.round(growth ?? 0),
       timelineData,
       totalInterviews: count,
       readiness: getReadinessLabel(baselineAvg),

@@ -7,7 +7,6 @@ import {
   Brain,
   Target,
   Trophy,
-  Zap,
   ShieldCheck,
   CheckCircle2,
   XCircle,
@@ -48,6 +47,7 @@ interface NormalizedAnswer extends Answer {
   techScore: number;
   commScore: number;
   reasonScore: number;
+  completenessScore: number;
 }
 
 const ResultsScreen: React.FC<ResultsScreenProps> = ({
