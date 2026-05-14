@@ -270,11 +270,8 @@ const FILLERS = [
    CLEANUP
 ================================================== */
 
-const cleanupRawTranscript = (
-  text?: string | null,
-): string => {
-  let cleaned = (text || "").trim();
-  if (!cleaned) return "";
+const cleanupRawTranscript = (text?: string | null): string => {
+  let cleaned = text || "";
 
   FILLERS.forEach((filler) => {
     const regex = new RegExp(`\\b${filler}\\b`, "gi");
@@ -296,7 +293,6 @@ const applyTechnicalRules = (
   domain: SalesforceDomain,
 ): string => {
   let processed = text || "";
-  if (!processed) return "";
 
   const sortedRules = [...TECHNICAL_RULES].sort((a, b) => {
     if (a.domain === domain && b.domain !== domain) {
@@ -417,16 +413,14 @@ export const useSpeech = () => {
 
   useEffect(() => {
     if (!IS_MOBILE_DEVICE) {
-      const speechWindow =
-  window as Window &
-    typeof globalThis & {
-      SpeechRecognition?: any;
-      webkitSpeechRecognition?: any;
-    };
+      const speechWindow = window as Window &
+        typeof globalThis & {
+          SpeechRecognition?: any;
+          webkitSpeechRecognition?: any;
+        };
 
-const SpeechRecognition =
-  speechWindow.SpeechRecognition ||
-  speechWindow.webkitSpeechRecognition;
+      const SpeechRecognition =
+        speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition;
       if (SpeechRecognition) {
         const recognition = new SpeechRecognition();
 
@@ -535,20 +529,15 @@ const SpeechRecognition =
 
           let interim = "";
 
-          if (event && event.results) {
-            for (let i = event.resultIndex; i < event.results.length; i++) {
-              const result = event.results[i];
-              if (result && result[0]) {
-                if (result.isFinal) {
-                  finalTranscript += result[0].transcript + " ";
-                } else {
-                  interim += result[0].transcript;
-                }
-              }
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+              finalTranscript += event.results[i][0].transcript + " ";
+            } else {
+              interim += event.results[i][0].transcript;
             }
           }
 
-          const raw = (finalTranscript + interim) || "";
+          const raw = finalTranscript + interim;
 
           const corrected = interpretTranscript(raw, "GENERAL");
 

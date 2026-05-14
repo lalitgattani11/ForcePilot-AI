@@ -8,23 +8,23 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import type { InterviewConfig, Answer } from "./types";
 import { useAuth } from "./context/AuthContext";
 import UserMenu from "./components/UserMenu";
+import logo from "./assets/logo.png";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import "./App.css";
 
-
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
-  
+
   if (loading) return null;
   if (!user) return <Navigate to="/" replace />;
-  
+
   return <>{children}</>;
 };
 
 function App() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  
+
   const [config, setConfig] = useState<InterviewConfig | null>(null);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [showCreatorTag, setShowCreatorTag] = useState(false);
@@ -79,13 +79,16 @@ function App() {
   };
 
   const getSessionSlug = (role: string, id: string) => {
-    const cleanRole = role.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const cleanRole = role
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
     return `${cleanRole}--${id}`;
   };
 
   return (
     <ErrorBoundary>
-      <div className="relative min-h-[100dvh] bg-[#02040a] text-slate-300 font-sans selection:bg-emerald-500/20 overflow-x-hidden antialiased">
+      <div className="relative min-h-screen bg-[#02040a] text-slate-300 font-sans selection:bg-emerald-500/20 overflow-x-hidden antialiased">
         {/* Cinematic Premium Background */}
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
           <div className="absolute inset-0 bg-aurora opacity-[0.15] sm:opacity-[0.25] sm:animate-aurora"></div>
@@ -97,14 +100,16 @@ function App() {
         <header className="fixed top-0 left-0 right-0 z-50 border-b border-cyan-500/10 bg-black/70 backdrop-blur-md sm:backdrop-blur-2xl">
           <div className="max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
             {/* Left Side Branding */}
-            <div 
+            <div
               onClick={() => navigate("/")}
               className="flex items-center gap-2 sm:gap-3 min-w-0 cursor-pointer group"
             >
-              <div className="flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 rounded-xl sm:rounded-2xl bg-cyan-500/10 border border-cyan-400/20 shadow-[0_0_15px_rgba(34,211,238,0.1)] sm:shadow-[0_0_30px_rgba(34,211,238,0.18)] transition-transform sm:group-hover:scale-105 duration-500 will-change-transform">
-                <span className="font-bold text-base sm:text-lg tracking-tighter text-cyan-400">
-                  F
-                </span>
+              <div className="flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 rounded-xl sm:rounded-2xl overflow-hidden border border-cyan-400/20 shadow-[0_0_15px_rgba(34,211,238,0.1)] sm:shadow-[0_0_30px_rgba(34,211,238,0.18)] transition-transform sm:group-hover:scale-105 duration-500 will-change-transform">
+                <img
+                  src={logo}
+                  alt="ForcePilot AI"
+                  className="w-full h-full object-cover"
+                />
               </div>
 
               <div className="flex flex-col justify-center items-start text-left min-w-0">
@@ -128,61 +133,65 @@ function App() {
         </header>
 
         {/* Main Content */}
-        <main className="relative z-10 pt-20 sm:pt-28 pb-4 min-h-[100dvh] sm:min-h-[86vh] overflow-x-hidden">
-          <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8 min-h-[100dvh] sm:min-h-[86vh]">
+        <main className="relative z-10 pt-20 sm:pt-28 pb-4 min-h-[86vh] overflow-x-hidden">
+          <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8 min-h-[86vh]">
             <Routes>
-              <Route 
-                path="/" 
-                element={
-                  <SetupScreen 
-                    onStart={startInterview} 
-                    onViewHistoryDetail={(record) => navigate(`/session/${getSessionSlug(record.role, record.id)}`)} 
-                  />
-                } 
-              />
-              
               <Route
-  path="/interview"
-  element={
-    config ? (
-      <ChatInterface
-        config={config}
-        onComplete={completeInterview}
-      />
-    ) : (
-      <Navigate to="/" replace />
-    )
-  }
-/>
-              
-              <Route 
-                path="/results" 
+                path="/"
+                element={
+                  <SetupScreen
+                    onStart={startInterview}
+                    onViewHistoryDetail={(record) =>
+                      navigate(
+                        `/session/${getSessionSlug(record.role, record.id)}`,
+                      )
+                    }
+                  />
+                }
+              />
+
+              <Route
+                path="/interview"
+                element={
+                  config ? (
+                    <ChatInterface
+                      config={config}
+                      onComplete={completeInterview}
+                    />
+                  ) : (
+                    <Navigate to="/" replace />
+                  )
+                }
+              />
+
+              <Route
+                path="/results"
                 element={
                   <ProtectedRoute>
                     {answers.length > 0 && config ? (
-                      <ResultsScreen 
-                        answers={answers} 
-                        role={config.role} 
-                        onReset={resetInterview} 
+                      <ResultsScreen
+                        answers={answers}
+                        role={config.role}
+                        onReset={resetInterview}
                       />
                     ) : (
                       <Navigate to="/" replace />
                     )}
                   </ProtectedRoute>
-                } 
+                }
               />
-              
-              <Route 
-                path="/session/:id" 
+
+              <Route
+                path="/session/:id"
                 element={
                   <ProtectedRoute>
-                    <ResultsScreen 
-                      answers={[]} 
+                    <ResultsScreen
+                      answers={[]}
                       role="Salesforce Admin" // Fallback, will be updated by internal fetch
-                      onReset={() => navigate("/")} 
+                      onReset={() => navigate("/")}
                     />
                   </ProtectedRoute>
-                } 
+                }
               />
 
               <Route path="*" element={<Navigate to="/" replace />} />
