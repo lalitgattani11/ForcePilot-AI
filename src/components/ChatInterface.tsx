@@ -7,7 +7,7 @@ import React, {
   useCallback,
 } from "react";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 import {
   Mic,
@@ -18,7 +18,8 @@ import {
   HeartHandshake,
 } from "lucide-react";
 
-import { ThinkingState, TypewriterText } from "./ConversationalEffects";
+import { TypewriterText } from "./ConversationalEffects";
+import { InterviewThinkingState } from "./InterviewThinkingState";
 
 import type {
   InterviewConfig,
@@ -440,6 +441,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   }, [isUnlocked, status, runInterviewCycle]);
 
   useEffect(() => {
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    };
+  }, []);
+
+  useEffect(() => {
     return () => {
       stopSpeech();
     };
@@ -459,7 +470,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
   if (!isInterviewReady) {
     return (
-      <div className="flex min-h-[86vh] items-center justify-center bg-transparent">
+      <div className="flex h-[calc(100dvh-theme(spacing.20))] sm:h-[calc(100vh-theme(spacing.28))] items-center justify-center bg-transparent">
         <div className="flex flex-col items-center gap-6">
           <div className="h-12 w-12 rounded-full border-2 border-cyan-400/30 border-t-cyan-400 animate-spin" />
           <p className="text-xs font-bold tracking-[0.2em] text-cyan-400/60 uppercase">Initializing Simulator</p>
@@ -469,21 +480,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   }
 
   return (
-    <motion.div 
-      initial={false}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.2 }}
-      className="w-full flex flex-col h-[calc(100vh-theme(spacing.20)-theme(spacing.4))] sm:h-[calc(100vh-theme(spacing.28)-theme(spacing.6))] lg:min-w-[1400px] max-w-[1600px] mx-auto overflow-hidden"
-    >
+    <div className="h-[calc(100dvh-80px)] sm:h-[calc(100vh-theme(spacing.28)-theme(spacing.6))] flex flex-col bg-[#050816] sm:bg-transparent overflow-hidden fixed top-20 inset-x-0 bottom-0 z-40 sm:static sm:z-auto w-full lg:min-w-[1400px] max-w-[1600px] mx-auto sm:premium-glass sm:rounded-3xl sm:border sm:border-white/10 sm:mb-2">
       
       {/* Handshake Mask */}
       {status === "AWAITING_UNLOCK" && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm sm:backdrop-blur-xl flex items-center justify-center p-6"
-        >
+        <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm sm:backdrop-blur-xl flex items-center justify-center p-6">
           <div className="max-w-xs w-full text-center space-y-8">
             <div className="space-y-3">
               <h3 className="text-xl font-bold text-white">Start Session</h3>
@@ -497,14 +498,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               Enable Audio
             </button>
           </div>
-        </motion.div>
+        </div>
       )}
 
-      {/* Main Interface */}
-      <div className="flex-1 flex flex-col premium-glass rounded-none sm:rounded-3xl overflow-hidden border border-white/10 min-h-0 mb-2">
-        
-        {/* Header (Shrink-0 to stay fixed) */}
-        <div className="shrink-0 px-4 sm:px-8 py-4 sm:py-6 border-b border-white/[0.05] flex justify-between items-center bg-white/[0.02]">
+      {/* HEADER */}
+      <div className="shrink-0 border-b border-white/5 z-50 bg-[#050816]">
+        <header className="px-4 sm:px-8 py-4 sm:py-6 flex justify-between items-center bg-[#050816] sm:bg-white/[0.02]">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white text-slate-950 flex items-center justify-center shadow-sm">
               <Cpu size={18} className="sm:size-[20px]" />
@@ -536,61 +535,67 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 ))}
              </div>
           </div>
-        </div>
+        </header>
+      </div>
 
-        {/* Chat History (Flex-1 + Overflow-y-auto to scroll) */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 scroll-smooth 
-          scrollbar-thin scrollbar-thumb-emerald-500/20 scrollbar-track-transparent hover:scrollbar-thumb-emerald-500/40 
-          [&::-webkit-scrollbar]:w-1.5
-          [&::-webkit-scrollbar-track]:bg-transparent
-          [&::-webkit-scrollbar-thumb]:bg-emerald-500/10
-          [&::-webkit-scrollbar-thumb]:rounded-full
-          [&::-webkit-scrollbar-thumb]:border-transparent
-          hover:[&::-webkit-scrollbar-thumb]:bg-emerald-500/30
-          [&::-webkit-scrollbar-thumb]:shadow-[0_0_10px_rgba(16,185,129,0.1)]">
-          <AnimatePresence initial={false}>
-            {messages.map((msg) => (
-              <motion.div
-                key={msg.id}
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2 }}
-                className={`flex ${msg.sender === "candidate" ? "justify-end" : "justify-start"} will-change-transform`}
-              >
-                <div className={`w-full ${msg.sender === "candidate" ? "text-right" : "text-left"}`}>
-                  <div className={`flex items-center gap-2 mb-1.5 sm:mb-2 text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider ${msg.sender === "candidate" ? "justify-end" : "justify-start"}`}>
-                    {msg.sender === "candidate" ? "You" : "AI Interviewer"}
-                  </div>
-                  <div className={`px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-sm leading-relaxed ${
-                    msg.sender === "candidate" 
-                    ? "bg-emerald-500/10 text-white border border-emerald-500/20" 
-                    : "bg-white/[0.03] text-slate-200 border border-white/[0.05]"
-                  }`}>
-                    {msg.sender === "interviewer" ? (
-                      <TypewriterText 
-                        text={msg.text} 
-                        isStreaming={msg.id === streamingMessageId}
-                        onComplete={() => {
-                          if (msg.id === streamingMessageId) setStreamingMessageId(null);
-                        }}
-                      />
-                    ) : (
-                      msg.text
-                    )}
-                  </div>
+      {/* CHAT AREA */}
+      <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide">
+        <main className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 scroll-smooth 
+          sm:scrollbar-thin sm:scrollbar-thumb-emerald-500/20 sm:scrollbar-track-transparent sm:hover:scrollbar-thumb-emerald-500/40 
+          sm:[&::-webkit-scrollbar]:w-1.5
+          sm:[&::-webkit-scrollbar-track]:bg-transparent
+          sm:[&::-webkit-scrollbar-thumb]:bg-emerald-500/10
+          sm:[&::-webkit-scrollbar-thumb]:rounded-full
+          sm:[&::-webkit-scrollbar-thumb]:border-transparent
+          sm:hover:[&::-webkit-scrollbar-thumb]:bg-emerald-500/30
+          sm:[&::-webkit-scrollbar-thumb]:shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+          {messages.map((msg) => (
+            <motion.div
+              key={msg.id}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+              className={`flex ${msg.sender === "candidate" ? "justify-end" : "justify-start"} will-change-transform`}
+            >
+              <div className={`w-full ${msg.sender === "candidate" ? "text-right" : "text-left"}`}>
+                <div className={`flex items-center gap-2 mb-1.5 sm:mb-2 text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider ${msg.sender === "candidate" ? "justify-end" : "justify-start"}`}>
+                  {msg.sender === "candidate" ? "You" : "AI Interviewer"}
                 </div>
-              </motion.div>
-            ))}
+                <div className={`px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-sm leading-relaxed ${
+                  msg.sender === "candidate" 
+                  ? "bg-emerald-500/10 text-white border border-emerald-500/20" 
+                  : "bg-white/[0.03] text-slate-200 border border-white/[0.05] min-h-[60px] md:min-h-0 flex items-center"
+                }`}>
+                  {msg.sender === "interviewer" ? (
+                    <TypewriterText 
+                      text={msg.text} 
+                      isStreaming={msg.id === streamingMessageId}
+                      onComplete={() => {
+                        if (msg.id === streamingMessageId) setStreamingMessageId(null);
+                      }}
+                    />
+                  ) : (
+                    msg.text
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          ))}
 
-            {(status === "ANALYZING" || status === "TRANSITIONING") && (
-              <ThinkingState key="thinking" />
-            )}
-          </AnimatePresence>
+          <InterviewThinkingState 
+            phase={
+              status === "ANALYZING" ? "analyzing" : 
+              (status === "TRANSITIONING" || (status === "AWAITING_UNLOCK" && messages.length === 0)) ? "generating" : 
+              "idle"
+            } 
+          />
           <div ref={chatEndRef} />
-        </div>
+        </main>
+      </div>
 
-        {/* Input Area (Shrink-0 to stay pinned) */}
-        <div className="shrink-0 p-4 sm:p-8 border-t border-white/[0.05] bg-white/[0.01]">
+      {/* INPUT */}
+      <div className="shrink-0 border-t border-white/5 bg-[#050816]">
+        <footer className="p-4 sm:p-8 bg-[#050816] sm:bg-white/[0.01]">
           <div className="flex gap-3 sm:gap-4 items-end w-full mx-auto relative">
             <textarea
               value={manualInput}
@@ -620,9 +625,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               </button>
             </div>
           </div>
-        </div>
+        </footer>
       </div>
-    </motion.div>
+
+    </div>
   );
 };
 

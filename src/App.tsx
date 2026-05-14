@@ -85,7 +85,7 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <div className="relative min-h-screen bg-[#02040a] text-slate-300 font-sans selection:bg-emerald-500/20 overflow-x-hidden antialiased">
+      <div className="relative min-h-[100dvh] bg-[#02040a] text-slate-300 font-sans selection:bg-emerald-500/20 overflow-x-hidden antialiased">
         {/* Cinematic Premium Background */}
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
           <div className="absolute inset-0 bg-aurora opacity-[0.15] sm:opacity-[0.25] sm:animate-aurora"></div>
@@ -128,8 +128,8 @@ function App() {
         </header>
 
         {/* Main Content */}
-        <main className="relative z-10 pt-20 sm:pt-28 pb-4 min-h-[86vh] overflow-x-hidden">
-          <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8 min-h-[86vh]">
+        <main className="relative z-10 pt-20 sm:pt-28 pb-4 min-h-[100dvh] sm:min-h-[86vh] overflow-x-hidden">
+          <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8 min-h-[100dvh] sm:min-h-[86vh]">
             <Routes>
               <Route 
                 path="/" 
