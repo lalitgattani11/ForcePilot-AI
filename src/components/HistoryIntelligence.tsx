@@ -793,115 +793,75 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       <AnalyticsDashboard stats={stats} />
 
       {/* Session Archives Section */}
-      <div className="space-y-10 pt-16 border-t border-white/5">
-        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 mb-12">
-          <div className="flex items-center justify-center sm:justify-start gap-3 shrink-0 w-full xl:w-auto">
-            <History className="text-cyan-500" size={24} />
-
-            <h3 className="text-3xl font-black text-white italic">
-              Intelligence Archives
-            </h3>
+      <div className="space-y-12 pt-16 border-t border-white/5">
+        <div className="flex flex-col md:flex-row items-end justify-between gap-6 border-b border-white/5 pb-8">
+          <div className="space-y-2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+              Intelligence <span className="text-cyan-400">Archives.</span>
+            </h2>
+            <p className="text-slate-500 text-sm sm:text-base max-w-lg">
+              Review and analyze your previous technical simulation sessions and recruiter-grade evaluation reports.
+            </p>
           </div>
 
           {/* Search & Filters */}
-          <div className="flex flex-wrap md:flex-nowrap items-center gap-3 w-full xl:w-auto">
-            <div className="relative group w-full md:w-64 shrink-0">
+          <div className="flex flex-wrap md:flex-nowrap items-center gap-3 w-full md:w-auto pb-1">
+            <div className="relative group w-full md:w-48 shrink-0">
               <Search
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors"
-                size={16}
+                size={14}
               />
 
               <input
                 type="text"
-                placeholder="Search history..."
+                placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-white/5 border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-[13px] sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all w-full"
+                className="bg-white/5 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-xs text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all w-full"
               />
             </div>
 
-            <div className="relative group w-full md:min-w-[180px] md:flex-1 md:flex-initial">
+            <div className="relative group w-full md:w-40">
               <select
                 value={filterRole}
                 onChange={(e) => setFilterRole(e.target.value)}
-                className="appearance-none bg-white/5 border border-white/10 rounded-2xl py-3 pl-4 pr-10 text-[13px] sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
+                className="appearance-none bg-white/5 border border-white/10 rounded-xl py-2.5 pl-4 pr-10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
               >
-                <option value="all" className="bg-[#0f172a] text-white">
-                  All Roles
-                </option>
-
+                <option value="all" className="bg-[#0f172a] text-white">All Roles</option>
                 {uniqueRoles.map((role) => (
-                  <option
-                    key={role}
-                    value={role}
-                    className="bg-[#0f172a] text-white"
-                  >
-                    {role}
-                  </option>
+                  <option key={role} value={role} className="bg-[#0f172a] text-white">{role}</option>
                 ))}
               </select>
-              <ChevronDown
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors"
-                size={14}
-              />
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors" size={12} />
             </div>
 
-            <div className="relative group w-full md:min-w-[180px] md:flex-1 md:flex-initial">
+            <div className="relative group w-full md:w-40">
               <select
                 value={filterDifficulty}
                 onChange={(e) => setFilterDifficulty(e.target.value)}
-                className="appearance-none bg-white/5 border border-white/10 rounded-2xl py-3 pl-4 pr-10 text-[13px] sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
+                className="appearance-none bg-white/5 border border-white/10 rounded-xl py-2.5 pl-4 pr-10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
               >
-                <option value="all" className="bg-[#0f172a] text-white">
-                  All Difficulties
-                </option>
-
+                <option value="all" className="bg-[#0f172a] text-white">All Diffs</option>
                 {uniqueDifficulties.map((diff) => (
-                  <option
-                    key={diff}
-                    value={diff}
-                    className="bg-[#0f172a] text-white"
-                  >
-                    {diff}
-                  </option>
+                  <option key={diff} value={diff} className="bg-[#0f172a] text-white">{diff}</option>
                 ))}
               </select>
-              <ChevronDown
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors"
-                size={14}
-              />
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors" size={12} />
             </div>
 
-            <div className="relative group w-full md:min-w-[180px] md:flex-1 md:flex-initial">
+            <div className="relative group w-full md:w-40">
               <select
                 value={filterScore}
                 onChange={(e) => setFilterScore(e.target.value)}
-                className="appearance-none bg-white/5 border border-white/10 rounded-2xl py-3 pl-4 pr-10 text-[13px] sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
+                className="appearance-none bg-white/5 border border-white/10 rounded-xl py-2.5 pl-4 pr-10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
               >
-                <option value="all" className="bg-[#0f172a] text-white">
-                  All Scores
-                </option>
-
-                <option value="exceptional" className="bg-[#0f172a] text-white">
-                  Exceptional (90+)
-                </option>
-
-                <option value="strong" className="bg-[#0f172a] text-white">
-                  Strong (80-89)
-                </option>
-
-                <option value="developing" className="bg-[#0f172a] text-white">
-                  Moderate (70-79)
-                </option>
-
-                <option value="needs-work" className="bg-[#0f172a] text-white">
-                  Needs Work (&lt;70)
-                </option>
+                <option value="all" className="bg-[#0f172a] text-white">All Scores</option>
+                <option value="exceptional" className="bg-[#0f172a] text-white">90+</option>
+                <option value="strong" className="bg-[#0f172a] text-white">80-89</option>
+                <option value="developing" className="bg-[#0f172a] text-white">70-79</option>
+                <option value="needs-work" className="bg-[#0f172a] text-white">&lt;70</option>
               </select>
-              <ChevronDown
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors"
-                size={14}
-              />
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors" size={12} />
             </div>
           </div>
         </div>
@@ -917,7 +877,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                 Featured Intelligence
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <AnimatePresence mode="popLayout">
                   {featuredSessions.map(({ record, type }) => (
                     <motion.div

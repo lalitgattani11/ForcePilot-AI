@@ -79,31 +79,32 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onStart, onViewHistoryDetail 
     <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto py-4 sm:py-8 px-3 sm:px-5 lg:px-8 space-y-12 sm:space-y-24">
       
       {/* 1. PRIMARY FOCUS: HERO & ROLE SELECTION */}
-      <section className="space-y-12 sm:space-y-20">
-        <div className="text-center space-y-4 sm:space-y-8 reveal-1">
-          <div className="hidden lg:flex justify-center mb-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/5 px-5 py-2 text-xs tracking-[0.25em] text-cyan-300 backdrop-blur-md">
-              <span className="h-2 w-2 rounded-full bg-cyan-400"></span>
+      <section className="space-y-12 lg:space-y-18 xl:space-y-24 pt-4 lg:pt-10 xl:pt-16 overflow-visible">
+        <div className="text-center space-y-6 lg:space-y-8 xl:space-y-10 reveal-1 max-w-4xl lg:max-w-6xl xl:max-w-[90rem] mx-auto overflow-visible">
+          <div className="hidden lg:flex justify-center mb-2">
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/5 px-6 py-2 text-xs tracking-[0.3em] text-cyan-300 backdrop-blur-md">
+              <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
               INTERVIEW INTELLIGENCE
             </div>
           </div>
 
-          <h1 className="hero-title">
-            The future of <br className="hidden sm:block" />{" "}
-            <span className="inline-block pr-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] italic">
-              Salesforce
-            </span>{" "}
-            mastery.
+          <h1 className="hero-title px-4 overflow-visible">
+            <span className="inline-block">The future of</span> <br />
+            <span className="inline-block">
+              <span className="inline-block pr-2 lg:pr-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] italic overflow-visible">
+                Salesforce
+              </span>{" "}
+              mastery.
+            </span>
           </h1>
           
-          <p className="sub-title mx-auto text-slate-400 max-w-xl">
-            ForcePilot is an elite technical simulator for SFDC architects. 
-            Bridge the gap between theory and enterprise-scale execution with AI-driven insights.
+          <p className="sub-title mx-auto px-6">
+            Master Salesforce interviews with AI-powered mock sessions and real-world technical practice.
           </p>
 
           {!user && (
-            <div className="pt-4 sm:pt-6">
-               <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/[0.02] border border-white/5 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            <div className="pt-4">
+               <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white/[0.02] border border-white/5 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                   <Zap size={12} className="text-cyan-400" />
                   Sign in to track your career evolution
                </div>
@@ -111,7 +112,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onStart, onViewHistoryDetail 
           )}
         </div>
 
-        <div className="premium-glass rounded-[2rem] sm:rounded-[3rem] p-1 shadow-2xl reveal-2 max-w-5xl mx-auto">
+        <div className="premium-glass rounded-[2rem] sm:rounded-[3rem] p-1 shadow-2xl reveal-2 w-full mx-auto">
           <div className="bg-slate-950/40 rounded-[1.9rem] sm:rounded-[2.9rem] p-6 sm:p-10 md:p-16 space-y-4 sm:space-y-12 border border-white/[0.02]">
             
             {/* Top: Identity & Track Intelligence Unit */}
@@ -254,10 +255,8 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onStart, onViewHistoryDetail 
 
       {/* 3. PERFORMANCE HISTORY SECTION */}
       {user && (
-        <section className="pt-12 sm:pt-24 border-t border-white/[0.05] reveal-4">
-          <div className="max-w-6xl mx-auto px-4">
-            <HistoryIntelligence onViewDetail={onViewHistoryDetail} />
-          </div>
+        <section id="analytics" className="pt-12 sm:pt-24 border-t border-white/[0.05] reveal-4 w-full">
+          <HistoryIntelligence onViewDetail={onViewHistoryDetail} />
         </section>
       )}
 

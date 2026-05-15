@@ -1,4 +1,3 @@
-import AuthButton from "./components/AuthButton";
 import { useState, useEffect, lazy, Suspense } from "react";
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import SetupScreen from "./components/SetupScreen";
@@ -7,8 +6,7 @@ import ResultsScreen from "./components/ResultsScreen";
 import ErrorBoundary from "./components/ErrorBoundary";
 import type { InterviewConfig, Answer } from "./types";
 import { useAuth } from "./context/AuthContext";
-import UserMenu from "./components/UserMenu";
-import logo from "./assets/logo.png";
+import Navbar from "./components/Navbar";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import "./App.css";
 
@@ -32,7 +30,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 function App() {
-  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [config, setConfig] = useState<InterviewConfig | null>(null);
@@ -88,12 +85,9 @@ function App() {
     navigate("/");
   };
 
-  const getSessionSlug = (role: string, id: string) => {
-    const cleanRole = role
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
-    return `${cleanRole}--${id}`;
+  const onViewHistoryDetail = (record: any) => {
+    setAnswers(record.full_results || []);
+    navigate("/results");
   };
 
   return (
@@ -106,41 +100,7 @@ function App() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_-20%,rgba(16,185,129,0.05)_0%,transparent_50%)]"></div>
         </div>
 
-        {/* New Premium Neon Navbar */}
-        <header className="fixed top-0 left-0 right-0 z-50 border-b border-cyan-500/10 bg-black/70 backdrop-blur-md sm:backdrop-blur-2xl">
-          <div className="max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
-            {/* Left Side Branding */}
-            <div
-              onClick={() => navigate("/")}
-              className="flex items-center gap-2 sm:gap-3 min-w-0 cursor-pointer group"
-            >
-              <div className="flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 rounded-xl sm:rounded-2xl overflow-hidden border border-cyan-400/20 shadow-[0_0_15px_rgba(34,211,238,0.1)] sm:shadow-[0_0_30px_rgba(34,211,238,0.18)] transition-transform sm:group-hover:scale-105 duration-500 will-change-transform">
-                <img
-                  src={logo}
-                  alt="ForcePilot AI"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              <div className="flex flex-col justify-center items-start text-left min-w-0">
-                <h1 className="text-[13px] sm:text-base font-semibold tracking-wide text-white leading-none truncate">
-                  ForcePilot AI
-                </h1>
-              </div>
-            </div>
-
-            {/* Right Side Auth */}
-            <div className="flex items-center justify-end flex-shrink-0">
-              {user ? (
-                <UserMenu />
-              ) : (
-                <div className="flex justify-end min-w-0">
-                  <AuthButton />
-                </div>
-              )}
-            </div>
-          </div>
-        </header>
+        <Navbar />
 
         {/* Main Content */}
         <main className="relative z-10 pt-20 sm:pt-28 pb-4 min-h-[86vh] overflow-x-hidden">
@@ -148,62 +108,33 @@ function App() {
             <Routes>
               <Route
                 path="/"
-                element={
-                  <SetupScreen
-                    onStart={startInterview}
-                    onViewHistoryDetail={(record) =>
-                      navigate(
-                        `/session/${getSessionSlug(record.role, record.id)}`,
-                      )
-                    }
-                  />
-                }
+                element={<SetupScreen onStart={startInterview} onViewHistoryDetail={onViewHistoryDetail} />}
               />
-
               <Route
                 path="/interview"
                 element={
-                  config ? (
-                    <ChatInterface
-                      config={config}
-                      onComplete={completeInterview}
-                    />
-                  ) : (
-                    <Navigate to="/" replace />
-                  )
-                }
-              />
-
-              <Route
-                path="/results"
-                element={
                   <ProtectedRoute>
-                    {answers.length > 0 && config ? (
-                      <ResultsScreen
-                        answers={answers}
-                        role={config.role}
-                        onReset={resetInterview}
-                      />
+                    {config ? (
+                      <ChatInterface config={config} onComplete={completeInterview} />
                     ) : (
                       <Navigate to="/" replace />
                     )}
                   </ProtectedRoute>
                 }
               />
-
               <Route
-                path="/session/:id"
+                path="/results"
                 element={
                   <ProtectedRoute>
-                    <ResultsScreen
-                      answers={[]}
-                      role="Salesforce Admin" // Fallback, will be updated by internal fetch
-                      onReset={() => navigate("/")}
-                    />
+                    {answers.length > 0 ? (
+                      <ResultsScreen answers={answers} onReset={resetInterview} />
+                    ) : (
+                      <Navigate to="/" replace />
+                    )}
                   </ProtectedRoute>
                 }
               />
-
+              
               <Route 
                 path="/apex-interview-questions" 
                 element={
