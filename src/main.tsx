@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
 import './index.css';
 
@@ -14,11 +15,13 @@ if (container) {
 
   root.render(
     <React.StrictMode>
-      <BrowserRouter>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </BrowserRouter>
+      <HelmetProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </BrowserRouter>
+      </HelmetProvider>
     </React.StrictMode>
   );
 } else {

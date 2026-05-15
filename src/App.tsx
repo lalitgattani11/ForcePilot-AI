@@ -1,5 +1,5 @@
 import AuthButton from "./components/AuthButton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import SetupScreen from "./components/SetupScreen";
 import ChatInterface from "./components/ChatInterface";
@@ -11,6 +11,10 @@ import UserMenu from "./components/UserMenu";
 import logo from "./assets/logo.png";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import "./App.css";
+
+const ApexInterviewQuestions = lazy(() => import("./components/ApexInterviewQuestions"));
+const LwcInterviewGuide = lazy(() => import("./components/LwcInterviewGuide"));
+const GovernorLimitsExplained = lazy(() => import("./components/GovernorLimitsExplained"));
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
@@ -192,6 +196,45 @@ function App() {
                     />
                   </ProtectedRoute>
                 }
+              />
+
+              <Route 
+                path="/apex-interview-questions" 
+                element={
+                  <Suspense fallback={
+                    <div className="min-h-screen flex items-center justify-center">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                    </div>
+                  }>
+                    <ApexInterviewQuestions />
+                  </Suspense>
+                } 
+              />
+
+              <Route 
+                path="/lwc-interview-guide" 
+                element={
+                  <Suspense fallback={
+                    <div className="min-h-screen flex items-center justify-center">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                    </div>
+                  }>
+                    <LwcInterviewGuide />
+                  </Suspense>
+                } 
+              />
+
+              <Route 
+                path="/governor-limits-explained" 
+                element={
+                  <Suspense fallback={
+                    <div className="min-h-screen flex items-center justify-center">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-rose-500 border-t-transparent"></div>
+                    </div>
+                  }>
+                    <GovernorLimitsExplained />
+                  </Suspense>
+                } 
               />
 
               <Route path="*" element={<Navigate to="/" replace />} />

@@ -8,9 +8,14 @@ import {
   UserCheck,
   HeartHandshake,
   Zap,
-  BrainCircuit
+  BrainCircuit,
+  Terminal,
+  Layers,
+  ShieldAlert,
+  ArrowRight
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 import HistoryIntelligence from './HistoryIntelligence';
 import type { InterviewConfig, Role, Difficulty, InterviewerPersonality } from '../types';
 
@@ -253,6 +258,66 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onStart, onViewHistoryDetail 
         </section>
       )}
 
+      {/* 4. TECHNICAL RESOURCES / SEO SECTION */}
+      <section className="space-y-12 pb-12 reveal-4">
+        <div className="flex flex-col md:flex-row items-end justify-between gap-6 border-b border-white/5 pb-8">
+          <div className="space-y-2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+              Technical <span className="text-emerald-400">Intelligence.</span>
+            </h2>
+            <p className="text-slate-500 text-sm sm:text-base max-w-lg">
+              Master the technical nuances of the Salesforce platform with our deep-dive interview guides.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              title: "Apex Questions",
+              desc: "From bulkification to trigger patterns and transaction control.",
+              link: "/apex-interview-questions",
+              icon: Terminal,
+              color: "emerald"
+            },
+            {
+              title: "LWC Guide",
+              desc: "Shadow DOM, reactivity, and performance for modern frontends.",
+              link: "/lwc-interview-guide",
+              icon: Layers,
+              color: "cyan"
+            },
+            {
+              title: "Governor Limits",
+              desc: "Deep-dive into multi-tenant constraints and architectural safety.",
+              link: "/governor-limits-explained",
+              icon: ShieldAlert,
+              color: "rose"
+            }
+          ].map((item, i) => (
+            <Link 
+              key={i} 
+              to={item.link}
+              className="group relative bg-white/[0.02] border border-white/5 p-8 rounded-3xl hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500 overflow-hidden"
+            >
+              <div className={`mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-${item.color}-500/10 text-${item.color}-400 group-hover:scale-110 transition-transform duration-500`}>
+                <item.icon size={24} />
+              </div>
+              
+              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                {item.title}
+                <ArrowRight size={16} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500" />
+              </h3>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                {item.desc}
+              </p>
+
+              {/* Decorative Gradient Overlay */}
+              <div className={`absolute -right-12 -bottom-12 h-32 w-32 bg-${item.color}-500/5 blur-[60px] rounded-full group-hover:bg-${item.color}-500/10 transition-colors duration-500`}></div>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 };
