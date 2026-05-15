@@ -86,7 +86,7 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate('/interview')}
             className="w-full sm:w-auto px-12 py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(59,130,246,0.2)] flex items-center justify-center gap-3 group active:scale-95"
           >
             Practice Apex Trigger Interviews
@@ -193,7 +193,7 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
           </h2>
           <div className="pt-8">
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate('/interview')}
               className="px-14 py-6 bg-blue-600 hover:bg-blue-500 text-white rounded-[2rem] font-black text-xl transition-all shadow-[0_0_50px_rgba(59,130,246,0.3)] flex items-center justify-center gap-4 mx-auto group"
             >
               Start Trigger Practice
