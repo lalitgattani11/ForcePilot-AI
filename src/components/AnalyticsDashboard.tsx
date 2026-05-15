@@ -123,34 +123,34 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
   return (
     <div className="space-y-8">
       {/* 1. Integrated Intelligence Surface: Executive Summary */}
-      <div className="premium-glass rounded-[2.5rem] p-8 sm:p-12 lg:p-16 border border-white/5 bg-slate-950/20 relative overflow-hidden group">
+      <div className="premium-glass rounded-[2.5rem] p-8 sm:p-12 lg:px-16 lg:py-12 border border-white/5 bg-slate-950/20 relative overflow-hidden group">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-500/[0.04] blur-[120px] pointer-events-none" />
 
-        <div className="relative z-10 flex flex-col xl:flex-row gap-12 xl:items-center justify-between">
-          <div className="space-y-6 max-w-2xl">
+        <div className="relative z-10 flex flex-col xl:flex-row gap-10 xl:items-center justify-between">
+          <div className="space-y-5 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-300 text-[9px] font-black tracking-[0.3em] uppercase">
               <Activity size={12} className="text-cyan-400" />
               Interview Performance Analysis
             </div>
 
-            <div className="space-y-3">
-              <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tighter leading-none">
+            <div className="space-y-2.5">
+              <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tighter leading-none">
                 Performance{" "}
                 <span className="inline-block pr-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]">
                   Insights
                 </span>
               </h2>
-              <p className="text-slate-400 text-sm font-medium leading-relaxed max-w-xl">
+              <p className="text-slate-400 text-xs sm:text-sm font-medium leading-relaxed max-w-xl">
                 Track your technical evolution and career readiness. ForcePilot AI synthesizes thousands of data points from your sessions to map your trajectory toward Salesforce mastery.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-4 pt-2">
+            <div className="flex flex-wrap gap-3 pt-1">
               <div className="px-4 py-2 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center gap-3">
                 <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">
                   Readiness
                 </div>
-                <div className="text-sm font-bold text-slate-200">
+                <div className="text-xs sm:text-sm font-bold text-slate-200">
                   {stats.readiness}
                 </div>
               </div>
@@ -158,36 +158,36 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
                 <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">
                   Status
                 </div>
-                <div className="text-sm font-bold text-slate-200">
+                <div className="text-xs sm:text-sm font-bold text-slate-200">
                   {stats.dataConfidence}
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-12 lg:pr-6 shrink-0">
-            <div className="space-y-1 text-center">
+          <div className="flex items-center gap-8 sm:gap-12 lg:pr-6 shrink-0">
+            <div className="space-y-0.5 text-center">
               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
                 OVERALL SCORE
               </div>
-              <div className="text-6xl sm:text-7xl font-black text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+              <div className="text-5xl sm:text-7xl font-black text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                 {stats.avgScore}%
               </div>
             </div>
             {!isCalibration && (
-              <div className="space-y-1 text-center border-l border-white/10 pl-12">
+              <div className="space-y-0.5 text-center border-l border-white/10 pl-8 sm:pl-12">
                 <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
                   RECENT GROWTH
                 </div>
                 {stats.recentGrowth !== null ? (
                   <div
-                    className={`text-3xl sm:text-4xl font-black ${stats.recentGrowth >= 0 ? "text-emerald-400" : "text-rose-400"}`}
+                    className={`text-2xl sm:text-4xl font-black ${stats.recentGrowth >= 0 ? "text-emerald-400" : "text-rose-400"}`}
                   >
                     {stats.recentGrowth >= 0 ? "+" : ""}
                     {Math.round(stats.recentGrowth)}%
                   </div>
                 ) : (
-                  <div className="text-3xl font-black text-cyan-400">
+                  <div className="text-2xl sm:text-4xl font-black text-cyan-400">
                     Baseline
                   </div>
                 )}
@@ -319,7 +319,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
           </div>
 
           {/* Metrics Summary Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-10 mt-10 border-t border-white/5">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 pt-8 mt-8 sm:pt-10 sm:mt-10 border-t border-white/5">
             <div className="px-5 py-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
               <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-wider text-slate-500">
                 <ShieldCheck size={12} className="text-emerald-500 shrink-0" />

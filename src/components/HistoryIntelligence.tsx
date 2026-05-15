@@ -793,7 +793,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       <AnalyticsDashboard stats={stats} />
 
       {/* Session Archives Section */}
-      <div className="space-y-12 pt-16 border-t border-white/5">
+      <div className="space-y-12 pt-12 border-t border-white/5">
         <div className="flex flex-col md:flex-row items-end justify-between gap-6 border-b border-white/5 pb-8">
           <div className="space-y-2">
             <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">

@@ -103,8 +103,8 @@ function App() {
         <Navbar />
 
         {/* Main Content */}
-        <main className="relative z-10 pt-20 sm:pt-28 pb-4 min-h-[86vh] overflow-x-hidden">
-          <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8 min-h-[86vh]">
+        <main className="relative z-10 pt-20 sm:pt-28 pb-4 overflow-x-hidden">
+          <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8">
             <Routes>
               <Route
                 path="/"
