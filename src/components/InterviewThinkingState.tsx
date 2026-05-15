@@ -42,9 +42,6 @@ export const InterviewThinkingState: React.FC<InterviewThinkingStateProps> = ({
   useEffect(() => {
     if (phase === "idle") return;
 
-    // Reset index when phase changes
-    setMessageIndex(0);
-
     const interval = setInterval(() => {
       if (messages.length > 0) {
         setMessageIndex((prev) => (prev + 1) % messages.length);
@@ -53,6 +50,10 @@ export const InterviewThinkingState: React.FC<InterviewThinkingStateProps> = ({
 
     return () => clearInterval(interval);
   }, [phase, messages.length]);
+
+  useEffect(() => {
+    setMessageIndex(0);
+  }, [phase]);
 
   return (
     <div

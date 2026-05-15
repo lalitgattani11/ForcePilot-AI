@@ -1,11 +1,9 @@
 {
-  "routes": [
+  "cleanUrls": true,
+  "rewrites": [
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/.*",
-      "dest": "/index.html"
+      "source": "/((?!robots\\.txt|sitemap\\.xml|favicon\\.ico|manifest\\.webmanifest|pwa-192\\.png|pwa-512\\.png|sw\\.js|registerSW\\.js).*)",
+      "destination": "/index.html"
     }
   ]
 }

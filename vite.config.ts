@@ -11,6 +11,13 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
 
+      workbox: {
+        navigateFallbackDenylist: [
+          /^\/robots\.txt$/,
+          /^\/sitemap\.xml$/,
+        ],
+      },
+
       manifest: {
         name: "ForcePilot AI",
         short_name: "ForcePilot",
@@ -53,4 +60,26 @@ export default defineConfig({
       },
     }),
   ],
+
+  build: {
+    chunkSizeWarningLimit: 1000,
+
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (id.includes("react")) {
+            return "react";
+          }
+
+          if (id.includes("framer-motion")) {
+            return "motion";
+          }
+
+          if (id.includes("@supabase")) {
+            return "supabase";
+          }
+        },
+      },
+    },
+  },
 });
