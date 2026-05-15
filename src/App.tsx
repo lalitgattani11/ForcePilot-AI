@@ -15,6 +15,12 @@ import "./App.css";
 const ApexInterviewQuestions = lazy(() => import("./components/ApexInterviewQuestions"));
 const LwcInterviewGuide = lazy(() => import("./components/LwcInterviewGuide"));
 const GovernorLimitsExplained = lazy(() => import("./components/GovernorLimitsExplained"));
+const SalesforceMockInterview = lazy(() => import("./components/SalesforceMockInterview"));
+const SalesforceAdminInterview = lazy(() => import("./components/SalesforceAdminInterview"));
+const SalesforceFlowInterviewQuestions = lazy(() => import("./components/SalesforceFlowInterviewQuestions"));
+const ApexTriggerInterviewQuestions = lazy(() => import("./components/ApexTriggerInterviewQuestions"));
+const LwcCodingInterview = lazy(() => import("./components/LwcCodingInterview"));
+const ScenarioBasedSalesforceInterview = lazy(() => import("./components/ScenarioBasedSalesforceInterview"));
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
@@ -233,6 +239,84 @@ function App() {
                     </div>
                   }>
                     <GovernorLimitsExplained />
+                  </Suspense>
+                } 
+              />
+
+              <Route 
+                path="/salesforce-mock-interview" 
+                element={
+                  <Suspense fallback={
+                    <div className="min-h-screen flex items-center justify-center">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                    </div>
+                  }>
+                    <SalesforceMockInterview />
+                  </Suspense>
+                } 
+              />
+
+              <Route 
+                path="/salesforce-admin-interview" 
+                element={
+                  <Suspense fallback={
+                    <div className="min-h-screen flex items-center justify-center">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                    </div>
+                  }>
+                    <SalesforceAdminInterview />
+                  </Suspense>
+                } 
+              />
+
+              <Route 
+                path="/salesforce-flow-interview-questions" 
+                element={
+                  <Suspense fallback={
+                    <div className="min-h-screen flex items-center justify-center">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                    </div>
+                  }>
+                    <SalesforceFlowInterviewQuestions />
+                  </Suspense>
+                } 
+              />
+
+              <Route 
+                path="/apex-trigger-interview-questions" 
+                element={
+                  <Suspense fallback={
+                    <div className="min-h-screen flex items-center justify-center">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+                    </div>
+                  }>
+                    <ApexTriggerInterviewQuestions />
+                  </Suspense>
+                } 
+              />
+
+              <Route 
+                path="/lwc-coding-interview" 
+                element={
+                  <Suspense fallback={
+                    <div className="min-h-screen flex items-center justify-center">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                    </div>
+                  }>
+                    <LwcCodingInterview />
+                  </Suspense>
+                } 
+              />
+
+              <Route 
+                path="/scenario-based-salesforce-interview" 
+                element={
+                  <Suspense fallback={
+                    <div className="min-h-screen flex items-center justify-center">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-rose-500 border-t-transparent"></div>
+                    </div>
+                  }>
+                    <ScenarioBasedSalesforceInterview />
                   </Suspense>
                 } 
               />

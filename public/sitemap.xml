@@ -21,4 +21,34 @@
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://forcepilotai.online/salesforce-mock-interview</loc>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://forcepilotai.online/salesforce-admin-interview</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://forcepilotai.online/salesforce-flow-interview-questions</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://forcepilotai.online/apex-trigger-interview-questions</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://forcepilotai.online/lwc-coding-interview</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://forcepilotai.online/scenario-based-salesforce-interview</loc>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>

@@ -79,15 +79,14 @@ export const InterviewThinkingState: React.FC<InterviewThinkingStateProps> = ({
             <div className="relative flex items-center justify-center w-5 h-5 shrink-0">
               {/* Soft opacity pulse only */}
               <motion.div
-                animate={{ opacity: [0.2, 0.5, 0.2] }}
+                initial={{ opacity: 0.2 }}
+                animate={{ opacity: 0.45 }}
                 transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
+                  duration: 1.2,
+                  ease: "easeOut",
                 }}
                 className="absolute w-full h-full rounded-full bg-emerald-500/10"
               />
-
               {/* Static center dot */}
               <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-md" />
             </div>

@@ -12,7 +12,10 @@ import {
   Terminal,
   Layers,
   ShieldAlert,
-  ArrowRight
+  ArrowRight,
+  Settings,
+  Workflow,
+  Search
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
@@ -271,21 +274,56 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onStart, onViewHistoryDetail 
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
+            {
+              title: "Mock Interview",
+              desc: "Practice recruiter-grade technical simulations for all SFDC roles.",
+              link: "/salesforce-mock-interview",
+              icon: Rocket,
+              color: "emerald"
+            },
+            {
+              title: "Admin Interview",
+              desc: "Master Security, Sharing, and User Management configurations.",
+              link: "/salesforce-admin-interview",
+              icon: Settings,
+              color: "emerald"
+            },
+            {
+              title: "Flow Interview",
+              desc: "Master before-save logic and enterprise flow architecture.",
+              link: "/salesforce-flow-interview-questions",
+              icon: Workflow,
+              color: "cyan"
+            },
+            {
+              title: "Apex Triggers",
+              desc: "Deep-dive into bulkification and recursion control patterns.",
+              link: "/apex-trigger-interview-questions",
+              icon: Terminal,
+              color: "blue"
+            },
             {
               title: "Apex Questions",
               desc: "From bulkification to trigger patterns and transaction control.",
               link: "/apex-interview-questions",
-              icon: Terminal,
-              color: "emerald"
+              icon: Code2,
+              color: "cyan"
             },
             {
-              title: "LWC Guide",
-              desc: "Shadow DOM, reactivity, and performance for modern frontends.",
-              link: "/lwc-interview-guide",
+              title: "LWC Coding",
+              desc: "Reactive rendering, shadow DOM, and component architecture.",
+              link: "/lwc-coding-interview",
               icon: Layers,
-              color: "cyan"
+              color: "violet"
+            },
+            {
+              title: "Scenario Based",
+              desc: "Solve real production issues and architect thinking puzzles.",
+              link: "/scenario-based-salesforce-interview",
+              icon: Search,
+              color: "rose"
             },
             {
               title: "Governor Limits",
