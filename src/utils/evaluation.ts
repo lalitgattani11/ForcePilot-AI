@@ -104,17 +104,16 @@ export const evaluateAnswer = async (
     if (!response.ok) {
       throw new Error(`Server responded with ${response.status}`);
     }
-
     const data = await response.json();
 
     const score = data.score ?? 0;
 
     const understanding_level =
-      score >= 8
+      score >= 80
         ? "strong"
-        : score >= 6
+        : score >= 60
           ? "good"
-          : score >= 4
+          : score >= 40
             ? "partial"
             : "none";
 

@@ -1,13 +1,15 @@
 import { useState, useEffect, lazy, Suspense } from "react";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate, Link } from "react-router-dom";
 import SetupScreen from "./components/SetupScreen";
 import ChatInterface from "./components/ChatInterface";
 import ResultsScreen from "./components/ResultsScreen";
 import ErrorBoundary from "./components/ErrorBoundary";
 import type { InterviewConfig, Answer } from "./types";
+import logo from "./assets/logo.png";
 import { useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
+import BackToTop from "./components/BackToTop";
 import "./App.css";
 
 const ApexInterviewQuestions = lazy(() => import("./components/ApexInterviewQuestions"));
@@ -19,6 +21,9 @@ const SalesforceFlowInterviewQuestions = lazy(() => import("./components/Salesfo
 const ApexTriggerInterviewQuestions = lazy(() => import("./components/ApexTriggerInterviewQuestions"));
 const LwcCodingInterview = lazy(() => import("./components/LwcCodingInterview"));
 const ScenarioBasedSalesforceInterview = lazy(() => import("./components/ScenarioBasedSalesforceInterview"));
+const CareerRoadmap = lazy(() => import("./components/CareerRoadmap"));
+const AIInsights = lazy(() => import("./components/AIInsights"));
+const PrepTips = lazy(() => import("./components/PrepTips"));
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
@@ -34,26 +39,6 @@ function App() {
 
   const [config, setConfig] = useState<InterviewConfig | null>(null);
   const [answers, setAnswers] = useState<Answer[]>([]);
-  const [showCreatorTag, setShowCreatorTag] = useState(false);
-
-  useEffect(() => {
-    // Always dark mode for the premium experience
-    document.documentElement.classList.add("dark");
-    document.body.classList.add("dark");
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 250) {
-        setShowCreatorTag(true);
-      } else {
-        setShowCreatorTag(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     const stopSpeech = () => {
@@ -92,7 +77,7 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <div className="relative min-h-screen bg-[#02040a] text-slate-300 font-sans selection:bg-emerald-500/20 overflow-x-hidden antialiased">
+      <div className="relative flex flex-col min-h-screen bg-[#02040a] text-slate-300 font-sans selection:bg-emerald-500/20 antialiased overflow-x-hidden">
         {/* Cinematic Premium Background */}
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
           <div className="absolute inset-0 bg-aurora opacity-[0.15] sm:opacity-[0.25] sm:animate-aurora"></div>
@@ -103,7 +88,7 @@ function App() {
         <Navbar />
 
         {/* Main Content */}
-        <main className="relative z-10 pt-20 sm:pt-28 pb-4 overflow-x-hidden">
+        <main className="relative flex-grow pt-20 sm:pt-28 pb-10 overflow-visible">
           <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8">
             <Routes>
               <Route
@@ -252,21 +237,126 @@ function App() {
                 } 
               />
 
+              <Route 
+                path="/career-roadmap" 
+                element={
+                  <Suspense fallback={
+                    <div className="min-h-screen flex items-center justify-center">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                    </div>
+                  }>
+                    <CareerRoadmap />
+                  </Suspense>
+                } 
+              />
+
+              <Route 
+                path="/ai-interview-insights" 
+                element={
+                  <Suspense fallback={
+                    <div className="min-h-screen flex items-center justify-center">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                    </div>
+                  }>
+                    <AIInsights />
+                  </Suspense>
+                } 
+              />
+
+              <Route 
+                path="/interview-preparation-tips" 
+                element={
+                  <Suspense fallback={
+                    <div className="min-h-screen flex items-center justify-center">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent"></div>
+                    </div>
+                  }>
+                    <PrepTips />
+                  </Suspense>
+                } 
+              />
+
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </div>
         </main>
 
-        {/* Floating Creator Branding */}
-        {showCreatorTag ? (
-          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0 z-50 hidden md:block">
-            <div className="rounded-full border border-cyan-400/20 bg-black/80 px-4 py-2 text-xs text-cyan-200/80 backdrop-blur-sm sm:backdrop-blur-xl">
-              Engineered by Lalit Gattani
+        {/* Footer Branding - Cinematic Enterprise SaaS Footer */}
+        <footer id="site-footer" className="w-full border-t border-white/5 bg-[#02040a] mt-auto relative z-10 overflow-hidden">
+          {/* Ambient Depth Glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent"></div>
+          
+          <div className="max-w-7xl mx-auto px-8 lg:px-12 py-10 md:py-16 lg:py-24">
+            
+            {/* Top: Brand & Navigation */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 lg:gap-16 mb-12 md:mb-16">
+              
+              {/* Brand Intelligence Unit */}
+              <div className="md:col-span-6 flex flex-col items-center md:items-start space-y-4 md:space-y-6">
+                <div 
+                  onClick={() => navigate("/")} 
+                  className="flex items-center justify-center md:justify-start gap-3 group shrink-0 cursor-pointer relative"
+                >
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-cyan-500/20 blur-md rounded-lg group-hover:bg-cyan-500/30 transition-all duration-500 opacity-0 group-hover:opacity-100" />
+                    <div className="relative h-8 w-8 rounded-xl overflow-hidden border border-cyan-400/20 shadow-lg transition-transform group-hover:scale-105 duration-500">
+                      <img src={logo} alt="FP" className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[15px] font-black text-white tracking-tight leading-none uppercase">FORCE<span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">PILOT AI</span></span>
+                    <span className="text-[7px] font-bold text-slate-600 uppercase tracking-[0.2em] leading-none mt-1">Technical Intelligence</span>
+                  </div>
+                </div>
+                <p className="text-slate-500 text-[13px] leading-relaxed max-w-[280px] font-medium tracking-tight text-center md:text-left">
+                  AI-powered Salesforce interview intelligence for modern engineering teams.
+                </p>
+              </div>
+
+              {/* Navigation Intelligence Grid */}
+              <div className="md:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-x-4 sm:gap-x-8 gap-y-10 justify-items-center md:justify-items-end">
+                <div className="space-y-4 md:space-y-5 text-center md:text-left">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">Platform</h4>
+                  <ul className="space-y-3 md:space-y-3.5">
+                    <li><Link to="/salesforce-mock-interview" className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300">Mock Interviews</Link></li>
+                    <li><Link to="/analytics" className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300">Performance</Link></li>
+                  </ul>
+                </div>
+                <div className="space-y-4 md:space-y-5 text-center md:text-left">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">Resources</h4>
+                  <ul className="space-y-3 md:space-y-3.5">
+                    <li><Link to="/career-roadmap" className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300">Roadmap</Link></li>
+                    <li><Link to="/ai-interview-insights" className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300">Insights</Link></li>
+                  </ul>
+                </div>
+                <div className="hidden sm:block space-y-4 md:space-y-5 text-center md:text-left">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">Ecosystem</h4>
+                  <ul className="space-y-3 md:space-y-3.5">
+                    <li><Link to="/interview-preparation-tips" className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300">Prep Tips</Link></li>
+                    <li><Link to="/governor-limits-explained" className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300">Limits Guide</Link></li>
+                  </ul>
+                </div>
+              </div>
+
             </div>
+
+            {/* Bottom Row: Refined SaaS Legal Strip */}
+            <div className="pt-8 md:pt-10 border-t border-white/[0.03] flex flex-col items-center justify-center gap-4 md:gap-5">
+              <div className="text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-slate-700 md:text-slate-800 text-center">
+                AI-Powered Salesforce Intelligence
+              </div>
+              <div className="flex items-center gap-4 text-[11px] font-medium text-slate-500 md:text-slate-600 tracking-tight">
+                <span>&copy; {new Date().getFullYear()} ForcePilot AI.</span>
+                <span className="h-1 w-1 rounded-full bg-slate-900"></span>
+                <span>All rights reserved.</span>
+              </div>
+            </div>
+
           </div>
-        ) : null}
+        </footer>
 
         <PWAInstallPrompt />
+        <BackToTop />
       </div>
     </ErrorBoundary>
   );

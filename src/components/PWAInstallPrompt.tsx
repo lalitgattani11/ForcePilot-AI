@@ -48,7 +48,7 @@ export default function PWAInstallPrompt() {
   if (!isVisible) return null;
 
   return (
-  <div className="fixed bottom-5 left-1/2 z-[9999] w-[92%] max-w-sm -translate-x-1/2 rounded-3xl border border-cyan-500/20 bg-slate-950/95 p-4 shadow-2xl backdrop-blur-xl">
+  <div className="fixed bottom-5 left-1/2 z-[5000] w-[92%] max-w-sm -translate-x-1/2 rounded-3xl border border-cyan-500/20 bg-slate-950/95 p-4 shadow-2xl backdrop-blur-xl">
     
     <div className="flex items-start justify-between gap-4">
       

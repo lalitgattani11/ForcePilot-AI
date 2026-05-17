@@ -142,78 +142,59 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
         if (error) throw error;
 
-        const fetchedRecords = (Array.isArray(data) ? data : []).map(
+        // PRODUCTION-GRADE FILTERING: Include completed sessions & valid legacy data
+        const rawData = Array.isArray(data) ? data : [];
+        const filteredData = rawData.filter((record: any) => {
+          const isExplicitlyCompleted = record.interview_completed === true;
+          const hasTenQuestions = Number(record.completed_questions || record.duration || 0) >= 10;
+          const hasValidLegacyResults = Number(record.score || 0) > 0 && Array.isArray(record.full_results) && record.full_results.length > 0;
+          
+          return isExplicitlyCompleted || hasTenQuestions || hasValidLegacyResults;
+        });
+
+        const fetchedRecords = filteredData.map(
           (record: Record<string, unknown>) => {
             const rawScore = Number(record?.score || 0);
             const behavior = (record?.behavior_analytics as BehaviorAnalytics) || {};
+            const createdAt = String(record?.created_at || "");
             
-            // Apply normalization for consistent historical display
-            const normalize = (val: number) => {
-              if (val <= 0) return 0;
-              // If already normalized (>10), keep it
-              if (val > 10) return Math.round(val);
-              
-              // NEW Realism Logic: 
-              // If we have granular behavior analytics, reconstruct the composite
-              if (behavior.technical != null && behavior.communication != null) {
-                const tech = Number(behavior.technical) || 0;
-                const comm = Number(behavior.communication) || 0;
-                const comp = Number(behavior.completeness) || 0;
-                const cons = Number(behavior.consistency) || 0;
-                
-                // Composite: 40% Tech, 20% reasoning (legacy raw), 20% Comm, 10% Comp, 10% Cons
-                const composite = (tech * 0.4) + (rawScore * 2) + (comm * 0.2) + (comp * 0.1) + (cons * 0.1);
-                return Math.min(95, Math.round(composite));
-              }
+            // Apply simple rounding for consistency
+            const normalizedScore = Math.round(rawScore);
 
-              // Fallback for Legacy Data: Direct 0-10 to 0-100% mapping
-              // (4/10 technically correct = 40%)
-              return Math.min(95, Math.round(val * 10));
+            // PRODUCTION-LEVEL SESSION NORMALIZATION
+            const getNormalizedLabel = () => {
+              const diff = String(record?.difficulty || "").toLowerCase();
+              const score = normalizedScore;
+              if (score >= 90) return "Final Evaluation";
+              if (diff.includes("advanced") || diff.includes("intermediate")) return "Technical Screening";
+              return "Mock Interview";
             };
-
-            const normalizedScore = normalize(rawScore);
 
             return {
               ...record,
               id: String(record?.id || ""),
-              created_at: String(record?.created_at || ""),
+              created_at: createdAt,
               user_id: String(record?.user_id || ""),
               role: (!record?.role || String(record.role).toLowerCase() === "unknown") ? "Professional Readiness" as Role : String(record.role) as Role,
-              difficulty: (!record?.difficulty || String(record.difficulty).toLowerCase() === "unknown") ? "Initial Assessment" : String(record.difficulty),
+              difficulty: getNormalizedLabel(),
               score: normalizedScore,
-              communication_score: normalize(Number(record?.communication_score || rawScore)),
-              technical_score: normalize(Number(record?.technical_score || rawScore)),
-              confidence_score: normalize(Number(record?.confidence_score || rawScore)),
+              communication_score: Math.round(Number(record?.communication_score || rawScore)),
+              technical_score: Math.round(Number(record?.technical_score || rawScore)),
+              confidence_score: Math.round(Number(record?.confidence_score || rawScore)),
               feedback: String(record?.feedback || ""),
               transcript: String(record?.transcript || ""),
               coach_advice: String(record?.coach_advice || ""),
               ai_verdict: String(record?.ai_verdict || ""),
               duration: Number(record?.duration || 0),
-              weak_concepts: Array.isArray(record?.weak_concepts)
-                ? (record.weak_concepts as WeakConceptItem[])
-                : [],
-              skill_matrix: Array.isArray(record?.skill_matrix)
-                ? (record.skill_matrix as SkillMatrixItem[])
-                : [],
-              full_results: Array.isArray(record?.full_results)
-                ? (record.full_results as Answer[])
-                : [],
+              weak_concepts: Array.isArray(record?.weak_concepts) ? (record.weak_concepts as WeakConceptItem[]) : [],
+              skill_matrix: Array.isArray(record?.skill_matrix) ? (record.skill_matrix as SkillMatrixItem[]) : [],
+              full_results: Array.isArray(record?.full_results) ? (record.full_results as Answer[]) : [],
               behavior_analytics: behavior,
               focus: (() => {
                 const results = Array.isArray(record?.full_results) ? (record.full_results as any[]) : [];
                 if (results.length > 0) {
-                  const topic = results[0].displayTopic || results[0].topic;
-                  if (topic && topic !== "General" && topic !== "Technical Assessment") return topic;
-                  
-                  const question = results[0].displayQuestion || results[0].question || results[0].questionText || "";
-                  if (question) {
-                    const clean = question.replace(/[?.,]/g, "").split(" ");
-                    const keywords = clean.filter((w: string) => 
-                      w.length > 4 && 
-                      !["explain", "difference", "between", "salesforce", "purpose"].includes(w.toLowerCase())
-                    );
-                    return keywords.length > 0 ? keywords.slice(0, 2).join(" ") : "General Assessment";
-                  }
+                  const topic = results[0].displayTopic || results[0].topic || results[0].questionText || "General Assessment";
+                  return topic;
                 }
                 return "General Review";
               })(),
@@ -221,7 +202,19 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
           },
         );
 
-        setRecords(Array.isArray(fetchedRecords) ? fetchedRecords : []);
+        // PREVENT INCONSISTENT DUPLICATES: Deduplicate based on Role, Topic, Score, and Date (rounded to minute)
+        const uniqueMap = new Map();
+        fetchedRecords.forEach(r => {
+          const date = new Date(r.created_at);
+          const minuteKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}`;
+          const key = `${r.role}-${r.focus}-${r.score}-${minuteKey}`;
+          
+          if (!uniqueMap.has(key)) {
+            uniqueMap.set(key, r);
+          }
+        });
+
+        setRecords(Array.from(uniqueMap.values()));
       } catch (err) {
         console.error("[DEBUG_HISTORY_ERROR]", err);
       } finally {
@@ -421,20 +414,10 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
   }, [filteredRecords, records]);
 
   const uniqueTimelineRecords = useMemo(() => {
-    // 1. Ensure absolute uniqueness of all filtered records by ID
+    // Ensure absolute uniqueness of all filtered records by ID
     const uniqueMap = new Map(filteredRecords.map((r) => [r.id, r]));
-    const allUnique = Array.from(uniqueMap.values());
-
-    // 2. Identify sessions already featured above
-    const featuredIds = new Set(featuredSessions.map((f) => f.record.id));
-    
-    // 3. If we only have one session, don't exclude it from the timeline
-    // This prevents the "No matches" message from showing when a session actually exists.
-    if (allUnique.length <= 1) return allUnique;
-
-    // 4. Otherwise, strictly exclude featured sessions to avoid redundancy
-    return allUnique.filter((r) => !featuredIds.has(r.id));
-  }, [filteredRecords, featuredSessions]);
+    return Array.from(uniqueMap.values());
+  }, [filteredRecords]);
 
   const stats = useMemo(() => {
     if (records.length === 0) return null;
@@ -472,26 +455,26 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
     // Qualitative mapping for confidence
     const getConfidenceLabel = (conf: number) => {
-      if (conf >= 85) return "Exceptional";
-      if (conf >= 70) return "Strong";
-      if (conf >= 50) return "Moderate";
-      return "Needs Improvement";
+      if (conf >= 88) return "Expert Conviction";
+      if (conf >= 75) return "Strong";
+      if (conf >= 60) return "Moderate";
+      return "Low Conviction";
     };
 
     // Qualitative mapping for technical performance
     const getTechLabel = (score: number) => {
-      if (score >= 85) return "Architectural";
-      if (score >= 70) return "Professional";
-      if (score >= 50) return "Foundation";
-      return "Needs Improvement";
+      if (score >= 88) return "Architectural";
+      if (score >= 75) return "Professional";
+      if (score >= 60) return "Operational";
+      return "Conceptual Gaps";
     };
 
     // Qualitative mapping for communication
     const getCommLabel = (score: number) => {
-      if (score >= 85) return "Articulate";
-      if (score >= 70) return "Clear";
-      if (score >= 50) return "Improving";
-      return "Moderate";
+      if (score >= 88) return "Elite";
+      if (score >= 75) return "Professional";
+      if (score >= 60) return "Effective";
+      return "Needs Refinement";
     };
 
     // 3. Grounded Topic Extraction
@@ -668,6 +651,9 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
           day: "numeric",
         });
 
+        // SINGLE SOURCE OF TRUTH: Use the exact normalized score from the record
+        const consistentScore = Math.round(record.score || 0);
+
         return {
           session: dayMonth, // X-axis marker
           fullDate: date.toLocaleDateString(undefined, {
@@ -676,9 +662,10 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
             year: "numeric",
           }),
           role: record.role,
-          score: Math.round(record.score || 0),
+          score: consistentScore,
           technical: Math.round(record.technical_score || 0),
           communication: Math.round(record.communication_score || 0),
+          id: record.id // Explicitly map by ID for integrity
         };
       });
 
@@ -731,21 +718,21 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
     // Data Confidence & Tier Logic (Recruiter-friendly)
     const count = records.length;
     const intelligenceTier: "calibration" | "basic" | "advanced" =
-      count >= 8 ? "advanced" : count >= 1 ? "basic" : "calibration";
+      count >= 10 && baselineAvg >= 85 ? "advanced" : count >= 1 ? "basic" : "calibration";
 
     const dataConfidence =
-      count >= 8
-        ? "Verified Profile"
+      count >= 10 && baselineAvg >= 85
+        ? "Verified Expert"
         : count >= 3
           ? "Stable Pattern"
           : "Active Analysis";
 
     // Qualitative labels for Readiness
     const getReadinessLabel = (score: number) => {
-      if (score >= 85) return "Highly Ready";
-      if (score >= 70) return "Strong Candidate";
-      if (score >= 50) return "Moderate";
-      return "Needs Improvement";
+      if (score >= 88) return "Executive Ready";
+      if (score >= 75) return "Strong Candidate";
+      if (score >= 60) return "Operational";
+      return "Growth Required";
     };
 
     return {
@@ -780,26 +767,18 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
     );
   }
 
-  if (records.length === 0) {
-    return (
-      <div className="text-center py-20 premium-glass rounded-3xl border border-white/5">
-        <h3 className="text-xl font-bold text-white mb-2">No History Yet</h3>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-12">
       <AnalyticsDashboard stats={stats} />
 
       {/* Session Archives Section */}
-      <div className="space-y-12 pt-12 border-t border-white/5">
-        <div className="flex flex-col md:flex-row items-end justify-between gap-6 border-b border-white/5 pb-8">
-          <div className="space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Intelligence <span className="text-cyan-400">Archives.</span>
+      <div className="space-y-12 pt-8 border-t border-white/5">
+        <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 border-b border-white/5 pb-8">
+          <div className="space-y-2 text-center md:text-left overflow-visible">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight pb-1 md:pb-0 overflow-visible">
+              Intelligence <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]">Archives.</span>
             </h2>
-            <p className="text-slate-500 text-sm sm:text-base max-w-lg">
+            <p className="text-slate-500 text-sm sm:text-base max-w-lg mx-auto md:mx-0">
               Review and analyze your previous technical simulation sessions and recruiter-grade evaluation reports.
             </p>
           </div>
@@ -867,7 +846,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
         </div>
 
         {/* Featured Sessions */}
-        {featuredSessions.length > 0 &&
+        {records.length > 0 && featuredSessions.length > 0 &&
           searchQuery === "" &&
           filterRole === "all" &&
           filterScore === "all" && (
@@ -877,7 +856,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                 Featured Intelligence
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
                 <AnimatePresence mode="popLayout">
                   {featuredSessions.map(({ record, type }) => (
                     <motion.div
@@ -890,7 +869,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                         scale: 0.9,
                         transition: { duration: 0.2 },
                       }}
-                      className="relative"
+                      className="relative h-full"
                     >
                       <motion.button
                         whileHover={{ y: -8, scale: 1.02 }}
@@ -901,7 +880,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                               `/session/${getSessionSlug(record.role, record.id)}`,
                             );
                         }}
-                        className="w-full text-left relative group overflow-hidden premium-glass rounded-[2rem] p-8 border border-white/10 hover:border-cyan-500/30 transition-all"
+                        className="w-full h-full text-left relative group overflow-hidden premium-glass rounded-[2rem] p-8 border border-white/10 hover:border-cyan-500/30 transition-all flex flex-col"
                       >
                         {/* Type Badge */}
                         <div
@@ -928,7 +907,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                           <Trash2 size={18} />
                         </button>
 
-                        <div className="flex justify-between items-start mb-8">
+                        <div className="flex justify-between items-start mb-8 shrink-0">
                           <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-cyan-500/10 transition-colors">
                             {type === "latest" ? (
                               <Zap className="text-cyan-400" size={28} />
@@ -953,7 +932,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                           </div>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-4 flex-1 flex flex-col">
                           <h4 className="text-xl font-bold text-white leading-tight group-hover:text-cyan-400 transition-colors">
                             {record.role}
                           </h4>
@@ -986,7 +965,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                             </p>
                           )}
 
-                          <div className="pt-6 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500 group-hover:text-cyan-400 transition-colors">
+                          <div className="mt-auto pt-6 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500 group-hover:text-cyan-400 transition-colors">
                             <span>Analyze Session</span>
 
                             <ArrowUpRight size={16} />
@@ -1001,13 +980,13 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
           )}
 
         {/* Compact Timeline */}
-        {uniqueTimelineRecords.length > 0 && (
-          <div className="space-y-6">
-            <div className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500 flex items-center gap-2">
-              <History size={12} />
-              Session Timeline
-            </div>
+        <div className="space-y-6">
+          <div className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500 flex items-center gap-2">
+            <History size={12} />
+            Session Timeline
+          </div>
 
+          {uniqueTimelineRecords.length > 0 ? (
             <div className="premium-glass rounded-[2rem] border border-white/5 overflow-hidden">
               <div className="divide-y divide-white/5">
                 <AnimatePresence mode="popLayout">
@@ -1034,62 +1013,54 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                         whileHover={{
                           backgroundColor: "rgba(255, 255, 255, 0.02)",
                         }}
-                        className="w-full text-left px-8 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4 group transition-all relative"
+                        className="w-full text-left px-8 py-6 flex flex-col md:flex-row md:items-center gap-6 group transition-all relative"
                       >
-                        <div className="flex items-center gap-6 flex-1">
-                          <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:text-cyan-400 group-hover:bg-cyan-500/5 transition-all">
-                            <Target size={20} />
+                        {/* 1. IDENTITY & METADATA */}
+                        <div className="flex items-center gap-6 flex-1 min-w-0">
+                          <div className="w-11 h-11 shrink-0 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:text-cyan-400 group-hover:bg-cyan-500/5 transition-all">
+                            <Target size={22} />
                           </div>
 
-                          <div>
-                            <h4 className="font-bold text-white group-hover:text-cyan-400 transition-colors">
+                          <div className="min-w-0">
+                            <h4 className="font-bold text-white group-hover:text-cyan-400 transition-colors truncate">
                               {record.role}
                             </h4>
 
-                            <div className="text-xs text-slate-500 flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
+                            <div className="text-[11px] text-slate-500 flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 font-medium">
                               <div className="flex items-center gap-2">
-                                <Calendar size={12} />
+                                <Calendar size={13} className="text-slate-600" />
                                 {new Date(
                                   record.created_at,
-                                ).toLocaleDateString()}
+                                ).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                               </div>
 
                               {record.focus && (
-                                <div className="flex items-center gap-1.5 text-cyan-500/80 font-bold uppercase tracking-widest text-[9px]">
-                                  <Target size={10} />
-                                  Focus: {record.focus}
+                                <div className="flex items-center gap-1.5 text-cyan-500/60 font-black uppercase tracking-[0.15em] text-[9px]">
+                                  <div className="w-1 h-1 rounded-full bg-cyan-500/40" />
+                                  {record.focus}
                                 </div>
                               )}
                             </div>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-8">
-                          {/* Delete Button for Timeline */}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSessionToDelete(record);
-                            }}
-                            className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-slate-500 hover:text-[#ff7b9c] hover:bg-[#16090d] hover:border-[#4b1d2b] transition-all opacity-0 group-hover:opacity-100 hidden md:flex items-center justify-center hover:shadow-[0_0_15px_rgba(255,123,156,0.1)]"
-                            title="Delete Session"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-
-                          <div className="text-center w-24">
-                            <div className="text-xl font-black text-white">
+                        {/* 2. STATS & ACTIONS (Right Stack) */}
+                        <div className="flex items-center justify-between md:justify-end gap-6 md:gap-10 shrink-0">
+                          
+                          {/* Score Column (Fixed Width for Alignment) */}
+                          <div className="text-center w-20 shrink-0">
+                            <div className="text-xl font-black text-white group-hover:text-emerald-400 transition-colors">
                               {record.score}%
                             </div>
-
-                            <div className="text-[10px] uppercase tracking-widest text-slate-500">
-                              Score
+                            <div className="text-[9px] font-black uppercase tracking-widest text-slate-600">
+                              Accuracy
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-3">
+                          {/* Badge Column (Consistent Alignment) */}
+                          <div className="w-28 flex justify-center shrink-0">
                             <div
-                              className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${
+                              className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border text-center w-full ${
                                 record.score >= 90
                                   ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
                                   : record.score >= 80
@@ -1099,20 +1070,34 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                             >
                               {record.difficulty}
                             </div>
+                          </div>
 
-                            <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-slate-500 group-hover:border-cyan-500/50 group-hover:text-cyan-400 transition-all">
-                              <ChevronRight size={16} />
+                          {/* Actions Column */}
+                          <div className="flex items-center gap-4 shrink-0">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSessionToDelete(record);
+                              }}
+                              className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-[#ff7b9c] hover:bg-[#16090d] hover:border-[#4b1d2b] transition-all opacity-0 lg:group-hover:opacity-100 hidden md:flex items-center justify-center"
+                              title="Delete Session"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+
+                            <div className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-slate-500 group-hover:border-cyan-500/50 group-hover:text-cyan-400 group-hover:bg-cyan-500/5 transition-all">
+                              <ChevronRight size={18} />
                             </div>
                           </div>
                         </div>
 
-                        {/* Mobile Delete Action */}
+                        {/* Mobile Only: Top-Right Floating Delete */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             setSessionToDelete(record);
                           }}
-                          className="absolute top-4 right-4 md:hidden p-2 text-slate-500 active:text-[#ff7b9c]"
+                          className="absolute top-4 right-4 md:hidden p-2 text-slate-500 active:text-[#ff7b9c] bg-white/5 rounded-lg border border-white/5"
                         >
                           <Trash2 size={14} />
                         </button>
@@ -1133,10 +1118,25 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                 </div>
               )}
             </div>
+          ) : records.length === 0 ? (
+            <div className="p-12 text-center premium-glass rounded-[2rem] border border-white/5 italic text-slate-500 text-sm">
+              No timeline data available. Complete an interview to start your journey.
+            </div>
+          ) : null}
+        </div>
+
+        {records.length === 0 && (
+          <div className="p-12 sm:p-20 text-center space-y-4 premium-glass rounded-[2rem] border border-white/5">
+            <div className="text-white font-bold italic text-lg sm:text-xl">
+              No Completed Interviews Yet
+            </div>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
+              Finish your first full 10-question interview simulation to activate performance analytics and unlock your technical intelligence archives.
+            </p>
           </div>
         )}
 
-        {filteredRecords.length === 0 && (
+        {records.length > 0 && filteredRecords.length === 0 && (
           <div className="p-20 text-center space-y-3">
             <div className="text-white font-bold italic">
               No interview sessions matched your search.

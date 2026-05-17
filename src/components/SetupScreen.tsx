@@ -92,9 +92,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   ];
 
   return (
-    <div className="flex flex-col w-full lg:min-w-[1400px] max-w-[1600px] mx-auto py-4 sm:py-8 px-3 sm:px-5 lg:px-8 gap-12 sm:gap-10">
+    <div className="flex flex-col w-full lg:min-w-[1400px] max-w-[1600px] mx-auto py-4 sm:py-8 px-3 sm:px-5 lg:px-8 gap-8 sm:gap-6">
       {/* 1. PRIMARY FOCUS: HERO & ROLE SELECTION */}
-      <section className="relative flex flex-col justify-center min-h-screen pt-6 lg:pt-24 xl:pt-28 pb-16 lg:pb-20 overflow-visible">
+      <section className="relative flex flex-col justify-center min-h-[85vh] lg:min-h-[90vh] pt-6 lg:pt-20 xl:pt-24 pb-8 lg:pb-12 overflow-visible">
         <div className="text-center space-y-6 lg:space-y-8 xl:space-y-10 max-w-4xl lg:max-w-6xl xl:max-w-[90rem] mx-auto overflow-visible">
           <div className="hidden lg:flex justify-center mb-2">
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/5 px-6 py-2 text-xs tracking-[0.3em] text-cyan-300 backdrop-blur-md">
@@ -128,7 +128,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
           )}
         </div>
 
-        <div className="premium-glass rounded-[2rem] sm:rounded-[3rem] p-1 shadow-2xl w-full mx-auto mt-20 lg:mt-24">
+        <div className="premium-glass rounded-[2rem] sm:rounded-[3rem] p-1 shadow-2xl w-full mx-auto mt-12 lg:mt-16">
           <div className="bg-slate-950/40 rounded-[1.9rem] sm:rounded-[2.9rem] p-6 sm:p-10 md:p-16 space-y-4 sm:space-y-12 border border-white/[0.02]">
             {/* Top: Identity & Track Intelligence Unit */}
             <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
@@ -325,20 +325,20 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
       )}
 
       {/* 4. TECHNICAL RESOURCES / SEO SECTION */}
-      <section className="relative space-y-12 pb-12">
-        <div className="flex flex-col md:flex-row items-end justify-between gap-6 border-b border-white/5 pb-8">
-          <div className="space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+      <section className="relative mt-4 sm:mt-6 pt-6 border-t border-white/10 space-y-8 pb-12">
+        <div className="flex flex-col md:flex-row items-center sm:items-end justify-between gap-6 border-b border-white/5 pb-6">
+          <div className="space-y-2 text-center sm:text-left overflow-visible">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight pb-1 sm:pb-0 overflow-visible">
               Technical <span className="text-emerald-400">Intelligence.</span>
             </h2>
-            <p className="text-slate-500 text-sm sm:text-base max-w-lg">
+            <p className="text-slate-500 text-sm sm:text-base max-w-lg mx-auto sm:mx-0">
               Master the technical nuances of the Salesforce platform with our
               deep-dive interview guides.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
           {[
             {
               title: "Mock Interview",

@@ -114,8 +114,28 @@ const CustomTooltip = ({
   return null;
 };
 
-const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
-  if (!stats) return null;
+const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
+  stats: propStats,
+}) => {
+  const defaultStats: NonNullable<AnalyticsDashboardProps["stats"]> = {
+    avgScore: 0,
+    recentGrowth: 0,
+    timelineData: [],
+    strongestTopics: [],
+    weakestTopics: [],
+    streak: 0,
+    totalInterviews: 0,
+    readiness: "Not Started",
+    signalStrength: 0,
+    dataConfidence: "No Data",
+    intelligenceTier: "calibration",
+    techPerformance: "N/A",
+    commClarity: "N/A",
+    interviewConsistency: "N/A",
+    responseConfidence: "N/A",
+  };
+
+  const stats = propStats || defaultStats;
 
   const isCalibration = stats.intelligenceTier === "calibration";
   const isBasic = stats.intelligenceTier === "basic";
@@ -127,25 +147,27 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-500/[0.04] blur-[120px] pointer-events-none" />
 
         <div className="relative z-10 flex flex-col xl:flex-row gap-10 xl:items-center justify-between">
-          <div className="space-y-5 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-300 text-[9px] font-black tracking-[0.3em] uppercase">
+          <div className="space-y-5 max-w-2xl text-center xl:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-300 text-[9px] font-black tracking-[0.3em] uppercase mx-auto xl:mx-0">
               <Activity size={12} className="text-cyan-400" />
               Interview Performance Analysis
             </div>
 
-            <div className="space-y-2.5">
-              <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tighter leading-none">
+            <div className="space-y-2.5 overflow-visible">
+              <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tighter leading-tight sm:leading-none pb-1 sm:pb-0 overflow-visible">
                 Performance{" "}
                 <span className="inline-block pr-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]">
                   Insights
                 </span>
               </h2>
-              <p className="text-slate-400 text-xs sm:text-sm font-medium leading-relaxed max-w-xl">
-                Track your technical evolution and career readiness. ForcePilot AI synthesizes thousands of data points from your sessions to map your trajectory toward Salesforce mastery.
+              <p className="text-slate-400 text-xs sm:text-sm font-medium leading-relaxed max-w-xl mx-auto xl:mx-0">
+                Track your technical evolution and career readiness. ForcePilot
+                AI synthesizes thousands of data points from your sessions to
+                map your trajectory toward Salesforce mastery.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-3 pt-1">
+            <div className="flex flex-wrap justify-center xl:justify-start gap-3 pt-1">
               <div className="px-4 py-2 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center gap-3">
                 <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">
                   Readiness
@@ -221,13 +243,18 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
               <div className="h-full flex flex-col justify-center gap-8">
                 {/* Calibration Block */}
                 <div className="flex flex-col items-center text-center space-y-4">
-                   <div className="w-16 h-16 rounded-full border-4 border-dashed border-white/10 animate-spin flex items-center justify-center">
-                      <TrendingUp size={24} className="text-slate-700" />
-                   </div>
-                   <div className="space-y-1">
-                      <h4 className="text-white font-bold uppercase tracking-widest text-[10px]">Analyzing Data Stream</h4>
-                      <p className="text-xs text-slate-500 max-w-[200px]">Waiting for consistent patterns to emerge in technical responses.</p>
-                   </div>
+                  <div className="w-16 h-16 rounded-full border-4 border-dashed border-white/10 animate-spin flex items-center justify-center">
+                    <TrendingUp size={24} className="text-slate-700" />
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-white font-bold uppercase tracking-widest text-[10px]">
+                      Analyzing Data Stream
+                    </h4>
+                    <p className="text-xs text-slate-500 max-w-[200px]">
+                      Waiting for consistent patterns to emerge in technical
+                      responses.
+                    </p>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -245,8 +272,9 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
                         Baseline Established
                       </h4>
                       <p className="text-[13px] text-slate-500 font-medium leading-relaxed max-w-[260px] mx-auto">
-                        Your first session is captured. Complete another interview 
-                        to activate multi-point trend analysis and growth metrics.
+                        Your first session is captured. Complete another
+                        interview to activate multi-point trend analysis and
+                        growth metrics.
                       </p>
                     </div>
                   </div>
@@ -254,7 +282,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                       data={stats.timelineData}
-                      margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                      margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
                     >
                       <defs>
                         <linearGradient
@@ -267,7 +295,12 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
                           <stop
                             offset="5%"
                             stopColor="#10b981"
-                            stopOpacity={0.15}
+                            stopOpacity={0.25}
+                          />
+                          <stop
+                            offset="50%"
+                            stopColor="#10b981"
+                            stopOpacity={0.1}
                           />
                           <stop
                             offset="95%"
@@ -277,38 +310,58 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
                         </linearGradient>
                       </defs>
                       <CartesianGrid
-                        strokeDasharray="3 3"
-                        stroke="rgba(255,255,255,0.03)"
-                        vertical={false}
+                        strokeDasharray="4 4"
+                        stroke="rgba(255,255,255,0.05)"
+                        vertical={true}
+                        horizontal={true}
                       />
                       <XAxis
                         dataKey="session"
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fill: "#475569", fontSize: 10, fontWeight: 800 }}
+                        tick={{
+                          fill: "#64748b",
+                          fontSize: 10,
+                          fontWeight: 700,
+                        }}
                         dy={15}
+                        padding={{ left: 20, right: 20 }}
                       />
-                      <YAxis hide={true} domain={[0, 105]} />
+                      <YAxis
+                        hide={false}
+                        domain={[0, 100]}
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fill: "#475569", fontSize: 9, fontWeight: 800 }}
+                        width={30}
+                      />
                       <Tooltip
                         content={<CustomTooltip />}
                         cursor={{
-                          stroke: "rgba(255,255,255,0.1)",
-                          strokeWidth: 1,
+                          stroke: "rgba(16, 185, 129, 0.2)",
+                          strokeWidth: 2,
+                          strokeDasharray: "5 5",
                         }}
                       />
                       <Area
                         type="monotone"
                         dataKey="score"
                         stroke="#10b981"
-                        strokeWidth={4}
+                        strokeWidth={3}
                         fill="url(#velocityGradient)"
-                        animationDuration={2500}
-                        dot={{ r: 5, fill: "#10b981", strokeWidth: 0 }}
+                        animationDuration={2000}
+                        connectNulls={true}
+                        dot={{
+                          r: 4,
+                          fill: "#020617",
+                          stroke: "#10b981",
+                          strokeWidth: 2,
+                        }}
                         activeDot={{
-                          r: 7,
+                          r: 6,
                           fill: "#10b981",
-                          stroke: "#020617",
-                          strokeWidth: 3,
+                          stroke: "#ffffff",
+                          strokeWidth: 2,
                         }}
                       />
                     </AreaChart>
@@ -401,21 +454,25 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
                             animate={{ width: `${topic.avg}%` }}
                             transition={{ duration: 1.5, delay: i * 0.2 }}
                             className={`h-full shadow-[0_0_10px_rgba(0,0,0,0.2)] ${
-                              topic.status === "Expert" || topic.status === "Strong" 
-                              ? "bg-emerald-500 shadow-emerald-500/20" 
-                              : topic.status === "Developing"
-                              ? "bg-cyan-500 shadow-cyan-500/20"
-                              : "bg-orange-500 shadow-orange-500/20"
+                              topic.status === "Expert" ||
+                              topic.status === "Strong"
+                                ? "bg-emerald-500 shadow-emerald-500/20"
+                                : topic.status === "Developing"
+                                  ? "bg-cyan-500 shadow-cyan-500/20"
+                                  : "bg-orange-500 shadow-orange-500/20"
                             }`}
                           />
                         </div>
-                        <span className={`text-[10px] font-black uppercase tracking-wider min-w-[80px] text-right ${
-                          topic.status === "Expert" || topic.status === "Strong" 
-                          ? "text-emerald-400" 
-                          : topic.status === "Developing"
-                          ? "text-cyan-400"
-                          : "text-orange-400"
-                        }`}>
+                        <span
+                          className={`text-[10px] font-black uppercase tracking-wider min-w-[80px] text-right ${
+                            topic.status === "Expert" ||
+                            topic.status === "Strong"
+                              ? "text-emerald-400"
+                              : topic.status === "Developing"
+                                ? "text-cyan-400"
+                                : "text-orange-400"
+                          }`}
+                        >
                           {topic.status}
                         </span>
                       </div>
@@ -465,7 +522,10 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats }) => {
                 </div>
                 <div className="text-4xl font-black text-white flex items-center gap-3">
                   {stats.streak}
-                  <Flame size={24} className="text-orange-500 group-hover:scale-110 transition-transform" />
+                  <Flame
+                    size={24}
+                    className="text-orange-500 group-hover:scale-110 transition-transform"
+                  />
                 </div>
               </div>
               <div className="w-px h-12 bg-white/10" />
