@@ -77,7 +77,7 @@ body {
 }
 
 .sub-title {
-  @apply text-sm sm:text-base md:text-xl lg:text-[1.35rem] xl:text-[1.5rem] text-slate-300 font-medium tracking-tight leading-relaxed max-w-2xl lg:max-w-3xl;
+  @apply text-xs sm:text-base md:text-xl lg:text-[1.35rem] xl:text-[1.5rem] text-slate-300 font-medium tracking-tight leading-relaxed max-w-2xl lg:max-w-3xl;
 }
 
 .meta-label {
