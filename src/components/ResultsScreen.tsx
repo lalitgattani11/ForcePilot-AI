@@ -318,7 +318,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-white gap-8">
+      <div className="flex flex-col items-center justify-center min-h-[85vh] sm:min-h-screen text-white gap-8">
         <div className="relative">
           <div className="h-20 w-20 rounded-full border-4 border-emerald-500/20 border-t-emerald-500 animate-spin" />
           <Brain size={40} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-emerald-500 animate-pulse" />
