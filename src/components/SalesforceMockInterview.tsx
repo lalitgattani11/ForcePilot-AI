@@ -137,18 +137,18 @@ const SalesforceMockInterview: React.FC = () => {
           </span>
         </h1>
         
-        <p className="text-xl sm:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-medium">
+        <p className="text-sm sm:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium">
           The elite technical simulator for SFDC professionals. Stop guessing. Start practicing with the platform that thinks like a Technical Architect.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
-          <button
-            onClick={() => navigate('/interview')}
-            className="w-full sm:w-auto px-12 py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95"
+          <Link
+            to="/#setup"
+            className="w-full sm:w-auto px-12 py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
           >
             Start Salesforce Mock Interview
             <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Link>
           
           <Link
             to="/apex-interview-questions"
@@ -227,10 +227,10 @@ const SalesforceMockInterview: React.FC = () => {
 
       {/* SECTION 3 — MOCK INTERVIEW CATEGORIES */}
       <section className="space-y-16">
-        <div className="flex flex-col md:flex-row items-end justify-between gap-6">
-          <div className="space-y-4">
+        <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 text-center md:text-left">
+          <div className="space-y-4 w-full">
             <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Tracks.</span></h2>
-            <p className="text-slate-500 max-w-xl">Choose your specialization and start a targeted simulation.</p>
+            <p className="text-slate-500 max-w-xl mx-auto md:mx-0">Choose your specialization and start a targeted simulation.</p>
           </div>
         </div>
 
@@ -240,7 +240,7 @@ const SalesforceMockInterview: React.FC = () => {
               key={i}
               {...fadeIn}
               className="group relative bg-[#0a0c10] border border-white/5 rounded-3xl overflow-hidden hover:border-cyan-500/30 transition-all cursor-pointer shadow-2xl"
-              onClick={() => navigate('/interview')}
+              onClick={() => navigate('/#setup', { state: { role: cat.slug } })}
             >
               <div className="p-8 space-y-6">
                 <div className={`w-14 h-14 rounded-2xl bg-${cat.color}-500/10 flex items-center justify-center text-${cat.color}-400 group-hover:scale-110 transition-transform`}>
@@ -438,13 +438,13 @@ const SalesforceMockInterview: React.FC = () => {
             Your next Salesforce role is within reach. Give your technical confidence the elite upgrade it deserves.
           </p>
           <div className="pt-8">
-            <button
-              onClick={() => navigate('/interview')}
+            <Link
+              to="/#setup"
               className="px-14 py-6 bg-emerald-600 hover:bg-emerald-500 text-white rounded-[2rem] font-black text-xl transition-all shadow-[0_0_50px_rgba(16,185,129,0.3)] flex items-center justify-center gap-4 mx-auto group active:scale-95"
             >
               Start Your Salesforce Mock Interview
               <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+            </Link>
           </div>
         </div>
 

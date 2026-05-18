@@ -16,6 +16,7 @@
   --animate-reveal: reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-pulse-neural: pulse-neural 6s ease-in-out infinite;
   --animate-aurora: aurora 30s linear infinite;
+  --animate-pulse-soft: pulse-soft 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 
   @keyframes float {
     0%, 100% { transform: translateY(0) rotate(0); }
@@ -33,6 +34,10 @@
   @keyframes aurora {
     from { background-position: 50% 50%, 50% 50%; }
     to { background-position: 350% 50%, 50% 50%; }
+  }
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; transform: scale(1); filter: blur(0); }
+    50% { opacity: 0.6; transform: scale(0.9); filter: blur(1px); }
   }
 }
 
@@ -71,7 +76,7 @@ body {
   @apply bg-white/[0.04] border-white/[0.1] shadow-xl sm:-translate-y-0.5 will-change-transform;
 }
 
-/* Elegant Typography Systems */
+/* Elegant Typography Systems (Restored for Homepage) */
 .hero-title {
   @apply text-4xl sm:text-6xl md:text-8xl lg:text-[7rem] xl:text-[8.5rem] font-bold tracking-[-0.02em] leading-tight lg:leading-[0.95] text-white;
 }
@@ -82,6 +87,27 @@ body {
 
 .meta-label {
   @apply text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-3 md:mb-4;
+}
+
+/* Platform-Specific Premium Typography (Isolated) */
+.platform-hero-title {
+  @apply text-[2.1rem] sm:text-6xl md:text-7xl lg:text-[7rem] xl:text-[8.5rem] font-bold tracking-[-0.03em] sm:tracking-[-0.03em] leading-[1.1] sm:leading-[1.1] lg:leading-[0.98] text-white;
+}
+
+.platform-sub-title {
+  @apply text-xs sm:text-base md:text-lg lg:text-[1.2rem] xl:text-[1.3rem] text-slate-300 font-medium tracking-tight leading-relaxed max-w-2xl lg:max-w-4xl;
+}
+
+.platform-pill-badge {
+  @apply inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-cyan-500/[0.03] border border-cyan-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(6,182,212,0.05)] mb-6 md:mb-6 mt-6 md:mt-10 transition-all duration-500 hover:border-cyan-500/20;
+}
+
+.platform-pill-badge .dot {
+  @apply h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)] animate-pulse-soft;
+}
+
+.platform-pill-badge .label-text {
+  @apply text-[10px] md:text-[11px] font-black uppercase tracking-[0.25em] text-cyan-400/80 leading-none;
 }
 
 /* Polished Interaction Feedback */

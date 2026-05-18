@@ -53,6 +53,7 @@ const Navbar: React.FC = () => {
 
   // Logic-based active states
   const isHomeActive = location.pathname === "/" && activeSection === "hero";
+  const isPlatformActive = location.pathname === "/platform";
   const isAnalyticsActive = location.pathname === "/analytics" || (location.pathname === "/" && activeSection === "analytics");
   const isInterviewActive = ["/salesforce-mock-interview", "/interview", "/results"].includes(location.pathname);
   const isGuidesActive = guideLinks.some(link => location.pathname === link.href);
@@ -170,6 +171,15 @@ const Navbar: React.FC = () => {
               }`}
             >
               Home
+            </NavLink>
+
+            <NavLink 
+              to="/platform" 
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${
+                isPlatformActive ? "text-emerald-400 bg-emerald-500/5 shadow-[0_0_15px_rgba(16,185,129,0.1)]" : "text-slate-400 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              Platform
             </NavLink>
             
             <NavLink 
@@ -372,6 +382,15 @@ const Navbar: React.FC = () => {
                       >
                         <Rocket size={16} className={isHomeActive ? "text-emerald-400" : "text-slate-500"} />
                         Home
+                      </NavLink>
+                      <NavLink 
+                        to="/platform" 
+                        className={`flex items-center gap-3 p-2.5 rounded-2xl text-[12px] font-bold transition-all ${
+                          isPlatformActive ? "bg-emerald-500/10 text-emerald-400" : "text-slate-400 hover:bg-white/5 hover:text-white"
+                        }`}
+                      >
+                        <Layers size={16} className={isPlatformActive ? "text-emerald-400" : "text-slate-500"} />
+                        Platform
                       </NavLink>
                       <NavLink 
                         to="/salesforce-mock-interview" 

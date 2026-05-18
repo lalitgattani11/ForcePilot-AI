@@ -11,12 +11,11 @@ import {
   AlertTriangle,
   Layout
 } from "lucide-react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 
 const SalesforceFlowInterviewQuestions: React.FC = () => {
-  const navigate = useNavigate();
 
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -84,18 +83,19 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
           </span>
         </h1>
         
-        <p className="text-xl sm:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-medium">
+        <p className="text-sm sm:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium">
           The definitive guide to low-code automation. From record-triggered logic to complex subflows. Get evaluated on your architectural decision-making.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
-          <button
-            onClick={() => navigate('/interview')}
-            className="w-full sm:w-auto px-12 py-5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(34,211,238,0.2)] flex items-center justify-center gap-3 group active:scale-95"
+          <Link
+            to="/#setup"
+            state={{ role: "Salesforce Admin" }}
+            className="w-full sm:w-auto px-12 py-5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(34,211,238,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
           >
             Master Salesforce Flow Interviews
             <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Link>
         </div>
       </section>
 
@@ -241,13 +241,14 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
             </span>
           </h2>
           <div className="pt-8">
-            <button
-             onClick={() => navigate('/interview')}
-              className="px-14 py-6 bg-cyan-600 hover:bg-cyan-500 text-white rounded-[2rem] font-black text-xl transition-all shadow-[0_0_50px_rgba(34,211,238,0.3)] flex items-center justify-center gap-4 mx-auto group"
+            <Link
+              to="/#setup"
+              state={{ role: "Salesforce Admin" }}
+              className="px-14 py-6 bg-cyan-600 hover:bg-cyan-500 text-white rounded-[2rem] font-black text-xl transition-all shadow-[0_0_50px_rgba(34,211,238,0.3)] flex items-center justify-center gap-4 mx-auto group active:scale-95 text-center"
             >
               Start Flow Practice
               <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+            </Link>
           </div>
         </div>
       </section>

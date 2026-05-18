@@ -4,11 +4,10 @@ import {
   ChevronRight,
   Globe
 } from 'lucide-react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
 const LwcInterviewGuide: React.FC = () => {
-  const navigate = useNavigate();
 
   const sections = [
     {
@@ -66,17 +65,18 @@ const LwcInterviewGuide: React.FC = () => {
         <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-white leading-tight">
           LWC <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">Interview Mastery</span>
         </h1>
-        <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed font-normal sm:font-medium">
           The ultimate technical roadmap for Lightning Web Components. From shadow DOM to specialized wire adapters.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <button 
-            onClick={() => navigate('/interview')}
+          <Link 
+            to="/#setup"
+            state={{ role: "Salesforce LWC Developer" }}
             className="w-full sm:w-auto px-8 py-4 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl font-semibold transition-all shadow-lg shadow-cyan-900/20 flex items-center justify-center gap-2 group"
           >
             Start LWC Mock Interview
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Link>
         </div>
       </section>
 
@@ -138,13 +138,14 @@ const LwcInterviewGuide: React.FC = () => {
             ForcePilot AI simulates complex LWC scenarios. Test your knowledge of lifecycle hooks, event propagation, and security best practices.
           </p>
           <div className="pt-6">
-            <button 
-              onClick={() => navigate('/interview')}
+            <Link 
+              to="/#setup"
+              state={{ role: "Salesforce LWC Developer" }}
               className="px-10 py-5 bg-white text-cyan-700 hover:bg-cyan-50 rounded-2xl font-bold text-lg transition-all shadow-xl flex items-center justify-center gap-3 mx-auto group"
             >
               Practice LWC Interviews
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+            </Link>
           </div>
         </div>
       </section>

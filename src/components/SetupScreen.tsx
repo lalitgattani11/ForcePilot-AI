@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Play,
@@ -20,7 +20,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import HistoryIntelligence from "./HistoryIntelligence";
 import type {
   InterviewConfig,
@@ -49,6 +49,17 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   onViewHistoryDetail,
 }) => {
   const { user } = useAuth();
+  const location = useLocation();
+  const roles = useMemo<Role[]>(
+    () => [
+      "Professional Readiness",
+      "Salesforce Admin",
+      "Salesforce Apex Developer",
+      "Salesforce LWC Developer",
+    ],
+    []
+  );
+
   const [config, setConfig] = useState<InterviewConfig>({
     candidateName: "Lalit",
     role: "Salesforce Admin",
@@ -58,6 +69,16 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
     voiceEnabled: true,
     speechSpeed: 1.0,
   });
+
+  // Context-aware pre-selection
+  useEffect(() => {
+    if (location.state?.role) {
+      const targetRole = location.state.role as Role;
+      if (roles.includes(targetRole)) {
+        setConfig(prev => ({ ...prev, role: targetRole }));
+      }
+    }
+  }, [location.state, roles]);
 
   const [hasScrolled, setHasScrolled] = useState(false);
 
@@ -75,13 +96,6 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
       onStart(config);
     }
   };
-
-  const roles: Role[] = [
-    "Professional Readiness",
-    "Salesforce Admin",
-    "Salesforce Apex Developer",
-    "Salesforce LWC Developer",
-  ];
 
   const difficulties: {
     val: Difficulty;
@@ -184,11 +198,12 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
 
       {/* 2. INTERVIEW CONFIGURATION LAYER */}
       <motion.div 
+        id="setup"
+        className="scroll-mt-32 premium-glass rounded-[2rem] sm:rounded-[3rem] p-1 shadow-2xl w-full mx-auto relative z-10"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="premium-glass rounded-[2rem] sm:rounded-[3rem] p-1 shadow-2xl w-full mx-auto relative z-10"
       >
         <div className="bg-slate-950/40 rounded-[1.9rem] sm:rounded-[2.9rem] p-6 sm:p-10 md:p-16 space-y-4 sm:space-y-12 border border-white/[0.02]">
           {/* Top: Identity & Track Intelligence Unit */}

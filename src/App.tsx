@@ -40,6 +40,7 @@ const ScenarioBasedSalesforceInterview = lazy(
 const CareerRoadmap = lazy(() => import("./components/CareerRoadmap"));
 const AIInsights = lazy(() => import("./components/AIInsights"));
 const PrepTips = lazy(() => import("./components/PrepTips"));
+const Platform = lazy(() => import("./components/Platform"));
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
@@ -83,7 +84,7 @@ function App() {
   const resetInterview = () => {
     setConfig(null);
     setAnswers([]);
-    navigate("/");
+    navigate("/#setup");
   };
 
   const onViewHistoryDetail = (record: any) => {
@@ -343,6 +344,21 @@ function App() {
                 }
               />
 
+              <Route
+                path="/platform"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
+                    <Platform />
+                  </Suspense>
+                }
+              />
+
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </div>
@@ -400,6 +416,14 @@ function App() {
                     Platform
                   </h4>
                   <ul className="space-y-3 md:space-y-3.5">
+                    <li>
+                      <Link
+                        to="/platform"
+                        className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300"
+                      >
+                        About Platform
+                      </Link>
+                    </li>
                     <li>
                       <Link
                         to="/salesforce-mock-interview"
