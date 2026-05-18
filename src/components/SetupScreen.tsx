@@ -120,12 +120,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             </div>
           </motion.div>
 
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-            className="hero-title px-4 overflow-visible"
-          >
+         <h1 className="hero-title px-4 overflow-visible">
             <span className="inline-block">The future of</span> <br />
             <span className="inline-block">
               <span className="inline-block pr-2 lg:pr-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] italic overflow-visible">
@@ -133,7 +128,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
               </span>{" "}
               mastery.
             </span>
-          </motion.h1>
+         </h1>
 
           <motion.p 
             initial={{ opacity: 0 }}

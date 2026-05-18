@@ -1,8 +1,8 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { Routes, Route, useNavigate, Navigate, Link } from "react-router-dom";
 import SetupScreen from "./components/SetupScreen";
-import ChatInterface from "./components/ChatInterface";
-import ResultsScreen from "./components/ResultsScreen";
+const ChatInterface = lazy(() => import("./components/ChatInterface"));
+const ResultsScreen = lazy(() => import("./components/ResultsScreen"));
 import ErrorBoundary from "./components/ErrorBoundary";
 import type { InterviewConfig, Answer } from "./types";
 import logo from "./assets/logo.png";
@@ -12,15 +12,31 @@ import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import BackToTop from "./components/BackToTop";
 import "./App.css";
 
-const ApexInterviewQuestions = lazy(() => import("./components/ApexInterviewQuestions"));
+const ApexInterviewQuestions = lazy(
+  () => import("./components/ApexInterviewQuestions"),
+);
 const LwcInterviewGuide = lazy(() => import("./components/LwcInterviewGuide"));
-const GovernorLimitsExplained = lazy(() => import("./components/GovernorLimitsExplained"));
-const SalesforceMockInterview = lazy(() => import("./components/SalesforceMockInterview"));
-const SalesforceAdminInterview = lazy(() => import("./components/SalesforceAdminInterview"));
-const SalesforceFlowInterviewQuestions = lazy(() => import("./components/SalesforceFlowInterviewQuestions"));
-const ApexTriggerInterviewQuestions = lazy(() => import("./components/ApexTriggerInterviewQuestions"));
-const LwcCodingInterview = lazy(() => import("./components/LwcCodingInterview"));
-const ScenarioBasedSalesforceInterview = lazy(() => import("./components/ScenarioBasedSalesforceInterview"));
+const GovernorLimitsExplained = lazy(
+  () => import("./components/GovernorLimitsExplained"),
+);
+const SalesforceMockInterview = lazy(
+  () => import("./components/SalesforceMockInterview"),
+);
+const SalesforceAdminInterview = lazy(
+  () => import("./components/SalesforceAdminInterview"),
+);
+const SalesforceFlowInterviewQuestions = lazy(
+  () => import("./components/SalesforceFlowInterviewQuestions"),
+);
+const ApexTriggerInterviewQuestions = lazy(
+  () => import("./components/ApexTriggerInterviewQuestions"),
+);
+const LwcCodingInterview = lazy(
+  () => import("./components/LwcCodingInterview"),
+);
+const ScenarioBasedSalesforceInterview = lazy(
+  () => import("./components/ScenarioBasedSalesforceInterview"),
+);
 const CareerRoadmap = lazy(() => import("./components/CareerRoadmap"));
 const AIInsights = lazy(() => import("./components/AIInsights"));
 const PrepTips = lazy(() => import("./components/PrepTips"));
@@ -80,7 +96,7 @@ function App() {
       <div className="relative flex flex-col min-h-screen bg-[#02040a] text-slate-300 font-sans selection:bg-emerald-500/20 antialiased overflow-x-hidden">
         {/* Cinematic Premium Background */}
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-          <div className="absolute inset-0 bg-aurora opacity-[0.15] sm:opacity-[0.25] sm:animate-aurora"></div>
+          <div className="absolute inset-0 bg-aurora opacity-[0.08] sm:opacity-[0.25] sm:animate-aurora"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#02040a]/10 to-[#02040a]"></div>
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_-20%,rgba(16,185,129,0.05)_0%,transparent_50%)]"></div>
         </div>
@@ -93,14 +109,30 @@ function App() {
             <Routes>
               <Route
                 path="/"
-                element={<SetupScreen onStart={startInterview} onViewHistoryDetail={onViewHistoryDetail} />}
+                element={
+                  <SetupScreen
+                    onStart={startInterview}
+                    onViewHistoryDetail={onViewHistoryDetail}
+                  />
+                }
               />
               <Route
                 path="/interview"
                 element={
                   <ProtectedRoute>
                     {config ? (
-                      <ChatInterface config={config} onComplete={completeInterview} />
+                      <Suspense
+                        fallback={
+                          <div className="min-h-screen flex items-center justify-center">
+                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                          </div>
+                        }
+                      >
+                        <ChatInterface
+                          config={config}
+                          onComplete={completeInterview}
+                        />
+                      </Suspense>
                     ) : (
                       <Navigate to="/" replace />
                     )}
@@ -112,168 +144,203 @@ function App() {
                 element={
                   <ProtectedRoute>
                     {answers.length > 0 ? (
-                      <ResultsScreen answers={answers} onReset={resetInterview} />
+                      <Suspense
+                        fallback={
+                          <div className="min-h-screen flex items-center justify-center">
+                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                          </div>
+                        }
+                      >
+                        <ResultsScreen
+                          answers={answers}
+                          onReset={resetInterview}
+                        />
+                      </Suspense>
                     ) : (
                       <Navigate to="/" replace />
                     )}
                   </ProtectedRoute>
                 }
               />
-              
-              <Route 
-                path="/apex-interview-questions" 
+
+              <Route
+                path="/apex-interview-questions"
                 element={
-                  <Suspense fallback={
-                    <div className="min-h-screen flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
-                    </div>
-                  }>
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
                     <ApexInterviewQuestions />
                   </Suspense>
-                } 
+                }
               />
 
-              <Route 
-                path="/lwc-interview-guide" 
+              <Route
+                path="/lwc-interview-guide"
                 element={
-                  <Suspense fallback={
-                    <div className="min-h-screen flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
-                    </div>
-                  }>
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
                     <LwcInterviewGuide />
                   </Suspense>
-                } 
+                }
               />
 
-              <Route 
-                path="/governor-limits-explained" 
+              <Route
+                path="/governor-limits-explained"
                 element={
-                  <Suspense fallback={
-                    <div className="min-h-screen flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-rose-500 border-t-transparent"></div>
-                    </div>
-                  }>
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-rose-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
                     <GovernorLimitsExplained />
                   </Suspense>
-                } 
+                }
               />
 
-              <Route 
-                path="/salesforce-mock-interview" 
+              <Route
+                path="/salesforce-mock-interview"
                 element={
-                  <Suspense fallback={
-                    <div className="min-h-screen flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
-                    </div>
-                  }>
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
                     <SalesforceMockInterview />
                   </Suspense>
-                } 
+                }
               />
 
-              <Route 
-                path="/salesforce-admin-interview" 
+              <Route
+                path="/salesforce-admin-interview"
                 element={
-                  <Suspense fallback={
-                    <div className="min-h-screen flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
-                    </div>
-                  }>
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
                     <SalesforceAdminInterview />
                   </Suspense>
-                } 
+                }
               />
 
-              <Route 
-                path="/salesforce-flow-interview-questions" 
+              <Route
+                path="/salesforce-flow-interview-questions"
                 element={
-                  <Suspense fallback={
-                    <div className="min-h-screen flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
-                    </div>
-                  }>
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
                     <SalesforceFlowInterviewQuestions />
                   </Suspense>
-                } 
+                }
               />
 
-              <Route 
-                path="/apex-trigger-interview-questions" 
+              <Route
+                path="/apex-trigger-interview-questions"
                 element={
-                  <Suspense fallback={
-                    <div className="min-h-screen flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
-                    </div>
-                  }>
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
                     <ApexTriggerInterviewQuestions />
                   </Suspense>
-                } 
+                }
               />
 
-              <Route 
-                path="/lwc-coding-interview" 
+              <Route
+                path="/lwc-coding-interview"
                 element={
-                  <Suspense fallback={
-                    <div className="min-h-screen flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
-                    </div>
-                  }>
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
                     <LwcCodingInterview />
                   </Suspense>
-                } 
+                }
               />
 
-              <Route 
-                path="/scenario-based-salesforce-interview" 
+              <Route
+                path="/scenario-based-salesforce-interview"
                 element={
-                  <Suspense fallback={
-                    <div className="min-h-screen flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-rose-500 border-t-transparent"></div>
-                    </div>
-                  }>
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-rose-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
                     <ScenarioBasedSalesforceInterview />
                   </Suspense>
-                } 
+                }
               />
 
-              <Route 
-                path="/career-roadmap" 
+              <Route
+                path="/career-roadmap"
                 element={
-                  <Suspense fallback={
-                    <div className="min-h-screen flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
-                    </div>
-                  }>
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
                     <CareerRoadmap />
                   </Suspense>
-                } 
+                }
               />
 
-              <Route 
-                path="/ai-interview-insights" 
+              <Route
+                path="/ai-interview-insights"
                 element={
-                  <Suspense fallback={
-                    <div className="min-h-screen flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
-                    </div>
-                  }>
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
                     <AIInsights />
                   </Suspense>
-                } 
+                }
               />
 
-              <Route 
-                path="/interview-preparation-tips" 
+              <Route
+                path="/interview-preparation-tips"
                 element={
-                  <Suspense fallback={
-                    <div className="min-h-screen flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent"></div>
-                    </div>
-                  }>
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
                     <PrepTips />
                   </Suspense>
-                } 
+                }
               />
 
               <Route path="*" element={<Navigate to="/" replace />} />
@@ -282,62 +349,122 @@ function App() {
         </main>
 
         {/* Footer Branding - Cinematic Enterprise SaaS Footer */}
-        <footer id="site-footer" className="w-full border-t border-white/5 bg-[#02040a] mt-auto relative z-10 overflow-hidden">
+        <footer
+          id="site-footer"
+          className="w-full border-t border-white/5 bg-[#02040a] mt-auto relative z-10 overflow-hidden"
+        >
           {/* Ambient Depth Glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent"></div>
-          
+
           <div className="max-w-7xl mx-auto px-8 lg:px-12 py-10 md:py-16 lg:py-24">
-            
             {/* Top: Brand & Navigation */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 lg:gap-16 mb-12 md:mb-16">
-              
               {/* Brand Intelligence Unit */}
               <div className="md:col-span-6 flex flex-col items-center md:items-start space-y-4 md:space-y-6">
-                <div 
-                  onClick={() => navigate("/")} 
+                <div
+                  onClick={() => navigate("/")}
                   className="flex items-center justify-center md:justify-start gap-3 group shrink-0 cursor-pointer relative"
                 >
                   <div className="relative">
                     <div className="absolute inset-0 bg-cyan-500/20 blur-md rounded-lg group-hover:bg-cyan-500/30 transition-all duration-500 opacity-0 group-hover:opacity-100" />
                     <div className="relative h-8 w-8 rounded-xl overflow-hidden border border-cyan-400/20 shadow-lg transition-transform group-hover:scale-105 duration-500">
-                      <img src={logo} alt="FP" className="w-full h-full object-cover" />
+                      <img
+                        src={logo}
+                        alt="FP"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[15px] font-black text-white tracking-tight leading-none uppercase">FORCE<span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">PILOT AI</span></span>
-                    <span className="text-[7px] font-bold text-slate-600 uppercase tracking-[0.2em] leading-none mt-1">Technical Intelligence</span>
+                    <span className="text-[15px] font-black text-white tracking-tight leading-none uppercase">
+                      FORCE
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                        PILOT AI
+                      </span>
+                    </span>
+                    <span className="text-[7px] font-bold text-slate-600 uppercase tracking-[0.2em] leading-none mt-1">
+                      Technical Intelligence
+                    </span>
                   </div>
                 </div>
                 <p className="text-slate-500 text-[13px] leading-relaxed max-w-[280px] font-medium tracking-tight text-center md:text-left">
-                  AI-powered Salesforce interview intelligence for modern engineering teams.
+                  AI-powered Salesforce interview intelligence for modern
+                  engineering teams.
                 </p>
               </div>
 
               {/* Navigation Intelligence Grid */}
               <div className="md:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-x-4 sm:gap-x-8 gap-y-10 justify-items-center md:justify-items-end">
                 <div className="space-y-4 md:space-y-5 text-center md:text-left">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">Platform</h4>
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">
+                    Platform
+                  </h4>
                   <ul className="space-y-3 md:space-y-3.5">
-                    <li><Link to="/salesforce-mock-interview" className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300">Mock Interviews</Link></li>
-                    <li><Link to="/analytics" className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300">Performance</Link></li>
+                    <li>
+                      <Link
+                        to="/salesforce-mock-interview"
+                        className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300"
+                      >
+                        Mock Interviews
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/analytics"
+                        className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300"
+                      >
+                        Performance
+                      </Link>
+                    </li>
                   </ul>
                 </div>
                 <div className="space-y-4 md:space-y-5 text-center md:text-left">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">Resources</h4>
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">
+                    Resources
+                  </h4>
                   <ul className="space-y-3 md:space-y-3.5">
-                    <li><Link to="/career-roadmap" className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300">Roadmap</Link></li>
-                    <li><Link to="/ai-interview-insights" className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300">Insights</Link></li>
+                    <li>
+                      <Link
+                        to="/career-roadmap"
+                        className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300"
+                      >
+                        Roadmap
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/ai-interview-insights"
+                        className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300"
+                      >
+                        Insights
+                      </Link>
+                    </li>
                   </ul>
                 </div>
                 <div className="hidden sm:block space-y-4 md:space-y-5 text-center md:text-left">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">Ecosystem</h4>
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">
+                    Ecosystem
+                  </h4>
                   <ul className="space-y-3 md:space-y-3.5">
-                    <li><Link to="/interview-preparation-tips" className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300">Prep Tips</Link></li>
-                    <li><Link to="/governor-limits-explained" className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300">Limits Guide</Link></li>
+                    <li>
+                      <Link
+                        to="/interview-preparation-tips"
+                        className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300"
+                      >
+                        Prep Tips
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/governor-limits-explained"
+                        className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300"
+                      >
+                        Limits Guide
+                      </Link>
+                    </li>
                   </ul>
                 </div>
               </div>
-
             </div>
 
             {/* Bottom Row: Refined SaaS Legal Strip */}
@@ -351,7 +478,6 @@ function App() {
                 <span>All rights reserved.</span>
               </div>
             </div>
-
           </div>
         </footer>
 
