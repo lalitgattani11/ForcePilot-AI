@@ -166,7 +166,7 @@ const SalesforceMockInterview: React.FC = () => {
       <section className="space-y-16">
         <div className="text-center space-y-4">
           <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Why <span className="text-emerald-400">ForcePilot AI?</span></h2>
-          <p className="text-slate-500 max-w-2xl mx-auto">Engineered to simulate the intensity of Tier-1 Salesforce technical rounds.</p>
+          <p className="text-slate-400 max-w-2xl mx-auto">Engineered to simulate the intensity of Tier-1 Salesforce technical rounds.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -217,7 +217,7 @@ const SalesforceMockInterview: React.FC = () => {
                 <item.icon size={28} />
               </div>
               <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
-              <p className="text-slate-500 leading-relaxed text-sm sm:text-base">
+              <p className="text-slate-400 leading-relaxed text-sm sm:text-base">
                 {item.desc}
               </p>
             </motion.div>
@@ -230,7 +230,7 @@ const SalesforceMockInterview: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 text-center md:text-left">
           <div className="space-y-4 w-full">
             <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Tracks.</span></h2>
-            <p className="text-slate-500 max-w-xl mx-auto md:mx-0">Choose your specialization and start a targeted simulation.</p>
+            <p className="text-slate-400 max-w-xl mx-auto md:mx-0">Choose your specialization and start a targeted simulation.</p>
           </div>
         </div>
 
@@ -248,7 +248,7 @@ const SalesforceMockInterview: React.FC = () => {
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-2xl font-bold text-white">{cat.title}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed">{cat.desc}</p>
+                  <p className="text-slate-400 text-sm leading-relaxed">{cat.desc}</p>
                 </div>
                 <div className="pt-4 flex items-center text-xs font-bold uppercase tracking-widest text-cyan-500 gap-2">
                   Launch Track <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
@@ -264,7 +264,7 @@ const SalesforceMockInterview: React.FC = () => {
       <section className="bg-white/[0.01] border border-white/5 rounded-[3rem] p-8 sm:p-20 space-y-20">
         <div className="text-center space-y-4">
           <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">The <span className="text-emerald-400">Experience.</span></h2>
-          <p className="text-slate-500">How ForcePilot AI elevates your preparation.</p>
+          <p className="text-slate-400">How ForcePilot AI elevates your preparation.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 relative">
@@ -284,7 +284,7 @@ const SalesforceMockInterview: React.FC = () => {
               </div>
               <div className="space-y-2">
                 <h4 className="text-lg font-bold text-white">{item.title}</h4>
-                <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+                <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
               </div>
             </div>
           ))}
@@ -311,7 +311,7 @@ const SalesforceMockInterview: React.FC = () => {
             ].map((stat, i) => (
               <div key={i} className="space-y-2">
                 <div className="flex justify-between text-sm font-bold tracking-widest uppercase">
-                  <span className="text-slate-500">{stat.label}</span>
+                  <span className="text-slate-400">{stat.label}</span>
                   <span className={`text-${stat.color}-400`}>{stat.val}</span>
                 </div>
                 <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
@@ -336,7 +336,7 @@ const SalesforceMockInterview: React.FC = () => {
                   <Cpu size={24} />
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">Feedback Module</div>
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Feedback Module</div>
                   <div className="text-white font-bold">Neural Evaluation #842</div>
                 </div>
               </div>
@@ -354,11 +354,11 @@ const SalesforceMockInterview: React.FC = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 text-center">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Verdict</div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Verdict</div>
                   <div className="text-xl font-bold text-emerald-400 uppercase tracking-tight">Strong Hire</div>
                 </div>
                 <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 text-center">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Confidence</div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Confidence</div>
                   <div className="text-xl font-bold text-white uppercase tracking-tight">High</div>
                 </div>
               </div>
@@ -373,7 +373,7 @@ const SalesforceMockInterview: React.FC = () => {
       <section className="space-y-16">
         <div className="text-center space-y-4">
           <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Scenario <span className="text-rose-400">Intelligence.</span></h2>
-          <p className="text-slate-500 max-w-2xl mx-auto">Real problems. Production-grade solutions.</p>
+          <p className="text-slate-400 max-w-2xl mx-auto">Real problems. Production-grade solutions.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -385,7 +385,7 @@ const SalesforceMockInterview: React.FC = () => {
             >
               <div className="flex items-start justify-between">
                 <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">{item.title}</h3>
-                <div className="p-2 rounded-lg bg-white/5"><Code2 size={16} className="text-slate-500" /></div>
+                <div className="p-2 rounded-lg bg-white/5"><Code2 size={16} className="text-slate-400" /></div>
               </div>
               <p className="text-slate-400 text-sm leading-relaxed">{item.context}</p>
               <div className="pt-4 flex items-start gap-3">
@@ -417,7 +417,7 @@ const SalesforceMockInterview: React.FC = () => {
               </div>
               <span className="font-bold text-white">{link.title}</span>
             </div>
-            <ChevronRight size={18} className="text-slate-600 group-hover:translate-x-1 group-hover:text-white transition-all" />
+            <ChevronRight size={18} className="text-slate-400 group-hover:translate-x-1 group-hover:text-white transition-all" />
           </Link>
         ))}
       </nav>
@@ -452,7 +452,7 @@ const SalesforceMockInterview: React.FC = () => {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20 -z-10"></div>
       </section>
 
-      <footer className="text-center text-slate-600 text-sm py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="text-center text-slate-400 text-sm py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p>© 2026 ForcePilot AI. The elite technical simulator for Salesforce professionals.</p>
         <div className="flex gap-8">
           <Link to="/" className="hover:text-emerald-400 transition-colors font-bold">Home</Link>

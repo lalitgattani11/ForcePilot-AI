@@ -1,12 +1,11 @@
 import { useState, useEffect, lazy, Suspense } from "react";
-import { Routes, Route, useNavigate, Navigate, Link } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate, Link, useLocation } from "react-router-dom";
 import SetupScreen from "./components/SetupScreen";
 const ChatInterface = lazy(() => import("./components/ChatInterface"));
 const ResultsScreen = lazy(() => import("./components/ResultsScreen"));
 import ErrorBoundary from "./components/ErrorBoundary";
 import type { InterviewConfig, Answer } from "./types";
 import logo from "./assets/logo.png";
-import { useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import BackToTop from "./components/BackToTop";
@@ -42,17 +41,10 @@ const AIInsights = lazy(() => import("./components/AIInsights"));
 const PrepTips = lazy(() => import("./components/PrepTips"));
 const Platform = lazy(() => import("./components/Platform"));
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
-
-  if (loading) return null;
-  if (!user) return <Navigate to="/" replace />;
-
-  return <>{children}</>;
-};
-
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isInterviewPage = location.pathname === "/interview";
 
   const [config, setConfig] = useState<InterviewConfig | null>(null);
   const [answers, setAnswers] = useState<Answer[]>([]);
@@ -105,7 +97,7 @@ function App() {
         <Navbar />
 
         {/* Main Content */}
-        <main className="relative flex-grow pt-20 sm:pt-28 pb-10 overflow-visible">
+        <main className={`relative flex-grow pt-20 sm:pt-28 ${isInterviewPage ? 'pb-0' : 'pb-10'} overflow-visible`}>
           <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8">
             <Routes>
               <Route
@@ -120,47 +112,43 @@ function App() {
               <Route
                 path="/interview"
                 element={
-                  <ProtectedRoute>
-                    {config ? (
-                      <Suspense
-                        fallback={
-                          <div className="min-h-screen flex items-center justify-center">
-                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
-                          </div>
-                        }
-                      >
-                        <ChatInterface
-                          config={config}
-                          onComplete={completeInterview}
-                        />
-                      </Suspense>
-                    ) : (
-                      <Navigate to="/" replace />
-                    )}
-                  </ProtectedRoute>
+                  config ? (
+                    <Suspense
+                      fallback={
+                        <div className="min-h-screen flex items-center justify-center">
+                          <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                        </div>
+                      }
+                    >
+                      <ChatInterface
+                        config={config}
+                        onComplete={completeInterview}
+                      />
+                    </Suspense>
+                  ) : (
+                    <Navigate to="/" replace />
+                  )
                 }
               />
               <Route
                 path="/results"
                 element={
-                  <ProtectedRoute>
-                    {answers.length > 0 ? (
-                      <Suspense
-                        fallback={
-                          <div className="min-h-screen flex items-center justify-center">
-                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
-                          </div>
-                        }
-                      >
-                        <ResultsScreen
-                          answers={answers}
-                          onReset={resetInterview}
-                        />
-                      </Suspense>
-                    ) : (
-                      <Navigate to="/" replace />
-                    )}
-                  </ProtectedRoute>
+                  answers.length > 0 ? (
+                    <Suspense
+                      fallback={
+                        <div className="min-h-screen flex items-center justify-center">
+                          <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                        </div>
+                      }
+                    >
+                      <ResultsScreen
+                        answers={answers}
+                        onReset={resetInterview}
+                      />
+                    </Suspense>
+                  ) : (
+                    <Navigate to="/" replace />
+                  )
                 }
               />
 
@@ -365,10 +353,11 @@ function App() {
         </main>
 
         {/* Footer Branding - Cinematic Enterprise SaaS Footer */}
-        <footer
-          id="site-footer"
-          className="w-full border-t border-white/5 bg-[#02040a] mt-auto relative z-10 overflow-hidden"
-        >
+        {!isInterviewPage && (
+          <footer
+            id="site-footer"
+            className="w-full border-t border-white/5 bg-[#02040a] mt-auto relative z-10 overflow-hidden"
+          >
           {/* Ambient Depth Glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent"></div>
 
@@ -504,9 +493,10 @@ function App() {
             </div>
           </div>
         </footer>
+        )}
 
         <PWAInstallPrompt />
-        <BackToTop />
+        {!isInterviewPage && <BackToTop />}
       </div>
     </ErrorBoundary>
   );

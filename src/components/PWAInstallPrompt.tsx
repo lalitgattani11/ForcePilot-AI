@@ -67,6 +67,7 @@ export default function PWAInstallPrompt() {
 
           <button
             onClick={closePrompt}
+            aria-label="Close install prompt"
             className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 text-slate-400 transition hover:border-cyan-400/30 hover:text-cyan-300"
           >
             ✕

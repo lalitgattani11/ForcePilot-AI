@@ -760,7 +760,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       <div className="flex flex-col items-center justify-center py-20">
         <div className="h-10 w-10 rounded-full border-2 border-cyan-400/30 border-t-cyan-400 animate-spin mb-4" />
 
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
           Loading Performance History
         </p>
       </div>
@@ -778,7 +778,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
             <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight pb-1 md:pb-0 overflow-visible">
               Intelligence <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]">Archives.</span>
             </h2>
-            <p className="text-slate-500 text-sm sm:text-base max-w-lg mx-auto md:mx-0">
+            <p className="text-slate-400 text-sm sm:text-base max-w-lg mx-auto md:mx-0">
               Review and analyze your previous technical simulation sessions and recruiter-grade evaluation reports.
             </p>
           </div>
@@ -787,11 +787,13 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
           <div className="flex flex-wrap md:flex-nowrap items-center gap-3 w-full md:w-auto pb-1">
             <div className="relative group w-full md:w-48 shrink-0">
               <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-cyan-400 transition-colors"
                 size={14}
               />
 
+              <label htmlFor="searchArchives" className="sr-only">Search archives</label>
               <input
+                id="searchArchives"
                 type="text"
                 placeholder="Search..."
                 value={searchQuery}
@@ -801,7 +803,9 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
             </div>
 
             <div className="relative group w-full md:w-40">
+              <label htmlFor="roleFilter" className="sr-only">Filter by role</label>
               <select
+                id="roleFilter"
                 value={filterRole}
                 onChange={(e) => setFilterRole(e.target.value)}
                 className="appearance-none bg-white/5 border border-white/10 rounded-xl py-2.5 pl-4 pr-10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
@@ -811,11 +815,13 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                   <option key={role} value={role} className="bg-[#0f172a] text-white">{role}</option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors" size={12} />
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-hover:text-cyan-400 transition-colors" size={12} />
             </div>
 
             <div className="relative group w-full md:w-40">
+              <label htmlFor="difficultyFilter" className="sr-only">Filter by difficulty</label>
               <select
+                id="difficultyFilter"
                 value={filterDifficulty}
                 onChange={(e) => setFilterDifficulty(e.target.value)}
                 className="appearance-none bg-white/5 border border-white/10 rounded-xl py-2.5 pl-4 pr-10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
@@ -825,11 +831,13 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                   <option key={diff} value={diff} className="bg-[#0f172a] text-white">{diff}</option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors" size={12} />
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-hover:text-cyan-400 transition-colors" size={12} />
             </div>
 
             <div className="relative group w-full md:w-40">
+              <label htmlFor="scoreFilter" className="sr-only">Filter by score</label>
               <select
+                id="scoreFilter"
                 value={filterScore}
                 onChange={(e) => setFilterScore(e.target.value)}
                 className="appearance-none bg-white/5 border border-white/10 rounded-xl py-2.5 pl-4 pr-10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
@@ -840,7 +848,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                 <option value="developing" className="bg-[#0f172a] text-white">70-79</option>
                 <option value="needs-work" className="bg-[#0f172a] text-white">&lt;70</option>
               </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-cyan-400 transition-colors" size={12} />
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-hover:text-cyan-400 transition-colors" size={12} />
             </div>
           </div>
         </div>
@@ -851,7 +859,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
           filterRole === "all" &&
           filterScore === "all" && (
             <div className="space-y-6">
-              <div className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500 flex items-center gap-2">
+              <div className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 flex items-center gap-2">
                 <Sparkles size={12} className="text-cyan-400" />
                 Featured Intelligence
               </div>
@@ -901,7 +909,8 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                             e.stopPropagation();
                             setSessionToDelete(record);
                           }}
-                          className="absolute bottom-6 right-6 p-3 rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-[#ff7b9c] hover:bg-[#16090d] hover:border-[#4b1d2b] transition-all opacity-40 group-hover:opacity-100 z-20 hover:shadow-[0_0_20px_rgba(255,123,156,0.15)]"
+                          aria-label="Delete session"
+                          className="absolute bottom-6 right-6 p-3 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-[#ff7b9c] hover:bg-[#16090d] hover:border-[#4b1d2b] transition-all opacity-40 group-hover:opacity-100 z-20 hover:shadow-[0_0_20px_rgba(255,123,156,0.15)]"
                           title="Delete Session"
                         >
                           <Trash2 size={18} />
@@ -926,7 +935,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                               {record.score}%
                             </div>
 
-                            <div className="text-[10px] uppercase tracking-widest text-slate-500">
+                            <div className="text-[10px] uppercase tracking-widest text-slate-400">
                               Efficiency
                             </div>
                           </div>
@@ -938,7 +947,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                           </h4>
 
                           <div className="flex flex-wrap items-center gap-3">
-                            <div className="flex items-center gap-2 text-xs text-slate-500">
+                            <div className="flex items-center gap-2 text-xs text-slate-400">
                               <Calendar size={14} />
 
                               {new Date(record.created_at).toLocaleDateString(
@@ -965,7 +974,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                             </p>
                           )}
 
-                          <div className="mt-auto pt-6 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500 group-hover:text-cyan-400 transition-colors">
+                          <div className="mt-auto pt-6 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-cyan-400 transition-colors">
                             <span>Analyze Session</span>
 
                             <ArrowUpRight size={16} />
@@ -981,7 +990,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
         {/* Compact Timeline */}
         <div className="space-y-6">
-          <div className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500 flex items-center gap-2">
+          <div className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 flex items-center gap-2">
             <History size={12} />
             Session Timeline
           </div>
@@ -1017,7 +1026,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                       >
                         {/* 1. IDENTITY & METADATA */}
                         <div className="flex items-center gap-6 flex-1 min-w-0">
-                          <div className="w-11 h-11 shrink-0 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:text-cyan-400 group-hover:bg-cyan-500/5 transition-all">
+                          <div className="w-11 h-11 shrink-0 rounded-xl bg-white/5 flex items-center justify-center text-slate-400 group-hover:text-cyan-400 group-hover:bg-cyan-500/5 transition-all">
                             <Target size={22} />
                           </div>
 
@@ -1026,9 +1035,9 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                               {record.role}
                             </h4>
 
-                            <div className="text-[11px] text-slate-500 flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 font-medium">
+                            <div className="text-[11px] text-slate-400 flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 font-medium">
                               <div className="flex items-center gap-2">
-                                <Calendar size={13} className="text-slate-600" />
+                                <Calendar size={13} className="text-slate-400" />
                                 {new Date(
                                   record.created_at,
                                 ).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
@@ -1052,7 +1061,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                             <div className="text-xl font-black text-white group-hover:text-emerald-400 transition-colors">
                               {record.score}%
                             </div>
-                            <div className="text-[9px] font-black uppercase tracking-widest text-slate-600">
+                            <div className="text-[9px] font-black uppercase tracking-widest text-slate-400">
                               Accuracy
                             </div>
                           </div>
@@ -1079,13 +1088,14 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                                 e.stopPropagation();
                                 setSessionToDelete(record);
                               }}
-                              className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-[#ff7b9c] hover:bg-[#16090d] hover:border-[#4b1d2b] transition-all opacity-0 lg:group-hover:opacity-100 hidden md:flex items-center justify-center"
+                              aria-label="Delete session"
+                              className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-[#ff7b9c] hover:bg-[#16090d] hover:border-[#4b1d2b] transition-all opacity-0 lg:group-hover:opacity-100 hidden md:flex items-center justify-center"
                               title="Delete Session"
                             >
                               <Trash2 size={16} />
                             </button>
 
-                            <div className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-slate-500 group-hover:border-cyan-500/50 group-hover:text-cyan-400 group-hover:bg-cyan-500/5 transition-all">
+                            <div className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-slate-400 group-hover:border-cyan-500/50 group-hover:text-cyan-400 group-hover:bg-cyan-500/5 transition-all">
                               <ChevronRight size={18} />
                             </div>
                           </div>
@@ -1097,7 +1107,8 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                             e.stopPropagation();
                             setSessionToDelete(record);
                           }}
-                          className="absolute top-4 right-4 md:hidden p-2 text-slate-500 active:text-[#ff7b9c] bg-white/5 rounded-lg border border-white/5"
+                          aria-label="Delete session"
+                          className="absolute top-4 right-4 md:hidden p-2 text-slate-400 active:text-[#ff7b9c] bg-white/5 rounded-lg border border-white/5"
                         >
                           <Trash2 size={14} />
                         </button>
@@ -1119,7 +1130,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
               )}
             </div>
           ) : records.length === 0 ? (
-            <div className="p-12 text-center premium-glass rounded-[2rem] border border-white/5 italic text-slate-500 text-sm">
+            <div className="p-12 text-center premium-glass rounded-[2rem] border border-white/5 italic text-slate-400 text-sm">
               No timeline data available. Complete an interview to start your journey.
             </div>
           ) : null}
@@ -1130,7 +1141,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
             <div className="text-white font-bold italic text-lg sm:text-xl">
               No Completed Interviews Yet
             </div>
-            <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-400 max-w-sm mx-auto leading-relaxed">
               Finish your first full 10-question interview simulation to activate performance analytics and unlock your technical intelligence archives.
             </p>
           </div>
@@ -1141,7 +1152,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
             <div className="text-white font-bold italic">
               No interview sessions matched your search.
             </div>
-            <p className="text-xs text-slate-500 max-w-xs mx-auto">
+            <p className="text-xs text-slate-400 max-w-xs mx-auto">
               Try searching for a specific role, technical concept, or interview
               track.
             </p>
@@ -1214,7 +1225,8 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
               <button
                 disabled={isDeleting}
                 onClick={() => setSessionToDelete(null)}
-                className="absolute top-6 right-6 p-2 text-slate-500 hover:text-white transition-colors"
+                aria-label="Close modal"
+                className="absolute top-6 right-6 p-2 text-slate-400 hover:text-white transition-colors"
               >
                 <X size={20} />
               </button>

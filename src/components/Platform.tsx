@@ -159,7 +159,7 @@ const Platform: React.FC = () => {
               <div className="meta-label text-emerald-500 mb-10">Why ForcePilot AI</div>
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-tight leading-tight">
                 Evaluations built on <br />
-                <span className="text-slate-500">technical reasoning.</span>
+                <span className="text-slate-400">technical reasoning.</span>
               </h2>
               <div className="space-y-6 text-slate-400 text-lg leading-relaxed max-w-lg mx-auto lg:mx-0">
                 <p>
@@ -183,7 +183,7 @@ const Platform: React.FC = () => {
                 <div className="flex flex-col h-full space-y-6">
                   <div className="flex items-center justify-between border-b border-white/5 pb-4">
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Interview Review</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Interview Review</span>
                       <span className="text-[13px] font-bold text-white mt-1">Session #842 - Async Frameworks</span>
                     </div>
                     <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
@@ -221,12 +221,12 @@ const Platform: React.FC = () => {
                   <div className="pt-4 border-t border-white/5 flex items-center justify-between">
                     <div className="flex -space-x-2">
                       {[1, 2, 3].map((i) => (
-                        <div key={i} className="h-6 w-6 rounded-full bg-slate-800 border-2 border-[#02040a] flex items-center justify-center text-[8px] font-bold text-slate-500">
+                        <div key={i} className="h-6 w-6 rounded-full bg-slate-800 border-2 border-[#02040a] flex items-center justify-center text-[8px] font-bold text-slate-400">
                           AI
                         </div>
                       ))}
                     </div>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Recruiter Intelligence Enabled</span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Recruiter Intelligence Enabled</span>
                   </div>
                 </div>
               </div>
@@ -299,7 +299,7 @@ const Platform: React.FC = () => {
             <div className="meta-label">Capabilities</div>
             <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
               Engineered for <br />
-              <span className="text-slate-500 font-medium">performance.</span>
+              <span className="text-slate-400 font-medium">performance.</span>
             </h2>
           </div>
 
@@ -317,7 +317,7 @@ const Platform: React.FC = () => {
                   <cap.icon size={24} />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-3">{cap.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{cap.description}</p>
+                <p className="text-slate-400 text-sm leading-relaxed">{cap.description}</p>
               </motion.div>
             ))}
           </div>
@@ -341,9 +341,9 @@ const Platform: React.FC = () => {
                 viewport={{ once: true }}
                 className="p-6 rounded-2xl bg-white/5 border border-white/5 flex flex-col items-center text-center group hover:bg-white/[0.08] transition-all"
               >
-                <item.icon className="text-slate-500 mb-4 group-hover:text-emerald-400 transition-colors" size={24} />
+                <item.icon className="text-slate-400 mb-4 group-hover:text-emerald-400 transition-colors" size={24} />
                 <h3 className="text-base font-bold text-white mb-2">{item.role}</h3>
-                <p className="text-slate-500 text-xs leading-relaxed">{item.focus}</p>
+                <p className="text-slate-400 text-xs leading-relaxed">{item.focus}</p>
               </motion.div>
             ))}
           </div>
@@ -377,7 +377,7 @@ const Platform: React.FC = () => {
               
               <div className="mt-12 pt-8 border-t border-white/5 inline-flex flex-col">
                 <div className="text-white font-bold text-base tracking-tight">Lalit Maheshwari</div>
-                <div className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mt-1">Founder, ForcePilot AI</div>
+                <div className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mt-1">Founder, ForcePilot AI</div>
               </div>
             </div>
           </div>
@@ -390,7 +390,7 @@ const Platform: React.FC = () => {
         <div className="max-w-[800px] mx-auto px-6 relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-10 tracking-tight leading-tight">
             Elevate your technical <br />
-            <span className="text-slate-500">interview readiness.</span>
+            <span className="text-slate-400">interview readiness.</span>
           </h2>
           <Link to="/#setup" className="cta-button inline-flex items-center gap-2">
             Get Started Now <ArrowRight size={18} />

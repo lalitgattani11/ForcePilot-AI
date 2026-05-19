@@ -98,14 +98,14 @@ const GovernorLimitsExplained: React.FC = () => {
             <div className="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-1">Apply Knowledge</div>
             <div className="text-white font-semibold">Apex Interview Questions</div>
           </div>
-          <ChevronRight size={20} className="text-slate-500 group-hover:translate-x-1 transition-transform" />
+          <ChevronRight size={20} className="text-slate-400 group-hover:translate-x-1 transition-transform" />
         </Link>
         <Link to="/lwc-interview-guide" className="p-4 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800 transition-colors flex items-center justify-between group">
           <div>
             <div className="text-xs font-bold text-cyan-500 uppercase tracking-widest mb-1">Frontend Focus</div>
             <div className="text-white font-semibold">LWC Interview Guide</div>
           </div>
-          <ChevronRight size={20} className="text-slate-500 group-hover:translate-x-1 transition-transform" />
+          <ChevronRight size={20} className="text-slate-400 group-hover:translate-x-1 transition-transform" />
         </Link>
       </nav>
 
@@ -126,11 +126,11 @@ const GovernorLimitsExplained: React.FC = () => {
               <p className="text-slate-400 text-sm leading-relaxed">{limit.desc}</p>
               <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-800">
                 <div>
-                  <div className="text-[10px] font-bold text-slate-500 uppercase">Synchronous</div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase">Synchronous</div>
                   <div className="text-white font-mono">{limit.sync}</div>
                 </div>
                 <div>
-                  <div className="text-[10px] font-bold text-slate-500 uppercase">Asynchronous</div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase">Asynchronous</div>
                   <div className="text-white font-mono">{limit.async}</div>
                 </div>
               </div>
@@ -177,7 +177,7 @@ const GovernorLimitsExplained: React.FC = () => {
         </div>
       </section>
 
-      <footer className="text-center text-slate-600 text-sm py-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="text-center text-slate-400 text-sm py-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p>© 2026 ForcePilot AI. Salesforce-Focused Intelligence.</p>
         <div className="flex gap-6">
           <Link to="/" className="hover:text-rose-400 transition-colors">Home</Link>

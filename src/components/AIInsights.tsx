@@ -97,14 +97,14 @@ const AIInsights: React.FC = () => {
             </div>
             
             <div className="space-y-4">
-              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">{card.title}</h3>
-              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-medium">{card.desc}</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">{card.title}</h2>
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-medium">{card.desc}</p>
             </div>
 
             <div className="pt-4 sm:pt-6 space-y-3">
               {card.metrics.map((m, idx) => (
                 <div key={idx} className="flex items-center justify-between border-b border-white/5 pb-2">
-                  <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest">{m}</span>
+                  <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">{m}</span>
                   <div className="flex gap-1">
                     {[1, 2, 3, 4, 5].map((dot) => (
                       <div key={dot} className={`w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full ${dot <= 4 ? `bg-${card.color}-500/40` : 'bg-white/5'}`} />
@@ -126,15 +126,15 @@ const AIInsights: React.FC = () => {
       <section className="space-y-10 sm:space-y-12">
          <div className="text-center space-y-4">
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tighter">Evaluation Patterns</h2>
-            <p className="text-slate-500 text-xs sm:text-base font-medium">What our AI identifies as high-performance signals.</p>
+            <p className="text-slate-400 text-xs sm:text-base font-medium">What our AI identifies as high-performance signals.</p>
          </div>
 
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {evaluationPatterns.map((pattern, i) => (
                <div key={i} className="p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] bg-white/[0.01] border border-white/5 space-y-4 sm:space-y-6 relative group overflow-hidden">
                   <div className="absolute -right-2 -top-2 sm:-right-4 sm:-top-4 text-white/5 font-black text-4xl sm:text-6xl italic group-hover:text-emerald-500/10 transition-colors leading-none">{pattern.val}</div>
-                  <h4 className="text-base sm:text-lg font-bold text-white tracking-tight relative z-10">{pattern.title}</h4>
-                  <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed font-medium relative z-10">{pattern.desc}</p>
+                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight relative z-10">{pattern.title}</h3>
+                  <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed font-medium relative z-10">{pattern.desc}</p>
                </div>
             ))}
          </div>
@@ -162,7 +162,7 @@ const AIInsights: React.FC = () => {
                     { label: "Shadow DOM Misconceptions", val: "58%" }
                   ].map((stat, i) => (
                     <div key={i} className="space-y-2">
-                       <div className="flex justify-between text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                       <div className="flex justify-between text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                           <span>{stat.label}</span>
                           <span className="text-rose-400">{stat.val}</span>
                        </div>
@@ -179,7 +179,7 @@ const AIInsights: React.FC = () => {
                      <Search size={20} className="sm:w-6 sm:h-6" />
                   </div>
                   <div>
-                     <div className="text-[8px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest">Intelligence Deep Dive</div>
+                     <div className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest">Intelligence Deep Dive</div>
                      <div className="text-base sm:text-lg font-bold text-white leading-tight">Architectural IQ</div>
                   </div>
                </div>
@@ -188,11 +188,11 @@ const AIInsights: React.FC = () => {
                </p>
                <div className="flex gap-4">
                   <div className="flex-1 p-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/5 text-center">
-                     <div className="text-[8px] sm:text-[9px] font-bold text-slate-600 uppercase mb-1">Pass Rate</div>
+                     <div className="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase mb-1">Pass Rate</div>
                      <div className="text-lg sm:text-xl font-black text-emerald-400 leading-none">12%</div>
                   </div>
                   <div className="flex-1 p-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/5 text-center">
-                     <div className="text-[8px] sm:text-[9px] font-bold text-slate-600 uppercase mb-1">Signal</div>
+                     <div className="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase mb-1">Signal</div>
                      <div className="text-lg sm:text-xl font-black text-cyan-400 leading-none">HIGH</div>
                   </div>
                </div>
@@ -220,8 +220,8 @@ const AIInsights: React.FC = () => {
                     0{i + 1}
                   </div>
                   <div className="space-y-1 pt-0.5">
-                    <h4 className="font-bold text-white text-[11px] sm:text-sm uppercase tracking-wide leading-none">{point.label}</h4>
-                    <p className="text-[10px] sm:text-xs text-slate-500 font-medium leading-relaxed">{point.desc}</p>
+                    <h3 className="font-bold text-white text-[11px] sm:text-sm uppercase tracking-wide leading-none">{point.label}</h3>
+                    <p className="text-[10px] sm:text-xs text-slate-400 font-medium leading-relaxed">{point.desc}</p>
                   </div>
                 </div>
               ))}

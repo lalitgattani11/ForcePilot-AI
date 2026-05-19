@@ -161,7 +161,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
               transition={{ duration: 0.8, delay: 0.6 }}
               className="pt-4"
             >
-              <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white/[0.02] border border-white/5 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+              <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white/[0.02] border border-white/5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 <Zap size={12} className="text-cyan-400" />
                 Sign in to track your career evolution
               </div>
@@ -183,11 +183,11 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
               className="absolute bottom-4 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2 cursor-pointer group"
               onClick={() => window.scrollTo({ top: window.innerHeight * 0.8, behavior: 'smooth' })}
             >
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-600 group-hover:text-cyan-400 transition-colors duration-500">Discover</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 group-hover:text-cyan-400 transition-colors duration-500">Discover</span>
               <motion.div
                 animate={{ y: [0, 5, 0] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="p-1.5 rounded-full border border-white/5 bg-white/[0.02] text-slate-500 group-hover:text-cyan-400 group-hover:border-cyan-500/20 group-hover:bg-cyan-500/5 transition-all duration-500"
+                className="p-1.5 rounded-full border border-white/5 bg-white/[0.02] text-slate-400 group-hover:text-cyan-400 group-hover:border-cyan-500/20 group-hover:bg-cyan-500/5 transition-all duration-500"
               >
                 <ChevronDown size={14} />
               </motion.div>
@@ -210,8 +210,10 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
           <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
             {/* Left Column: Identity Control */}
             <div className="w-full lg:w-80 shrink-0 space-y-3">
-              <h3 className="meta-label">Identity</h3>
+              <h2 className="meta-label">Identity</h2>
+              <label htmlFor="candidateName" className="sr-only">Candidate Name</label>
               <input
+                id="candidateName"
                 type="text"
                 required
                 placeholder="Candidate Name"
@@ -225,10 +227,12 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
 
             {/* Right Column: Track Intelligence Grid */}
             <div className="flex-1 w-full space-y-3">
-              <h3 className="meta-label">Interview Track</h3>
+              <h2 className="meta-label">Interview Track</h2>
 
               <div className="block sm:hidden">
+                <label htmlFor="roleSelect" className="sr-only">Select interview role</label>
                 <select
+                  id="roleSelect"
                   value={config.role}
                   onChange={(e) =>
                     setConfig({ ...config, role: e.target.value as Role })
@@ -276,9 +280,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                 <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">
                   <BrainCircuit size={16} />
                 </div>
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                   Readiness
-                </h3>
+                </h2>
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {difficulties.map(({ val, label }) => (
@@ -286,7 +290,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                     key={val}
                     type="button"
                     onClick={() => setConfig({ ...config, difficulty: val })}
-                    className={`py-2.5 px-1 rounded-lg text-[8.5px] font-black uppercase tracking-tight transition-all ${config.difficulty === val ? "bg-white text-slate-950 shadow-lg" : "bg-white/5 text-slate-600 hover:text-white"}`}
+                    className={`py-2.5 px-1 rounded-lg text-[8.5px] font-black uppercase tracking-tight transition-all ${config.difficulty === val ? "bg-white text-slate-950 shadow-lg" : "bg-white/5 text-slate-400 hover:text-white"}`}
                   >
                     {label}
                   </button>
@@ -300,9 +304,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                 <div className="p-2 rounded-xl bg-violet-500/10 text-violet-400">
                   <ShieldCheck size={16} />
                 </div>
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                   Persona
-                </h3>
+                </h2>
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {personalities.map(({ val, label }) => (
@@ -310,7 +314,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                     key={val}
                     type="button"
                     onClick={() => setConfig({ ...config, personality: val })}
-                    className={`py-2.5 px-1 rounded-lg text-[8.5px] font-black uppercase tracking-tight transition-all ${config.personality === val ? "bg-white text-slate-950 shadow-lg" : "bg-white/5 text-slate-600 hover:text-white"}`}
+                    className={`py-2.5 px-1 rounded-lg text-[8.5px] font-black uppercase tracking-tight transition-all ${config.personality === val ? "bg-white text-slate-950 shadow-lg" : "bg-white/5 text-slate-400 hover:text-white"}`}
                   >
                     {label}
                   </button>
@@ -325,9 +329,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                   <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
                     <Zap size={16} />
                   </div>
-                  <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                  <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                     Audio
-                  </h3>
+                  </h2>
                 </div>
                 <button
                   type="button"
@@ -337,6 +341,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                       voiceEnabled: !config.voiceEnabled,
                     })
                   }
+                  aria-label={config.voiceEnabled ? "Disable voice audio" : "Enable voice audio"}
                   className={`w-9 h-4.5 rounded-full relative transition-all ${config.voiceEnabled ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]" : "bg-slate-900 border border-white/10"}`}
                 >
                   <div
@@ -345,13 +350,15 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                 </button>
               </div>
               <div className="space-y-2">
-                <div className="flex justify-between text-[9px] font-bold text-slate-600 tracking-widest uppercase">
+                <div className="flex justify-between text-[9px] font-bold text-slate-400 tracking-widest uppercase">
                   <span>Transmission</span>
                   <span className="text-emerald-500">
                     {config.speechSpeed}x
                   </span>
                 </div>
+                <label htmlFor="speedControl" className="sr-only">Speech transmission speed</label>
                 <input
+                  id="speedControl"
                   type="range"
                   min="0.5"
                   max="1.5"
@@ -406,7 +413,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight pb-1 sm:pb-0 overflow-visible">
               Technical <span className="text-emerald-400">Intelligence.</span>
             </h2>
-            <p className="text-slate-500 text-sm sm:text-base max-w-lg mx-auto sm:mx-0">
+            <p className="text-slate-400 text-sm sm:text-base max-w-lg mx-auto sm:mx-0">
               Master the technical nuances of the Salesforce platform with our
               deep-dive interview guides.
             </p>
@@ -490,7 +497,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                   className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500"
                 />
               </h3>
-              <p className="text-slate-500 text-sm leading-relaxed">
+              <p className="text-slate-400 text-sm leading-relaxed">
                 {item.desc}
               </p>
 

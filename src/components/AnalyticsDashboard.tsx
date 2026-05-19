@@ -76,7 +76,7 @@ const CustomTooltip = ({
           <p className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em]">
             {data?.role ?? "Interview Session"}
           </p>
-          <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
             {data?.fullDate ?? ""}
           </p>
         </div>
@@ -91,7 +91,7 @@ const CustomTooltip = ({
           </div>
           <div className="grid grid-cols-2 gap-4 border-t border-white/5 pt-2">
             <div className="space-y-0.5">
-              <span className="text-[8px] font-black text-slate-500 uppercase tracking-tighter">
+              <span className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">
                 Technical
               </span>
               <div className="text-xs font-black text-cyan-400">
@@ -99,7 +99,7 @@ const CustomTooltip = ({
               </div>
             </div>
             <div className="space-y-0.5">
-              <span className="text-[8px] font-black text-slate-500 uppercase tracking-tighter">
+              <span className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">
                 Comm.
               </span>
               <div className="text-xs font-black text-purple-400">
@@ -169,7 +169,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
             <div className="flex flex-wrap justify-center xl:justify-start gap-3 pt-1">
               <div className="px-4 py-2 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center gap-3">
-                <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                   Readiness
                 </div>
                 <div className="text-xs sm:text-sm font-bold text-slate-200">
@@ -177,7 +177,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                 </div>
               </div>
               <div className="px-4 py-2 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center gap-3">
-                <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                   Status
                 </div>
                 <div className="text-xs sm:text-sm font-bold text-slate-200">
@@ -189,7 +189,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
           <div className="flex items-center gap-8 sm:gap-12 lg:pr-6 shrink-0">
             <div className="space-y-0.5 text-center">
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
                 OVERALL SCORE
               </div>
               <div className="text-5xl sm:text-7xl font-black text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
@@ -198,7 +198,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             </div>
             {!isCalibration && (
               <div className="space-y-0.5 text-center border-l border-white/10 pl-8 sm:pl-12">
-                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
                   RECENT GROWTH
                 </div>
                 {stats.recentGrowth !== null ? (
@@ -228,7 +228,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-400">
                 <TrendingUp size={20} />
               </div>
-              <h3 className="text-[11px] font-black uppercase tracking-[0.25em] text-slate-500">
+              <h3 className="text-[11px] font-black uppercase tracking-[0.25em] text-slate-400">
                 {isCalibration
                   ? "In Progress"
                   : isBasic
@@ -250,7 +250,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                     <h4 className="text-white font-bold uppercase tracking-widest text-[10px]">
                       Analyzing Data Stream
                     </h4>
-                    <p className="text-xs text-slate-500 max-w-[200px]">
+                    <p className="text-xs text-slate-400 max-w-[200px]">
                       Waiting for consistent patterns to emerge in technical
                       responses.
                     </p>
@@ -271,7 +271,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                       <h4 className="text-white font-black uppercase tracking-[0.25em] text-[11px]">
                         Baseline Established
                       </h4>
-                      <p className="text-[13px] text-slate-500 font-medium leading-relaxed max-w-[260px] mx-auto">
+                      <p className="text-[13px] text-slate-400 font-medium leading-relaxed max-w-[260px] mx-auto">
                         Your first session is captured. Complete another
                         interview to activate multi-point trend analysis and
                         growth metrics.
@@ -374,7 +374,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           {/* Metrics Summary Bar */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 pt-8 mt-8 sm:pt-10 sm:mt-10 border-t border-white/5">
             <div className="px-5 py-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
-              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-wider text-slate-500">
+              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-wider text-slate-400">
                 <ShieldCheck size={12} className="text-emerald-500 shrink-0" />
                 <span>Technical Skills</span>
               </div>
@@ -383,7 +383,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </div>
             </div>
             <div className="px-5 py-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
-              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-wider text-slate-500">
+              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-wider text-slate-400">
                 <MessageSquare size={12} className="text-cyan-500 shrink-0" />
                 <span>Communication</span>
               </div>
@@ -392,7 +392,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </div>
             </div>
             <div className="px-5 py-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
-              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-wider text-slate-500">
+              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-wider text-slate-400">
                 <Award size={12} className="text-purple-500 shrink-0" />
                 <span>Consistency</span>
               </div>
@@ -401,7 +401,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </div>
             </div>
             <div className="px-5 py-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
-              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-wider text-slate-500">
+              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-wider text-slate-400">
                 <Flame size={12} className="text-orange-500 shrink-0" />
                 <span>Confidence</span>
               </div>
@@ -420,16 +420,16 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <div className="p-3 rounded-2xl bg-cyan-500/10 text-cyan-400">
                 <Brain size={20} />
               </div>
-              <h3 className="text-[11px] font-black uppercase tracking-[0.25em] text-slate-500">
+              <h3 className="text-[11px] font-black uppercase tracking-[0.25em] text-slate-400">
                 Topic Analysis
               </h3>
             </div>
 
             <div className="space-y-10">
               <div className="space-y-6">
-                <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">
+                <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
                   <span>Strongest Topics</span>
-                  <span className="text-[9px] text-slate-600 uppercase">
+                  <span className="text-[9px] text-slate-400 uppercase">
                     Skill Level
                   </span>
                 </div>
@@ -443,7 +443,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                         <span className="text-sm font-bold text-slate-300 group-hover:text-white transition-colors">
                           {topic.name}
                         </span>
-                        <div className="text-[9px] font-black uppercase text-slate-500/80">
+                        <div className="text-[9px] font-black uppercase text-slate-400/80">
                           {topic.confidence} Confidence
                         </div>
                       </div>
@@ -479,14 +479,14 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                     </div>
                   ))
                 ) : (
-                  <div className="text-[10px] text-slate-600 italic">
+                  <div className="text-[10px] text-slate-400 italic">
                     Complete more sessions to identify top skills.
                   </div>
                 )}
               </div>
 
               <div className="space-y-4 pt-4">
-                <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
                   Areas to Improve
                 </div>
                 <div className="flex flex-wrap gap-2.5">
@@ -498,13 +498,13 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                       >
                         <div className="w-1.5 h-1.5 rounded-full bg-rose-500" />
                         {topic.name}
-                        <span className="text-[8px] text-rose-500/40 ml-1">
+                        <span className="text-[8px] text-rose-500/70 ml-1">
                           {topic.confidence === "Consistent" ? "!!" : "!"}
                         </span>
                       </div>
                     ))
                   ) : (
-                    <div className="text-[10px] text-slate-600 italic">
+                    <div className="text-[10px] text-slate-400 italic">
                       More history needed to identify common technical gaps.
                     </div>
                   )}
@@ -517,7 +517,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           <div className="premium-glass rounded-[2.5rem] p-10 border border-white/5 bg-slate-950/20 flex items-center justify-between group hover:bg-slate-950/30 transition-all">
             <div className="flex items-center gap-8">
               <div className="space-y-2">
-                <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                   Interview Streak
                 </div>
                 <div className="text-4xl font-black text-white flex items-center gap-3">
@@ -530,7 +530,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </div>
               <div className="w-px h-12 bg-white/10" />
               <div className="space-y-2">
-                <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                   Total Interviews
                 </div>
                 <div className="text-4xl font-black text-white group-hover:text-cyan-400 transition-colors">

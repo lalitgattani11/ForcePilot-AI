@@ -202,6 +202,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         setStreamingMessageId(msgId);
         setStatus("AI_SPEAKING");
         await speak(aiText);
+        setStreamingMessageId(null);
         setStatus("WAITING_FOR_ANSWER");
 
       } catch (err) {
@@ -462,11 +463,15 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     };
   }, [stopSpeech]);
 
+  const handleTypewriterComplete = useCallback((id: string) => {
+    setStreamingMessageId(prev => prev === id ? null : prev);
+  }, []);
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({
       behavior: "smooth",
     });
-  }, [messages]);
+  }, [messages, streamingMessageId]); // Also scroll when streaming updates height
 
   const getPersonaIcon = () => {
     if (config.personality === "Strict") return <ShieldCheck className="text-amber-400" size={14} />;
@@ -486,15 +491,15 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   }
 
   return (
-    <div className="h-[calc(100dvh-80px)] sm:h-[calc(100vh-theme(spacing.28)-theme(spacing.6))] flex flex-col bg-[#050816] sm:bg-transparent overflow-hidden fixed top-20 inset-x-0 bottom-0 z-40 sm:static sm:z-auto w-full lg:min-w-[1400px] max-w-[1600px] mx-auto sm:premium-glass sm:rounded-3xl sm:border sm:border-white/10 sm:mb-2">
+    <div className="h-[calc(100dvh-80px)] sm:h-[calc(100vh-theme(spacing.28)-theme(spacing.2))] flex flex-col bg-[#050816] sm:bg-transparent overflow-hidden fixed top-20 inset-x-0 bottom-0 z-40 sm:static sm:z-auto w-full lg:min-w-[1400px] max-w-[1600px] mx-auto sm:premium-glass sm:rounded-3xl sm:border sm:border-white/10 sm:mb-0">
       
       {/* Handshake Mask */}
       {status === "AWAITING_UNLOCK" && (
         <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm sm:backdrop-blur-xl flex items-center justify-center p-6">
           <div className="max-w-xs w-full text-center space-y-8">
             <div className="space-y-3">
-              <h3 className="text-xl font-bold text-white">Start Session</h3>
-              <p className="text-xs text-slate-500 font-medium">Please enable audio to begin the interview.</p>
+              <h2 className="text-xl font-bold text-white">Start Session</h2>
+              <p className="text-xs text-slate-400 font-medium">Please enable audio to begin the interview.</p>
             </div>
 
             <button
@@ -520,15 +525,15 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 <div className="w-1 h-1 rounded-full bg-slate-700"></div>
                 <div className="flex items-center gap-1 sm:gap-1.5">
                   {getPersonaIcon()}
-                  <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider">{config.personality}</span>
+                  <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider">{config.personality}</span>
                 </div>
               </div>
-              <h2 className="text-xs sm:text-sm font-semibold text-white truncate max-w-[150px] sm:max-w-none">{config.role}</h2>
+              <h1 className="text-xs sm:text-sm font-semibold text-white truncate max-w-[150px] sm:max-w-none">{config.role}</h1>
             </div>
           </div>
 
           <div className="flex flex-col items-end gap-1.5 sm:gap-2">
-             <div className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Progress</div>
+             <div className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Progress</div>
              <div className="flex gap-0.5 sm:gap-1">
                 {Array.from({ length: TOTAL_QUESTIONS_GOAL }).map((_, i) => (
                   <div 
@@ -545,7 +550,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       </div>
 
       {/* CHAT AREA */}
-      <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide">
+      <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide bg-[#050816] sm:bg-[#050816]/30">
         <main className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 scroll-smooth 
           sm:scrollbar-thin sm:scrollbar-thumb-emerald-500/20 sm:scrollbar-track-transparent sm:hover:scrollbar-thumb-emerald-500/40 
           sm:[&::-webkit-scrollbar]:w-1.5
@@ -555,38 +560,38 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           sm:[&::-webkit-scrollbar-thumb]:border-transparent
           sm:hover:[&::-webkit-scrollbar-thumb]:bg-emerald-500/30
           sm:[&::-webkit-scrollbar-thumb]:shadow-[0_0_10px_rgba(16,185,129,0.1)]">
-          {messages.map((msg) => (
-            <motion.div
-              key={msg.id}
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2 }}
-              className={`flex ${msg.sender === "candidate" ? "justify-end" : "justify-start"} will-change-transform`}
-            >
-              <div className={`w-full ${msg.sender === "candidate" ? "text-right" : "text-left"}`}>
-                <div className={`flex items-center gap-2 mb-1.5 sm:mb-2 text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider ${msg.sender === "candidate" ? "justify-end" : "justify-start"}`}>
-                  {msg.sender === "candidate" ? "You" : "AI Interviewer"}
+          {messages.map((msg) => {
+            return (
+              <motion.div
+                key={msg.id}
+                initial={false}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className={`flex ${msg.sender === "candidate" ? "justify-end" : "justify-start"}`}
+              >
+                <div className={`w-full ${msg.sender === "candidate" ? "text-right" : "text-left"}`}>
+                  <div className={`flex items-center gap-2 mb-1.5 sm:mb-2 text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider ${msg.sender === "candidate" ? "justify-end" : "justify-start"}`}>
+                    {msg.sender === "candidate" ? "You" : "AI Interviewer"}
+                  </div>
+                  <div className={`px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-sm leading-relaxed ${
+                    msg.sender === "candidate" 
+                    ? "bg-emerald-500/10 text-white border border-emerald-500/20" 
+                    : "bg-white/[0.03] text-slate-200 border border-white/[0.05] min-h-[60px] md:min-h-0 flex items-center"
+                  }`}>
+                    {msg.sender === "interviewer" ? (
+                      <TypewriterText 
+                        text={msg.text} 
+                        isStreaming={msg.id === streamingMessageId}
+                        onComplete={() => handleTypewriterComplete(msg.id)}
+                      />
+                    ) : (
+                      msg.text
+                    )}
+                  </div>
                 </div>
-                <div className={`px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-sm leading-relaxed ${
-                  msg.sender === "candidate" 
-                  ? "bg-emerald-500/10 text-white border border-emerald-500/20" 
-                  : "bg-white/[0.03] text-slate-200 border border-white/[0.05] min-h-[60px] md:min-h-0 flex items-center"
-                }`}>
-                  {msg.sender === "interviewer" ? (
-                    <TypewriterText 
-                      text={msg.text} 
-                      isStreaming={msg.id === streamingMessageId}
-                      onComplete={() => {
-                        if (msg.id === streamingMessageId) setStreamingMessageId(null);
-                      }}
-                    />
-                  ) : (
-                    msg.text
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
 
           <InterviewThinkingState 
             phase={
@@ -603,7 +608,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       <div className="shrink-0 border-t border-white/5 bg-[#050816]">
         <footer className="p-4 sm:p-8 bg-[#050816] sm:bg-white/[0.01]">
           <div className="flex gap-3 sm:gap-4 items-end w-full mx-auto relative">
+            <label htmlFor="manualInput" className="sr-only">Type your answer</label>
             <textarea
+              id="manualInput"
               value={manualInput}
               onChange={(e) => setManualInput(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -616,8 +623,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             <div className="flex gap-2 shrink-0 sm:absolute sm:right-4 sm:bottom-4">
               <button
                 onClick={handleMicClick}
+                aria-label={speechState === "LISTENING" ? "Stop listening" : "Start voice input"}
                 className={`hidden sm:flex w-10 h-10 sm:w-8 sm:h-8 rounded-lg items-center justify-center transition-all ${
-                  speechState === "LISTENING" ? 'bg-rose-500 text-white' : 'bg-white/5 text-slate-500 hover:text-white'
+                  speechState === "LISTENING" ? 'bg-rose-500 text-white' : 'bg-white/5 text-slate-400 hover:text-white'
                 }`}
               >
                 <Mic size={16} className={`${speechState === "LISTENING" ? 'animate-pulse' : ''} sm:size-[14px]`} />
@@ -625,6 +633,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               <button
                 disabled={!manualInput.trim()}
                 onClick={handleManualSubmit}
+                aria-label="Send message"
                 className="w-10 h-10 sm:w-8 sm:h-8 rounded-lg bg-white text-slate-950 flex items-center justify-center transition-all hover:scale-105 disabled:opacity-20 disabled:scale-100"
               >
                 <Send size={16} className="sm:size-[14px]" />
@@ -638,4 +647,4 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   );
 };
 
-export default React.memo(ChatInterface);
+export default ChatInterface;

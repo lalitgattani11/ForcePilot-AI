@@ -18,8 +18,17 @@ export const TypewriterText: React.FC<TypewriterTextProps> = ({
 }) => {
   const [displayedText, setDisplayedText] = useState(isStreaming ? '' : text);
   const [currentIndex, setCurrentIndex] = useState(0);
-const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Sync displayedText with text if not streaming or if text changes
+  useEffect(() => {
+    if (!isStreaming) {
+      setDisplayedText(text);
+      setCurrentIndex(text.length);
+    }
+  }, [isStreaming, text]);
+
+  // Handle typewriter effect
   useEffect(() => {
     if (!isStreaming) return;
 
@@ -29,7 +38,11 @@ const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
         setCurrentIndex((prev) => prev + 1);
       }, speed);
     } else {
-      if (onComplete) onComplete();
+      if (onComplete) {
+        // Use a small delay to ensure the last character is rendered before calling onComplete
+        const t = setTimeout(onComplete, 50);
+        return () => clearTimeout(t);
+      }
     }
 
     return () => {
@@ -37,5 +50,5 @@ const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     };
   }, [currentIndex, text, speed, onComplete, isStreaming]);
 
-  return <span>{displayedText}</span>;
+  return <span className="whitespace-pre-wrap">{displayedText}</span>;
 };

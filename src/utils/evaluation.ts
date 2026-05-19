@@ -56,7 +56,18 @@ export const generateQuestion = async (
   } catch (error) {
     console.error("❌ Question Generation Error:", error);
 
-    return FALLBACK_QUESTIONS[role] || "What is Salesforce?";
+    // Filter fallback questions to avoid duplicates
+    const historySet = new Set(askedQuestions.map(q => q.toLowerCase().trim()));
+    const roleFallback = FALLBACK_QUESTIONS[role] || "What is Salesforce?";
+    
+    if (historySet.has(roleFallback.toLowerCase().trim())) {
+      // If primary fallback was used, try to find an alternative that wasn't used
+      const fallbacks = Object.values(FALLBACK_QUESTIONS);
+      const unusedFallback = fallbacks.find(f => !historySet.has(f.toLowerCase().trim()));
+      return unusedFallback || "Could you describe a complex Salesforce challenge you've faced?";
+    }
+
+    return roleFallback;
   }
 };
 

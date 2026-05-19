@@ -86,7 +86,7 @@ body {
 }
 
 .meta-label {
-  @apply text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-3 md:mb-4;
+  @apply text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-3 md:mb-4;
 }
 
 /* Platform-Specific Premium Typography (Isolated) */
@@ -133,7 +133,7 @@ body {
 }
 
 .card-selector.inactive {
-  @apply bg-white/[0.01] border-white/[0.05] text-slate-500 hover:bg-white/[0.03] hover:border-white/10 hover:text-slate-300;
+  @apply bg-white/[0.01] border-white/[0.05] text-slate-400 hover:bg-white/[0.03] hover:border-white/10 hover:text-slate-300;
 }
 
 @utility scrollbar-hide {

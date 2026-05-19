@@ -110,7 +110,7 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
               </div>
               <span className="font-bold text-white text-sm">{link.title}</span>
             </div>
-            <ChevronRight size={18} className="text-slate-600 group-hover:translate-x-1 group-hover:text-white transition-all" />
+            <ChevronRight size={18} className="text-slate-400 group-hover:translate-x-1 group-hover:text-white transition-all" />
           </Link>
         ))}
       </nav>
@@ -119,7 +119,7 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
       <section className="space-y-16">
         <div className="text-center space-y-4">
           <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Core <span className="text-blue-400">Concepts.</span></h2>
-          <p className="text-slate-500 max-w-2xl mx-auto">Master the trigger nuances that separate senior architects from junior developers.</p>
+          <p className="text-slate-400 max-w-2xl mx-auto">Master the trigger nuances that separate senior architects from junior developers.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -130,7 +130,7 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
               className="bg-white/[0.02] border border-white/5 p-8 rounded-[2rem] hover:bg-white/[0.04] transition-all group"
             >
               <h3 className="text-xl font-bold text-white mb-3">{section.title}</h3>
-              <p className="text-slate-500 leading-relaxed text-sm mb-6">
+              <p className="text-slate-400 leading-relaxed text-sm mb-6">
                 {section.desc}
               </p>
               <div className="space-y-3">
@@ -178,7 +178,7 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
           <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
              <div className="h-full w-[85%] bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
           </div>
-          <div className="text-[10px] text-slate-500 uppercase font-black tracking-widest text-center">Architectural Maturity</div>
+          <div className="text-[10px] text-slate-400 uppercase font-black tracking-widest text-center">Architectural Maturity</div>
         </div>
       </section>
 
@@ -204,7 +204,7 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
         </div>
       </section>
 
-      <footer className="text-center text-slate-600 text-sm py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="text-center text-slate-400 text-sm py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p>© 2026 ForcePilot AI. Salesforce-Focused Intelligence.</p>
         <div className="flex gap-8">
           <Link to="/" className="hover:text-blue-400 transition-colors">Home</Link>

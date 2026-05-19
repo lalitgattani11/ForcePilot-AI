@@ -315,10 +315,16 @@ function calculateSimilarity(q1, q2) {
 function isDuplicateQuestion(newQuestion, askedQuestions = []) {
   if (!askedQuestions || askedQuestions.length === 0) return false;
 
+  const normalizedNew = normalizeText(newQuestion);
+
   for (const oldQ of askedQuestions) {
     const similarity = calculateSimilarity(newQuestion, oldQ);
-    if (similarity > 0.55) {
-      // 55% threshold for concept/paraphrase detection
+    if (similarity > 0.45) { // Lowered threshold for stricter duplicate prevention
+      return true;
+    }
+
+    // Direct normalized comparison as safety
+    if (normalizedNew === normalizeText(oldQ)) {
       return true;
     }
   }
@@ -359,6 +365,43 @@ function isAdvancedLeakage(question = "", difficulty = "") {
   return false;
 }
 
+/**
+ * 🚧 ROLE DOMAIN GATE
+ * Rejects questions that leak from other Salesforce domains.
+ */
+function isDomainLeakage(question = "", role = "") {
+  const lowerQ = question.toLowerCase();
+  
+  const rules = {
+    "Salesforce Admin": {
+      forbidden: ["apex", "trigger", "soql", "sosl", "lwc", "javascript", "lightning web component", "code", "class", "method", "@api", "@track", "@wire"],
+      reason: "technical code/development leaked into Admin"
+    },
+    "Salesforce Apex Developer": {
+      forbidden: ["page layout", "introduction", "strength", "weakness", "career goal", "tell me about yourself"],
+      reason: "Admin/HR leaked into Apex"
+    },
+    "Salesforce LWC Developer": {
+      forbidden: ["trigger", "batch", "schedulable", "soql", "profile", "permission set", "sharing rule"],
+      reason: "Admin/Apex leaked into LWC"
+    },
+    "Professional Readiness": {
+      forbidden: ["apex", "soql", "lwc", "trigger", "validation rule", "flow", "permission set"],
+      reason: "Technical leaked into HR"
+    }
+  };
+
+  const config = rules[role];
+  if (!config) return false;
+
+  const matched = config.forbidden.filter(word => lowerQ.includes(word));
+  if (matched.length > 0) {
+    console.log(`[DOMAIN_TRACE] [LEAKAGE_DETECTED] Match: ${matched.join(", ")} | Reason: ${config.reason}`);
+    return true;
+  }
+  return false;
+}
+
 /* ==================================================
    DIFFICULTY GUIDELINES (Calibrated)
 ================================================== */
@@ -389,17 +432,32 @@ function isProjectQuestion(question = "") {
 }
 
 function getRandomTopic(role, difficulty, askedQuestions = []) {
-  const rolePool = ROLE_TOPICS[role] || {
-    Fresher: ["General Concepts"],
-    Intermediate: ["General Concepts"],
-    Advanced: ["General Concepts"],
+  // CRITICAL: Strict role-based pool isolation
+  const rolePool = ROLE_TOPICS[role];
+  
+  if (!rolePool) {
+    console.error(`[CRITICAL_ERROR] Invalid role requested: ${role}`);
+    return "General Salesforce Overview";
+  }
+
+  // Map difficulty to correct bucket
+  const difficultyMap = {
+    "Fresher": "Fresher",
+    "Beginner": "Fresher", // Safety for possible frontend mismatch
+    "Intermediate": "Intermediate",
+    "Advanced": "Advanced"
   };
 
-  const topics = rolePool[difficulty] ||
-    rolePool["Intermediate"] || ["General Concepts"];
+  const targetDifficulty = difficultyMap[difficulty] || "Intermediate";
+  const topics = rolePool[targetDifficulty];
 
-  // Try to find a topic that hasn't been used in recent questions
-  const historyText = askedQuestions.join(" ").toLowerCase();
+  if (!topics || topics.length === 0) {
+    console.error(`[CRITICAL_ERROR] No topics found for role: ${role} | difficulty: ${targetDifficulty}`);
+    return role === "Professional Readiness" ? "Career Background" : "Platform Fundamentals";
+  }
+
+  // Filter out used topics to ensure variety within the role bank
+  const historyText = (askedQuestions || []).join(" ").toLowerCase();
   const unusedTopics = topics.filter(
     (topic) => !historyText.includes(topic.toLowerCase()),
   );
@@ -407,15 +465,10 @@ function getRandomTopic(role, difficulty, askedQuestions = []) {
   const finalPool = unusedTopics.length > 0 ? unusedTopics : topics;
   const selected = finalPool[Math.floor(Math.random() * finalPool.length)];
 
-  if (difficulty !== "Fresher") {
-    console.log(
-      `[DIFFICULTY_TRACE] [BUCKET_CHECK] Level: ${difficulty} | Bucket: ${difficulty} | Topics Available: ${topics.length} | Unused: ${unusedTopics.length} | Selected: ${selected}`,
-    );
-  } else {
-    console.log(
-      `[TOPIC SELECTION] Role: ${role} | Difficulty: ${difficulty} | Selected: ${selected}`,
-    );
-  }
+  console.log(
+    `[ISOLATION_TRACE] Role: ${role} | Difficulty: ${targetDifficulty} | Source: ROLE_TOPICS["${role}"]["${targetDifficulty}"] | Selected: ${selected}`,
+  );
+  
   return selected;
 }
 
@@ -445,26 +498,35 @@ app.post("/generate-question", async (req, res) => {
     ================================================== */
   if (difficulty === "Intermediate") {
     console.log(
-      `[DIFFICULTY_TRACE] [INTERMEDIATE_BYPASS] Pulling from hardcoded bank...`,
+      `[ISOLATION_TRACE] [INTERMEDIATE_BYPASS] Entering bypass for role: ${role}`,
     );
-    const bank = INTERMEDIATE_QUESTION_BANK[role] || [
-      "What is a standard business requirement in Salesforce?",
-    ];
+    
+    // Explicitly lock to the specific role's bank
+    const roleBank = INTERMEDIATE_QUESTION_BANK[role];
+    
+    if (!roleBank) {
+      console.error(`[CRITICAL_ERROR] No intermediate bank for role: ${role}`);
+      return res.json({ text: "Could you describe your typical day-to-day responsibilities in a Salesforce environment?" });
+    }
 
-    // Filter out previously asked questions
-    const historySet = new Set(askedQuestions.map((q) => q.toLowerCase()));
-    const available = bank.filter((q) => !historySet.has(q.toLowerCase()));
+    // Filter out previously asked questions using similarity check
+    const available = roleBank.filter((q) => !isDuplicateQuestion(q, askedQuestions));
 
-    const pool = available.length > 0 ? available : bank;
+    // If bank is exhausted, use the first available that's not exactly the last one
+    const pool = available.length > 0 ? available : roleBank;
     const finalQuestion = pool[Math.floor(Math.random() * pool.length)];
 
     console.log(
-      `[DIFFICULTY_TRACE] [FINAL_SENT] Level: Intermediate | Question: "${finalQuestion}"`,
+      `[ISOLATION_TRACE] [FINAL_SENT] Track: ${role} | Question Source: INTERMEDIATE_QUESTION_BANK["${role}"]`,
     );
     return res.json({ text: finalQuestion });
   }
 
   try {
+    if (!GROQ_API_KEY || GROQ_API_KEY === "gsk_dummy") {
+      throw new Error("Invalid or missing GROQ_API_KEY. Please configure your environment variables.");
+    }
+
     let generatedQuestion = "";
     let attempts = 0;
     let selectedTopic = "";
@@ -489,12 +551,18 @@ app.post("/generate-question", async (req, res) => {
           : "Focus on standard role expectations.";
 
       const prompt = `
-You are a senior Salesforce technical interviewer.
+You are a senior Salesforce technical interviewer. 
+YOUR MISSION: Conduct a specialized technical interview for the role of ${role}.
+
+STRICT DOMAIN BOUNDARY:
+- ONLY ask questions related to ${role}.
+- NEVER ask questions from other tracks (e.g., if Admin, NO Apex; if Apex, NO Admin security; if HR, NO Technical).
+
 TRACK: ${role}
 LEVEL: ${difficulty}
 CONSTRAINTS: ${currentConstraints}
 GUIDELINE: ${DIFFICULTY_GUIDELINES[difficulty] || DIFFICULTY_GUIDELINES.Intermediate}
-PRIMARY FOCUS: ${selectedTopic}
+PRIMARY FOCUS TOPIC: ${selectedTopic}
 
 ==================================================
 PREVIOUSLY ASKED (STRICT EXCLUSION):
@@ -530,7 +598,7 @@ CRITICAL RULES:
               {
                 role: "system",
                 content:
-                  "Senior Salesforce Interviewer. Return ONLY the question.",
+                  `Senior Salesforce Interviewer. You are an expert in ${role}. You NEVER deviate from this role. Return ONLY the question.`,
               },
               { role: "user", content: prompt },
             ],
@@ -566,6 +634,7 @@ CRITICAL RULES:
         role !== "Professional Readiness" &&
         isProjectQuestion(generatedQuestion);
       const isLeakage = isAdvancedLeakage(generatedQuestion, difficulty);
+      const isRoleLeakage = isDomainLeakage(generatedQuestion, role);
 
       if (isDuplicate)
         console.log(
@@ -579,8 +648,12 @@ CRITICAL RULES:
         console.log(
           `[DIFFICULTY_TRACE] [REJECTED] Reason: Advanced concept leakage (HARD GATE).`,
         );
+      if (isRoleLeakage)
+        console.log(
+          `[DIFFICULTY_TRACE] [REJECTED] Reason: Role domain leakage detected.`,
+        );
 
-      if (!isDuplicate && !isInvalidHR && !isLeakage) {
+      if (!isDuplicate && !isInvalidHR && !isLeakage && !isRoleLeakage) {
         if (difficulty !== "Fresher") {
           console.log(
             `[DIFFICULTY_TRACE] [ACCEPTED] Level: ${difficulty} | Topic: ${selectedTopic}`,
@@ -598,19 +671,29 @@ CRITICAL RULES:
     if (
       !generatedQuestion ||
       isDuplicateQuestion(generatedQuestion, askedQuestions) ||
-      isAdvancedLeakage(generatedQuestion, difficulty)
+      isAdvancedLeakage(generatedQuestion, difficulty) ||
+      isDomainLeakage(generatedQuestion, role)
     ) {
       console.log(
-        `[DIFFICULTY_TRACE] [FALLBACK_TRIGGERED] Reason: All AI attempts rejected for ${difficulty}.`,
+        `[ISOLATION_TRACE] [FALLBACK_TRIGGERED] Final safety for role: ${role}`,
       );
 
-      // Hardcoded safe fallback based on level
+      // Hardcoded safe fallback based on level - strictly role-locked via selectedTopic
+      let fallbackText = "";
       if (difficulty === "Fresher") {
-        generatedQuestion = `Could you explain the basic purpose of ${selectedTopic} in Salesforce?`;
+        fallbackText = `Could you explain how ${selectedTopic} works within the context of ${role}?`;
       } else if (difficulty === "Intermediate") {
-        generatedQuestion = `When would you typically choose to use ${selectedTopic} in a standard business requirement, and what are its main advantages?`;
+        fallbackText = `In a standard ${role} scenario, when would you typically use ${selectedTopic}, and what are the main benefits?`;
       } else {
-        generatedQuestion = `Could you discuss the architectural implications and scalability considerations of implementing ${selectedTopic} in a global enterprise environment?`;
+        fallbackText = `Considering your expertise in ${role}, could you discuss the architectural implications and scalability of implementing ${selectedTopic}?`;
+      }
+
+      // Final uniqueness check for the fallback itself
+      if (isDuplicateQuestion(fallbackText, askedQuestions)) {
+        // Ultimate emergency fallback - still role-locked
+        generatedQuestion = `Based on your specific experience in ${role}, could you describe a complex technical challenge you've recently solved?`;
+      } else {
+        generatedQuestion = fallbackText;
       }
     }
 

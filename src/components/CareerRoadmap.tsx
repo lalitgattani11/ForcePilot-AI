@@ -107,7 +107,7 @@ const CareerRoadmap: React.FC = () => {
           </div>
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Progression Milestones</h2>
-            <p className="text-slate-500 text-xs sm:text-sm font-medium">Targeted developmental stages for SFDC professionals.</p>
+            <p className="text-slate-400 text-xs sm:text-sm font-medium">Targeted developmental stages for SFDC professionals.</p>
           </div>
         </div>
 
@@ -138,10 +138,10 @@ const CareerRoadmap: React.FC = () => {
                   ))}
                 </ul>
                 <div className="pt-6 border-t border-white/5">
-                   <div className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Key Checkpoints</div>
+                   <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Key Checkpoints</div>
                    <div className="space-y-2">
                       {m.checkpoints.map((cp, idx) => (
-                        <div key={idx} className="text-[10px] sm:text-[11px] text-slate-500 italic flex gap-2 font-medium">
+                        <div key={idx} className="text-[10px] sm:text-[11px] text-slate-400 italic flex gap-2 font-medium">
                            <span className="text-emerald-500">→</span> {cp}
                         </div>
                       ))}
@@ -161,7 +161,7 @@ const CareerRoadmap: React.FC = () => {
           </div>
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Technical Specializations</h2>
-            <p className="text-slate-500 text-xs sm:text-sm font-medium">Deep-dive mastery paths for high-growth roles.</p>
+            <p className="text-slate-400 text-xs sm:text-sm font-medium">Deep-dive mastery paths for high-growth roles.</p>
           </div>
         </div>
 
@@ -174,7 +174,7 @@ const CareerRoadmap: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-base sm:text-lg font-bold text-white leading-tight">{p.role}</h3>
-                  <p className="text-[8px] sm:text-[10px] text-slate-500 uppercase tracking-widest font-black mt-0.5">{p.trajectory}</p>
+                  <p className="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-widest font-black mt-0.5">{p.trajectory}</p>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -224,11 +224,11 @@ const CareerRoadmap: React.FC = () => {
               </p>
               <div className="grid grid-cols-2 gap-4 sm:gap-6">
                  <div className="p-4 sm:p-6 rounded-2xl bg-white/5 border border-white/10 text-center sm:text-left">
-                    <div className="text-[8px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Architectural IQ</div>
+                    <div className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Architectural IQ</div>
                     <div className="text-lg sm:text-xl font-bold text-white">Essential</div>
                  </div>
                  <div className="p-4 sm:p-6 rounded-2xl bg-white/5 border border-white/10 text-center sm:text-left">
-                    <div className="text-[8px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Data Literacy</div>
+                    <div className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Data Literacy</div>
                     <div className="text-lg sm:text-xl font-bold text-white">Critical</div>
                  </div>
               </div>
@@ -245,7 +245,7 @@ const CareerRoadmap: React.FC = () => {
                    </div>
                    <div className="space-y-1">
                       <div className="font-bold text-white text-xs sm:text-sm">{item.label}</div>
-                      <p className="text-[10px] sm:text-xs text-slate-500 leading-relaxed font-medium">{item.desc}</p>
+                      <p className="text-[10px] sm:text-xs text-slate-400 leading-relaxed font-medium">{item.desc}</p>
                    </div>
                 </div>
               ))}

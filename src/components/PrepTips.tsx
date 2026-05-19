@@ -109,7 +109,7 @@ const PrepTips: React.FC = () => {
                 <cat.icon size={24} className="sm:w-7 sm:h-7" />
               </div>
               
-              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">{cat.title}</h3>
+              <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">{cat.title}</h2>
               
               <ul className="space-y-5">
                 {cat.tips.map((tip, idx) => (
@@ -129,7 +129,7 @@ const PrepTips: React.FC = () => {
       <section className="space-y-10 sm:space-y-12">
          <div className="text-center space-y-4">
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tighter">Strategic Frameworks</h2>
-            <p className="text-slate-500 text-xs sm:text-base font-medium italic">Mental models used by CTA candidates.</p>
+            <p className="text-slate-400 text-xs sm:text-base font-medium italic">Mental models used by CTA candidates.</p>
          </div>
 
          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
@@ -139,7 +139,7 @@ const PrepTips: React.FC = () => {
                      <Target size={100} className="text-emerald-500 sm:w-32 sm:h-32" />
                   </div>
                   <div className="relative z-10 space-y-6">
-                     <h4 className="text-xl sm:text-2xl font-black text-white italic">{f.title}</h4>
+                     <h3 className="text-xl sm:text-2xl font-black text-white italic">{f.title}</h3>
                      <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-medium">{f.desc}</p>
                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         {f.steps.map((step, idx) => (
@@ -161,7 +161,7 @@ const PrepTips: React.FC = () => {
              <Zap size={20} className="sm:w-6 sm:h-6" />
              <span className="text-[9px] sm:text-xs font-black uppercase tracking-[0.2em]">The "Power Move" Strategy</span>
            </div>
-           <h3 className="text-xl sm:text-2xl font-black text-white italic">Explain trade-offs automatically.</h3>
+           <h2 className="text-xl sm:text-2xl font-black text-white italic">Explain trade-offs automatically.</h2>
            <p className="text-slate-400 text-sm leading-relaxed font-medium">
              Don't just provide a solution. Explain why you chose it over an alternative. 
            </p>
@@ -172,7 +172,7 @@ const PrepTips: React.FC = () => {
              <AlertCircle size={20} className="sm:w-6 sm:h-6" />
              <span className="text-[9px] sm:text-xs font-black uppercase tracking-[0.2em]">Common Failure Pattern</span>
            </div>
-           <h3 className="text-xl sm:text-2xl font-black text-white italic">The "Definition Trap".</h3>
+           <h2 className="text-xl sm:text-2xl font-black text-white italic">The "Definition Trap".</h2>
            <p className="text-slate-400 text-sm leading-relaxed font-medium">
              Avoid just reciting definitions. Describe a real scenario where you solved a business problem.
            </p>
@@ -183,7 +183,7 @@ const PrepTips: React.FC = () => {
       <section className="space-y-10 sm:space-y-12">
          <div className="text-center space-y-4">
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tighter">Strategic Pacing</h2>
-            <p className="text-slate-500 text-xs sm:text-base font-medium">Controlling the technical dialogue for maximum impact.</p>
+            <p className="text-slate-400 text-xs sm:text-base font-medium">Controlling the technical dialogue for maximum impact.</p>
          </div>
 
          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
@@ -202,7 +202,7 @@ const PrepTips: React.FC = () => {
         <div className="relative z-10 max-w-4xl mx-auto space-y-10 sm:space-y-12">
           <div className="text-center space-y-4">
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tighter">Final Session Checklist</h2>
-            <p className="text-slate-500 text-xs sm:text-base font-medium italic">Ensure you are optimized for high-fidelity gathering.</p>
+            <p className="text-slate-400 text-xs sm:text-base font-medium italic">Ensure you are optimized for high-fidelity gathering.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -225,7 +225,7 @@ const PrepTips: React.FC = () => {
           <Target size={24} className="text-emerald-500/50" />
           <Rocket size={24} className="text-slate-700" />
         </div>
-        <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">
+        <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">
           Join the top 1% of Salesforce technical performers.
         </p>
       </section>

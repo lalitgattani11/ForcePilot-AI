@@ -325,7 +325,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
         </div>
         <div className="flex flex-col items-center gap-2">
           <div className="text-2xl font-black tracking-tighter uppercase italic">Analyzing Performance</div>
-          <div className="text-xs font-bold text-slate-500 tracking-[0.3em] uppercase">Intelligence Layer Initializing</div>
+          <div className="text-xs font-bold text-slate-400 tracking-[0.3em] uppercase">Intelligence Layer Initializing</div>
         </div>
       </div>
     );
@@ -348,7 +348,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
             <div className="flex flex-wrap items-center gap-3">
               <div className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-black uppercase tracking-widest text-emerald-400">Session Intelligence</div>
               {date && (
-                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                   <Calendar size={12} />
                   {new Date(date).toLocaleDateString()}
                 </div>
@@ -361,7 +361,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-emerald-400 border border-white/10 shrink-0"><Target size={20} /></div>
                 <div>
-                  <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Readiness</div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Readiness</div>
                   <div className="text-sm font-black text-white">{metrics.readiness}</div>
                 </div>
               </div>
@@ -369,7 +369,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-cyan-400 border border-white/10 shrink-0"><ShieldCheck size={20} /></div>
                 <div>
-                  <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Evaluation Index</div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Evaluation Index</div>
                   <div className="text-sm font-black text-white">{metrics.avgScore}%</div>
                 </div>
               </div>
@@ -382,7 +382,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
               <div className="text-7xl sm:text-8xl font-black text-emerald-500 italic leading-none drop-shadow-[0_0_30px_rgba(16,185,129,0.15)]">
                 {metrics.avgScore}<span className="text-3xl sm:text-4xl">%</span>
               </div>
-              <div className="text-[10px] font-black text-emerald-500/50 uppercase tracking-[0.4em] mt-3 sm:mt-2 sm:mr-2">OVERALL READINESS</div>
+              <div className="text-[10px] font-black text-emerald-500/70 uppercase tracking-[0.4em] mt-3 sm:mt-2 sm:mr-2">OVERALL READINESS</div>
             </div>
           </div>
         </div>
@@ -393,7 +393,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className="lg:col-span-2 premium-glass rounded-3xl border border-white/5 p-8 space-y-8">
           <div className="flex items-center gap-3 border-b border-white/5 pb-6">
             <BarChart3 className="text-cyan-400" size={20} />
-            <h3 className="text-sm font-black text-white uppercase tracking-widest">Dimension Analytics</h3>
+            <h2 className="text-sm font-black text-white uppercase tracking-widest">Dimension Analytics</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -404,7 +404,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
             ].map((dim, i) => (
               <div key={i} className="space-y-4">
                 <div className="flex justify-between items-end">
-                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{dim.label}</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{dim.label}</span>
                   <span className={`text-lg font-black ${dim.color === "emerald" ? "text-emerald-400" : dim.color === "cyan" ? "text-cyan-400" : "text-violet-400"}`}>
                     {Math.round(dim.score || 0)}%
                   </span>
@@ -420,7 +420,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="premium-glass rounded-3xl border border-white/5 p-8 flex flex-col justify-center gap-4 text-center relative overflow-hidden group">
           <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
           <Trophy className="mx-auto text-emerald-400 mb-2" size={32} />
-          <h3 className="text-lg font-black text-white italic">Technical Verdict</h3>
+          <h2 className="text-lg font-black text-white italic">Technical Verdict</h2>
           <p className="text-sm text-slate-400 leading-relaxed italic whitespace-pre-line">"{metrics.verdict}"</p>
         </motion.div>
       </div>
@@ -429,7 +429,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
       <div className="space-y-8">
         <div className="flex items-center gap-3">
           <MessageSquare className="text-emerald-500" size={24} />
-          <h3 className="text-2xl font-black text-white italic">Intelligence Breakdown</h3>
+          <h2 className="text-2xl font-black text-white italic">Intelligence Breakdown</h2>
         </div>
 
         <div className="space-y-6">
@@ -441,15 +441,15 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
                   <div className="flex items-center gap-4 sm:gap-6 min-w-0 flex-1">
                     <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center font-black text-base sm:text-lg shrink-0 ${answer.displayScore >= 80 ? "bg-emerald-500/10 text-emerald-400" : answer.displayScore >= 60 ? "bg-cyan-500/10 text-cyan-400" : "bg-slate-500/10 text-slate-400"}`}>{index + 1}</div>
                     <div className="min-w-0 flex-1">
-                      <div className="text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <div className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 flex flex-wrap items-center gap-x-2 gap-y-1">
                         <span>{answer.displayTopic}</span>
                         <div className="hidden xs:block w-1 h-1 rounded-full bg-slate-700" />
                         <span>Score: {Math.round(answer.displayScore)}%</span>
                       </div>
-                      <h4 className="text-sm sm:text-lg font-bold text-white group-hover:text-emerald-400 transition-colors leading-tight break-words line-clamp-2 sm:line-clamp-1">{answer.displayQuestion}</h4>
+                      <h3 className="text-sm sm:text-lg font-bold text-white group-hover:text-emerald-400 transition-colors leading-tight break-words line-clamp-2 sm:line-clamp-1">{answer.displayQuestion}</h3>
                     </div>
                   </div>
-                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/5 flex items-center justify-center text-slate-500 shrink-0 transition-all ${isExpanded ? "rotate-180 bg-white/5 text-white" : ""}`}><ChevronDown size={18} /></div>
+                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/5 flex items-center justify-center text-slate-400 shrink-0 transition-all ${isExpanded ? "rotate-180 bg-white/5 text-white" : ""}`}><ChevronDown size={18} /></div>
                 </button>
 
                 <AnimatePresence>
@@ -458,12 +458,12 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
                       <div className="px-8 pb-8 pt-2 space-y-10 border-t border-white/5">
                         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                           <div className="space-y-4">
-                            <div className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest"><Sparkles size={12} className="text-cyan-400" />Technical Question</div>
+                            <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest"><Sparkles size={12} className="text-cyan-400" />Technical Question</div>
                             <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 text-slate-200 text-sm leading-relaxed italic">"{answer.displayQuestion}"</div>
                           </div>
                           <div className="space-y-4">
-                            <div className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest"><Users size={12} className="text-emerald-400" />Your Response</div>
-                            <div className={`p-6 rounded-2xl border text-sm leading-relaxed ${answer.displayAnswer.length < 20 ? "italic text-slate-500" : "text-white"} ${answer.displayScore >= 70 ? "bg-emerald-500/5 border-emerald-500/10" : "bg-white/[0.03] border-white/5"}`}>{answer.displayAnswer}</div>
+                            <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest"><Users size={12} className="text-emerald-400" />Your Response</div>
+                            <div className={`p-6 rounded-2xl border text-sm leading-relaxed ${answer.displayAnswer.length < 20 ? "italic text-slate-400" : "text-white"} ${answer.displayScore >= 70 ? "bg-emerald-500/5 border-emerald-500/10" : "bg-white/[0.03] border-white/5"}`}>{answer.displayAnswer}</div>
                           </div>
                         </div>
 
@@ -472,7 +472,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                               <div className="flex items-center gap-2 sm:gap-3">
                                 <Trophy className="text-emerald-400 shrink-0" size={16} />
-                                <h5 className="text-[11px] sm:text-sm font-black text-white uppercase tracking-widest italic">Technical Expectations</h5>
+                                <h4 className="text-[11px] sm:text-sm font-black text-white uppercase tracking-widest italic">Technical Expectations</h4>
                               </div>
                             </div>
                             <div className="text-sm text-slate-300 leading-relaxed font-medium whitespace-pre-line">{answer.displayIdeal}</div>
@@ -533,7 +533,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
       </div>
 
       <div className="pt-12 border-t border-white/5 flex justify-center sm:justify-between items-center gap-6">
-        <div className="hidden sm:block text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">End of Session Intelligence Review</div>
+        <div className="hidden sm:block text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">End of Session Intelligence Review</div>
         <button onClick={onReset} className="cta-button group flex items-center gap-4 px-10 py-5">
           <RotateCcw size={16} className="group-hover:rotate-[-45deg] transition-transform" />
           <span className="text-xs font-black uppercase tracking-widest">{isHistory ? "Return to Archives" : "Restart Interview"}</span>

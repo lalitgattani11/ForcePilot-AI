@@ -17,10 +17,10 @@ import {
   Target,
   Rocket,
   Settings,
-  Zap
+  Zap,
+  LogOut
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import UserMenu from "./UserMenu";
 import AuthButton from "./AuthButton";
 import logo from "../assets/logo.png";
 import { FcGoogle } from 'react-icons/fc';
@@ -142,13 +142,13 @@ const Navbar: React.FC = () => {
           : "bg-transparent border-transparent py-5"
       }`}
     >
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-8 lg:px-12">
+        <div className="flex items-center justify-between relative">
           
-          {/* LEFT: LOGO */}
+          {/* LEFT: LOGO & BRAND */}
           <div 
             onClick={() => navigate("/")} 
-            className="flex items-center gap-2.5 sm:gap-3 group shrink-0 cursor-pointer relative z-[110]"
+            className="flex items-center gap-3 group shrink-0 cursor-pointer relative z-[110]"
           >
             <div className="relative">
               <div className="absolute inset-0 bg-cyan-500/20 blur-md rounded-lg group-hover:bg-cyan-500/30 transition-all duration-500 opacity-0 group-hover:opacity-100" />
@@ -157,13 +157,13 @@ const Navbar: React.FC = () => {
               </div>
             </div>
             <div className="flex flex-col">
-              <span className="text-base sm:text-lg font-black text-white tracking-tight leading-none">FORCE<span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">PILOT AI</span></span>
-              <span className="hidden sm:block text-[8px] font-bold text-slate-500 uppercase tracking-[0.2em] leading-none mt-1">Technical Intelligence</span>
+              <span className="text-base sm:text-lg font-black text-white tracking-tight leading-none uppercase">Force<span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Pilot AI</span></span>
+              <span className="hidden sm:block text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] leading-none mt-1">Technical Intelligence</span>
             </div>
           </div>
 
-          {/* CENTER: DESKTOP NAVIGATION */}
-          <div className="hidden lg:flex items-center gap-1 xl:gap-2">
+          {/* CENTER: DESKTOP NAVIGATION (Independently Centered) */}
+          <div className="hidden lg:flex items-center gap-1 xl:gap-2 absolute left-1/2 -translate-x-1/2">
             <NavLink 
               to="/" 
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${
@@ -194,13 +194,12 @@ const Navbar: React.FC = () => {
             {/* Dropdown: Interview Guides */}
             <div className="relative" ref={activeDropdown === 'guides' ? dropdownRef : null}>
               <button 
-                onClick={() => setActiveDropdown(activeDropdown === 'guides' ? null : 'guides')}
                 onMouseEnter={() => setActiveDropdown('guides')}
                 className={`px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 flex items-center gap-1.5 ${
                   (activeDropdown === 'guides' || isGuidesActive) ? "text-emerald-400 bg-emerald-500/5 shadow-[0_0_15px_rgba(16,185,129,0.1)]" : "text-slate-400 hover:text-white hover:bg-white/5"
                 }`}
               >
-                Interview Guides
+                Guides
                 <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === 'guides' ? 'rotate-180' : ''}`} />
               </button>
 
@@ -249,7 +248,6 @@ const Navbar: React.FC = () => {
             {/* Dropdown: Resources */}
             <div className="relative" ref={activeDropdown === 'resources' ? dropdownRef : null}>
               <button 
-                onClick={() => setActiveDropdown(activeDropdown === 'resources' ? null : 'resources')}
                 onMouseEnter={() => setActiveDropdown('resources')}
                 className={`px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 flex items-center gap-1.5 ${
                   (activeDropdown === 'resources' || isResourcesActive) ? "text-emerald-400 bg-emerald-500/5 shadow-[0_0_15px_rgba(16,185,129,0.1)]" : "text-slate-400 hover:text-white hover:bg-white/5"
@@ -290,15 +288,49 @@ const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* RIGHT: AUTH */}
-          <div className="hidden lg:flex items-center gap-4">
-            {user ? <UserMenu /> : <AuthButton />}
+          {/* RIGHT: AUTH & PROFILE */}
+          <div className="hidden lg:flex items-center justify-end shrink-0">
+            {user ? (
+              <div className="flex items-center gap-3 p-1.5 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] hover:border-white/20 transition-all duration-300 group">
+                <div className="flex items-center gap-3 px-2">
+                  <div className="relative">
+                    <img 
+                      src={user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.user_metadata?.full_name || 'U')}&background=0D1117&color=22D3EE`} 
+                      alt="U" 
+                      className="h-8 w-8 rounded-lg object-cover border border-white/10 group-hover:border-cyan-400/40 transition-colors" 
+                    />
+                    <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-950 rounded-full" />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-xs font-bold text-white truncate max-w-[100px] leading-tight">
+                      {user.user_metadata?.full_name || 'Candidate'}
+                    </span>
+                    <span className="text-[10px] text-slate-400 truncate max-w-[100px] leading-tight">
+                      {user.email}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="w-px h-6 bg-white/10 mx-1" />
+                
+                <button 
+                  onClick={() => signOut()}
+                  className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-all"
+                  title="Logout"
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <AuthButton />
+            )}
           </div>
 
           {/* MOBILE TOGGLE */}
           <div className="flex items-center lg:hidden relative z-[110]">
             <button 
               onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
               className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-white transition-all active:scale-90 pointer-events-auto"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -327,7 +359,7 @@ const Navbar: React.FC = () => {
             >
               <div className="flex flex-col h-full">
                 {/* Mobile Header: Logo & Close */}
-                <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 shrink-0">
+                <div className="flex items-center justify-between px-6 py-3 border-b border-white/5 shrink-0">
                   <div className="flex items-center gap-3">
                     <div className="h-8 w-8 rounded-lg overflow-hidden border border-cyan-400/20">
                       <img src={logo} alt="FP" className="w-full h-full object-cover" />
@@ -336,15 +368,16 @@ const Navbar: React.FC = () => {
                   </div>
                   <button 
                     onClick={() => setIsOpen(false)}
+                    aria-label="Close navigation menu"
                     className="p-2 rounded-xl bg-white/5 text-slate-400 hover:text-white transition-colors relative z-[10000]"
                   >
                     <X size={18} />
                   </button>
                 </div>
 
-                <div className="px-6 py-4 flex-1 flex flex-col justify-center gap-4 overflow-hidden">
+                <div className="px-6 py-3 flex-1 flex flex-col justify-start gap-3 overflow-y-auto">
                   {!user ? (
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       <p className="text-[9px] font-black text-slate-600 uppercase tracking-[0.25em] px-3">Identity Center</p>
                       <button 
                         onClick={() => signInWithGoogle()}
@@ -355,28 +388,28 @@ const Navbar: React.FC = () => {
                       </button>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-4 p-3 rounded-2xl bg-white/[0.03] border border-white/5">
-                      <div className="relative">
+                    <div className="flex items-center gap-4 p-4 rounded-[1.5rem] bg-white/[0.03] border border-white/5 min-h-[80px] w-full shrink-0">
+                      <div className="relative shrink-0 flex items-center justify-center">
                         <img 
                           src={user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.user_metadata?.full_name || 'U')}&background=0D1117&color=22D3EE`} 
                           alt="U" 
-                          className="h-9 w-9 rounded-xl object-cover border border-white/10" 
+                          className="h-10 w-10 rounded-xl object-cover border border-white/10 shadow-lg" 
                         />
-                        <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-900 rounded-full" />
+                        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-[#0f172a] rounded-full z-10" />
                       </div>
-                      <div className="flex flex-col min-w-0">
-                        <span className="text-[12px] font-bold text-white truncate">{user.user_metadata?.full_name || 'Candidate'}</span>
-                        <span className="text-[9px] text-slate-500 truncate">{user.email}</span>
+                      <div className="flex flex-col min-w-0 flex-1 justify-center">
+                        <span className="text-[15px] font-bold text-white truncate leading-tight">{user.user_metadata?.full_name || 'Candidate'}</span>
+                        <span className="text-[11px] text-slate-400 truncate leading-tight mt-0.5 font-medium">{user.email}</span>
                       </div>
                     </div>
                   )}
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-1">
                     <p className="text-[9px] font-black text-slate-600 uppercase tracking-[0.25em] px-3">Intelligence</p>
                     <div className="grid gap-0.5">
                       <NavLink 
                         to="/" 
-                        className={`flex items-center gap-3 p-2.5 rounded-2xl text-[12px] font-bold transition-all ${
+                        className={`flex items-center gap-3 p-2 rounded-2xl text-[12px] font-bold transition-all ${
                           isHomeActive ? "bg-emerald-500/10 text-emerald-400" : "text-slate-400 hover:bg-white/5 hover:text-white"
                         }`}
                       >
@@ -385,7 +418,7 @@ const Navbar: React.FC = () => {
                       </NavLink>
                       <NavLink 
                         to="/platform" 
-                        className={`flex items-center gap-3 p-2.5 rounded-2xl text-[12px] font-bold transition-all ${
+                        className={`flex items-center gap-3 p-2 rounded-2xl text-[12px] font-bold transition-all ${
                           isPlatformActive ? "bg-emerald-500/10 text-emerald-400" : "text-slate-400 hover:bg-white/5 hover:text-white"
                         }`}
                       >
@@ -394,7 +427,7 @@ const Navbar: React.FC = () => {
                       </NavLink>
                       <NavLink 
                         to="/salesforce-mock-interview" 
-                        className={`flex items-center gap-3 p-2.5 rounded-2xl text-[12px] font-bold transition-all ${
+                        className={`flex items-center gap-3 p-2 rounded-2xl text-[12px] font-bold transition-all ${
                           isInterviewActive ? "bg-emerald-500/10 text-emerald-400" : "text-slate-400 hover:bg-white/5 hover:text-white"
                         }`}
                       >
@@ -403,7 +436,7 @@ const Navbar: React.FC = () => {
                       </NavLink>
                       <button 
                         onClick={handleAnalyticsClick}
-                        className={`flex items-center gap-3 p-2.5 rounded-2xl text-[12px] font-bold transition-all w-full text-left ${
+                        className={`flex items-center gap-3 p-2 rounded-2xl text-[12px] font-bold transition-all w-full text-left ${
                           isAnalyticsActive ? "bg-emerald-500/10 text-emerald-400" : "text-slate-400 hover:bg-white/5 hover:text-white"
                         }`}
                       >
@@ -413,14 +446,14 @@ const Navbar: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-1">
                     <p className="text-[9px] font-black text-slate-600 uppercase tracking-[0.25em] px-3">Technical Tracks</p>
                     <div className="grid grid-cols-1 gap-0.5">
                       {guideLinks.map((guide) => (
                         <NavLink 
                           key={guide.href} 
                           to={guide.href} 
-                          className={({ isActive }) => `flex items-center gap-3 p-2 rounded-xl text-[12px] font-bold transition-all group/m-item ${
+                          className={({ isActive }) => `flex items-center gap-3 p-1.5 rounded-xl text-[12px] font-bold transition-all group/m-item ${
                             isActive ? "bg-cyan-500/10 text-cyan-400" : "text-slate-400 hover:bg-white/5 hover:text-white"
                           }`}
                         >
@@ -437,14 +470,14 @@ const Navbar: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-1">
                     <p className="text-[9px] font-black text-slate-600 uppercase tracking-[0.25em] px-3">Intelligence Resources</p>
                     <div className="grid grid-cols-1 gap-0.5">
                       {resourceLinks.map((res) => (
                         <NavLink 
                           key={res.href} 
                           to={res.href} 
-                          className={({ isActive }) => `flex items-center gap-3 p-2 rounded-xl text-[12px] font-bold transition-all group/m-item ${
+                          className={({ isActive }) => `flex items-center gap-3 p-1.5 rounded-xl text-[12px] font-bold transition-all group/m-item ${
                             isActive ? "bg-amber-500/10 text-amber-400" : "text-slate-400 hover:bg-white/5 hover:text-white"
                           }`}
                         >
@@ -464,14 +497,14 @@ const Navbar: React.FC = () => {
 
                 {/* Mobile Logout (If user exists) */}
                 {user && (
-                  <div className="p-6 border-t border-white/5 shrink-0">
+                  <div className="p-4 border-t border-white/5 shrink-0">
                     <button 
                       onClick={async () => {
                         await signOut();
                         setIsOpen(false);
                         navigate("/");
                       }}
-                      className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl bg-white/5 text-slate-400 font-bold text-[10px] uppercase tracking-widest hover:bg-rose-500/10 hover:text-rose-400 transition-all border border-white/5"
+                      className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl bg-white/5 text-slate-400 font-bold text-[10px] uppercase tracking-widest hover:bg-rose-500/10 hover:text-rose-400 transition-all border border-white/5"
                     >
                       Sign Out
                     </button>
