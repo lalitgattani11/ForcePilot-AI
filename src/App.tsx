@@ -387,12 +387,12 @@ function App() {
                         PILOT AI
                       </span>
                     </span>
-                    <span className="text-[7px] font-bold text-slate-600 uppercase tracking-[0.2em] leading-none mt-1">
+                    <span className="text-[7px] font-bold text-slate-500 uppercase tracking-[0.2em] leading-none mt-1">
                       Technical Intelligence
                     </span>
                   </div>
                 </div>
-                <p className="text-slate-500 text-[12px] sm:text-[13px] leading-relaxed max-w-[280px] font-medium tracking-tight text-center md:text-left">
+                <p className="text-slate-400 text-[12px] sm:text-[13px] leading-relaxed max-w-[280px] font-medium tracking-tight text-center md:text-left">
                   AI-powered Salesforce interview intelligence for modern
                   engineering teams.
                 </p>
@@ -401,7 +401,7 @@ function App() {
               {/* Navigation Intelligence Grid */}
               <div className="md:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-x-4 sm:gap-x-8 gap-y-10 justify-items-center md:justify-items-end">
                 <div className="space-y-4 md:space-y-5 text-center md:text-left">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500">
                     Platform
                   </h4>
                   <ul className="space-y-3 md:space-y-3.5">
@@ -432,7 +432,7 @@ function App() {
                   </ul>
                 </div>
                 <div className="space-y-4 md:space-y-5 text-center md:text-left">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500">
                     Resources
                   </h4>
                   <ul className="space-y-3 md:space-y-3.5">
@@ -455,7 +455,7 @@ function App() {
                   </ul>
                 </div>
                 <div className="hidden sm:block space-y-4 md:space-y-5 text-center md:text-left">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500">
                     Ecosystem
                   </h4>
                   <ul className="space-y-3 md:space-y-3.5">
@@ -482,10 +482,10 @@ function App() {
 
             {/* Bottom Row: Refined SaaS Legal Strip */}
             <div className="pt-8 md:pt-10 border-t border-white/[0.03] flex flex-col items-center justify-center gap-4 md:gap-5">
-              <div className="text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-slate-700 md:text-slate-800 text-center">
+              <div className="text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-slate-500 md:text-slate-600 text-center">
                 AI-Powered Salesforce Intelligence
               </div>
-              <div className="flex items-center gap-4 text-[11px] font-medium text-slate-500 md:text-slate-600 tracking-tight">
+              <div className="flex items-center gap-4 text-[11px] font-medium text-slate-400 md:text-slate-500 tracking-tight">
                 <span>&copy; {new Date().getFullYear()} ForcePilot AI.</span>
                 <span className="h-1 w-1 rounded-full bg-slate-900"></span>
                 <span>All rights reserved.</span>

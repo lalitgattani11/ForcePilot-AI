@@ -78,7 +78,7 @@ body {
 
 /* Elegant Typography Systems (Restored for Homepage) */
 .hero-title {
-  @apply text-[2.5rem] sm:text-6xl md:text-8xl lg:text-[7rem] xl:text-[8.5rem] font-bold tracking-[-0.02em] leading-[1.1] sm:leading-tight lg:leading-[0.95] text-white;
+  @apply text-[2.25rem] sm:text-6xl md:text-8xl lg:text-[7rem] xl:text-[8.5rem] font-bold tracking-[-0.02em] leading-[1.05] sm:leading-tight lg:leading-[0.95] text-white;
 }
 
 .sub-title {

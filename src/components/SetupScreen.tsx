@@ -121,7 +121,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
     <div className="flex flex-col w-full lg:min-w-[1400px] max-w-[1600px] mx-auto pt-0 pb-6 sm:py-8 px-4 sm:px-5 lg:px-8 gap-4 sm:gap-24 lg:gap-32">
       {/* 1. PRIMARY FOCUS: HERO & ROLE SELECTION */}
       <section className="relative flex flex-col justify-center min-h-0 pt-12 pb-16 lg:min-h-[78vh] lg:pt-0 lg:pb-0 overflow-visible">
-        <div className="text-center space-y-4 md:space-y-8 xl:space-y-10 max-w-4xl lg:max-w-6xl xl:max-w-[90rem] mx-auto overflow-visible">
+        <div className="text-center space-y-3 md:space-y-8 xl:space-y-10 max-w-4xl lg:max-w-6xl xl:max-w-[90rem] mx-auto overflow-visible">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -135,8 +135,8 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
           </motion.div>
 
          <h1 className="hero-title px-4 overflow-visible">
-            <span className="inline-block">The future of</span> <br />
-            <span className="inline-block">
+            <span className="block">The future of</span>
+            <span className="block">
               <span className="inline-block pr-2 lg:pr-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] italic overflow-visible">
                 Salesforce
               </span>{" "}
@@ -148,7 +148,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.4 }}
-            className="sub-title mx-auto px-6"
+            className="sub-title mx-auto px-8 sm:px-6 max-w-[320px] sm:max-w-2xl lg:max-w-3xl"
           >
             Master Salesforce interviews with AI-powered mock sessions and
             real-world technical practice.
