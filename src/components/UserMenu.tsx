@@ -29,6 +29,10 @@ const UserMenu = () => {
             `https://ui-avatars.com/api/?name=${encodeURIComponent(user.user_metadata?.full_name || 'User')}&background=0D1117&color=22D3EE`
           }
           alt="User"
+          width="36"
+          height="36"
+          loading="lazy"
+          decoding="async"
           className="
             w-8 h-8 sm:w-9 sm:h-9
             rounded-full

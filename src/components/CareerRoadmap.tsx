@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { 
   Rocket, 
   Map, 
@@ -261,13 +262,12 @@ const CareerRoadmap: React.FC = () => {
           <p className="text-slate-400 text-sm sm:text-base max-w-xl mx-auto font-medium px-4">
             Start a recruiter-grade technical simulation today and identify your current position on the roadmap.
           </p>
-          <button 
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="w-full sm:w-auto px-8 py-4 rounded-xl sm:rounded-2xl bg-emerald-500 text-slate-950 font-black uppercase tracking-widest text-[10px] sm:text-xs hover:scale-105 transition-transform shadow-[0_0_30px_rgba(16,185,129,0.3)]"
+          <Link
+            to="/#setup"
+            className="w-full sm:w-auto px-8 py-4 rounded-xl sm:rounded-2xl bg-emerald-500 text-slate-950 font-black uppercase tracking-widest text-[10px] sm:text-xs hover:scale-105 transition-transform shadow-[0_0_30px_rgba(16,185,129,0.3)] inline-block"
           >
             Launch Assessment
-          </button>
-        </div>
+          </Link>        </div>
       </section>
     </div>
   );

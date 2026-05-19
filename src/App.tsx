@@ -377,6 +377,10 @@ function App() {
                         src={logo}
                         alt="FP"
                         className="w-full h-full object-cover"
+                        width="32"
+                        height="32"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                   </div>
@@ -410,7 +414,7 @@ function App() {
                         to="/platform"
                         className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300"
                       >
-                        About Platform
+                        About
                       </Link>
                     </li>
                     <li>

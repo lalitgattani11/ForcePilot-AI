@@ -142,7 +142,7 @@ const Navbar: React.FC = () => {
           : "bg-transparent border-transparent py-5"
       }`}
     >
-      <div className="max-w-[1800px] mx-auto px-4 sm:px-8 lg:px-12">
+      <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-12">
         <div className="flex items-center justify-between relative">
           
           {/* LEFT: LOGO & BRAND */}
@@ -153,7 +153,15 @@ const Navbar: React.FC = () => {
             <div className="relative">
               <div className="absolute inset-0 bg-cyan-500/20 blur-md rounded-lg group-hover:bg-cyan-500/30 transition-all duration-500 opacity-0 group-hover:opacity-100" />
               <div className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-xl sm:rounded-2xl overflow-hidden border border-cyan-400/20 shadow-lg transition-transform sm:group-hover:scale-105 duration-500">
-                <img src={logo} alt="FP" className="w-full h-full object-cover" />
+                <img 
+                  src={logo} 
+                  alt="FP" 
+                  className="w-full h-full object-cover" 
+                  width="40" 
+                  height="40"
+                  fetchPriority="high"
+                  decoding="async"
+                />
               </div>
             </div>
             <div className="flex flex-col">
@@ -162,8 +170,8 @@ const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* CENTER: DESKTOP NAVIGATION (Independently Centered) */}
-          <div className="hidden lg:flex items-center gap-1 xl:gap-2 absolute left-1/2 -translate-x-1/2">
+          {/* CENTER: DESKTOP NAVIGATION (Truly Viewport Centered) */}
+          <div className="hidden lg:flex items-center gap-1 xl:gap-2 absolute left-1/2 -translate-x-1/2 z-[100]">
             <NavLink 
               to="/" 
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${
@@ -234,16 +242,18 @@ const Navbar: React.FC = () => {
               </AnimatePresence>
             </div>
 
-            <button 
-              onClick={handleAnalyticsClick}
-              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${
-                isAnalyticsActive 
-                  ? "text-emerald-400 bg-emerald-500/5 shadow-[0_0_15px_rgba(16,185,129,0.1)]" 
-                  : "text-slate-400 hover:text-white hover:bg-white/5"
-              }`}
-            >
-              Analytics
-            </button>
+            {user && (
+              <button 
+                onClick={handleAnalyticsClick}
+                className={`px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${
+                  isAnalyticsActive 
+                    ? "text-emerald-400 bg-emerald-500/5 shadow-[0_0_15px_rgba(16,185,129,0.1)]" 
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                Analytics
+              </button>
+            )}
 
             {/* Dropdown: Resources */}
             <div className="relative" ref={activeDropdown === 'resources' ? dropdownRef : null}>
@@ -288,56 +298,58 @@ const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* RIGHT: AUTH & PROFILE */}
-          <div className="hidden lg:flex items-center justify-end shrink-0">
-            {user ? (
-              <div className="flex items-center gap-3 p-1.5 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] hover:border-white/20 transition-all duration-300 group">
-                <div className="flex items-center gap-3 px-2">
-                  <div className="relative">
-                    <img 
-                      src={user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.user_metadata?.full_name || 'U')}&background=0D1117&color=22D3EE`} 
-                      alt="U" 
-                      className="h-8 w-8 rounded-lg object-cover border border-white/10 group-hover:border-cyan-400/40 transition-colors" 
-                    />
-                    <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-950 rounded-full" />
+          {/* RIGHT: AUTH & MOBILE TOGGLE */}
+          <div className="flex items-center gap-4 shrink-0 relative z-[110]">
+            <div className="hidden lg:flex items-center">
+              {user ? (
+                <div className="flex items-center gap-3 p-1.5 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] hover:border-white/20 transition-all duration-300 group">
+                  <div className="flex items-center gap-3 px-2">
+                    <div className="relative">
+                      <img 
+                        src={user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.user_metadata?.full_name || 'U')}&background=0D1117&color=22D3EE`} 
+                        alt="U" 
+                        className="h-8 w-8 rounded-lg object-cover border border-white/10 group-hover:border-cyan-400/40 transition-colors" 
+                      />
+                      <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-950 rounded-full" />
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs font-bold text-white truncate max-w-[100px] leading-tight">
+                        {user.user_metadata?.full_name || 'Candidate'}
+                      </span>
+                      <span className="text-[10px] text-slate-400 truncate max-w-[100px] leading-tight">
+                        {user.email}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-xs font-bold text-white truncate max-w-[100px] leading-tight">
-                      {user.user_metadata?.full_name || 'Candidate'}
-                    </span>
-                    <span className="text-[10px] text-slate-400 truncate max-w-[100px] leading-tight">
-                      {user.email}
-                    </span>
-                  </div>
+                  
+                  <div className="w-px h-6 bg-white/10 mx-1" />
+                  
+                  <button 
+                    onClick={() => signOut()}
+                    className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-all"
+                    title="Logout"
+                  >
+                    <LogOut size={16} />
+                  </button>
                 </div>
-                
-                <div className="w-px h-6 bg-white/10 mx-1" />
-                
-                <button 
-                  onClick={() => signOut()}
-                  className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-all"
-                  title="Logout"
-                >
-                  <LogOut size={16} />
-                </button>
-              </div>
-            ) : (
-              <AuthButton />
-            )}
-          </div>
+              ) : (
+                <AuthButton />
+              )}
+            </div>
 
-          {/* MOBILE TOGGLE */}
-          <div className="flex items-center lg:hidden relative z-[110]">
-            <button 
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
-              className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-white transition-all active:scale-90 pointer-events-auto"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            {/* MOBILE TOGGLE */}
+            <div className="flex lg:hidden">
+              <button 
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+                className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-white transition-all active:scale-90 pointer-events-auto"
+              >
+                {isOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
-          </div>
-          </div>
+        </div>
+      </div>
 
       {/* MOBILE NAVIGATION DRAWER */}
       <AnimatePresence>
@@ -362,7 +374,7 @@ const Navbar: React.FC = () => {
                 <div className="flex items-center justify-between px-6 py-3 border-b border-white/5 shrink-0">
                   <div className="flex items-center gap-3">
                     <div className="h-8 w-8 rounded-lg overflow-hidden border border-cyan-400/20">
-                      <img src={logo} alt="FP" className="w-full h-full object-cover" />
+                      <img src={logo} alt="FP" className="w-full h-full object-cover" width="32" height="32" loading="lazy" decoding="async" />
                     </div>
                     <span className="text-[14px] font-black text-white tracking-tight">FORCE<span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">PILOT</span></span>
                   </div>
@@ -393,6 +405,10 @@ const Navbar: React.FC = () => {
                         <img 
                           src={user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.user_metadata?.full_name || 'U')}&background=0D1117&color=22D3EE`} 
                           alt="U" 
+                          width="40"
+                          height="40"
+                          loading="lazy"
+                          decoding="async"
                           className="h-10 w-10 rounded-xl object-cover border border-white/10 shadow-lg" 
                         />
                         <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-[#0f172a] rounded-full z-10" />
@@ -434,15 +450,17 @@ const Navbar: React.FC = () => {
                         <Zap size={16} className={isInterviewActive ? "text-emerald-400" : "text-slate-500"} />
                         Mock Interview
                       </NavLink>
-                      <button 
-                        onClick={handleAnalyticsClick}
-                        className={`flex items-center gap-3 p-2 rounded-2xl text-[12px] font-bold transition-all w-full text-left ${
-                          isAnalyticsActive ? "bg-emerald-500/10 text-emerald-400" : "text-slate-400 hover:bg-white/5 hover:text-white"
-                        }`}
-                      >
-                        <LineChart size={16} className={isAnalyticsActive ? "text-emerald-400" : "text-slate-500"} />
-                        Analytics
-                      </button>
+                      {user && (
+                        <button 
+                          onClick={handleAnalyticsClick}
+                          className={`flex items-center gap-3 p-2 rounded-2xl text-[12px] font-bold transition-all w-full text-left ${
+                            isAnalyticsActive ? "bg-emerald-500/10 text-emerald-400" : "text-slate-400 hover:bg-white/5 hover:text-white"
+                          }`}
+                        >
+                          <LineChart size={16} className={isAnalyticsActive ? "text-emerald-400" : "text-slate-500"} />
+                          Analytics
+                        </button>
+                      )}
                     </div>
                   </div>
 

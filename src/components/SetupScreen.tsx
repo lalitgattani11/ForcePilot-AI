@@ -21,7 +21,9 @@ import {
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useLocation } from "react-router-dom";
-import HistoryIntelligence from "./HistoryIntelligence";
+
+const HistoryIntelligence = React.lazy(() => import("./HistoryIntelligence"));
+
 import type {
   InterviewConfig,
   Role,
@@ -126,7 +128,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="hidden lg:flex justify-center mb-2"
+            className="hidden lg:flex justify-center mb-2 will-change-transform"
           >
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/5 px-6 py-2 text-xs tracking-[0.3em] text-cyan-300 backdrop-blur-md">
               <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
@@ -134,7 +136,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             </div>
           </motion.div>
 
-         <h1 className="hero-title px-4 overflow-visible">
+         <h1 className="hero-title px-4 overflow-visible will-change-[opacity,transform]">
             <span className="block">The future of</span>
             <span className="block">
               <span className="inline-block pr-2 lg:pr-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] italic overflow-visible">
@@ -148,7 +150,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.4 }}
-            className="sub-title mx-auto px-8 sm:px-6 max-w-[320px] sm:max-w-2xl lg:max-w-3xl"
+            className="sub-title mx-auto px-8 sm:px-6 max-w-[320px] sm:max-w-2xl lg:max-w-3xl will-change-opacity"
           >
             Master Salesforce interviews with AI-powered mock sessions and
             real-world technical practice.
@@ -400,13 +402,19 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
         <section
           id="analytics"
           className="relative border-t border-white/[0.05] w-full"
+          style={{ contentVisibility: 'auto', containIntrinsicSize: '0 500px' }}
         >
-          <HistoryIntelligence onViewDetail={onViewHistoryDetail} />
+          <React.Suspense fallback={<div className="h-40 w-full animate-pulse bg-white/5 rounded-3xl" />}>
+            <HistoryIntelligence onViewDetail={onViewHistoryDetail} />
+          </React.Suspense>
         </section>
       )}
 
       {/* 4. TECHNICAL RESOURCES / SEO SECTION */}
-      <section className="relative mt-4 sm:mt-6 pt-6 border-t border-white/10 space-y-8 pb-12">
+      <section 
+        className="relative mt-4 sm:mt-6 pt-6 border-t border-white/10 space-y-8 pb-12"
+        style={{ contentVisibility: 'auto', containIntrinsicSize: '0 800px' }}
+      >
         <div className="flex flex-col md:flex-row items-center sm:items-end justify-between gap-6 border-b border-white/5 pb-6">
           <div className="space-y-2 text-center sm:text-left overflow-visible">
             <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight pb-1 sm:pb-0 overflow-visible">
