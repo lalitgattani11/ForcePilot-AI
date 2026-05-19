@@ -53,23 +53,19 @@ type InterviewStatus =
 
 const TOTAL_QUESTIONS_GOAL = 10;
 
-const fallbackReplies = [
-  "Alright.",
-  "Okay.",
+const transitionPhrases = [
+  "Alright, let’s continue.",
+  "Moving to the next area.",
   "Understood.",
-  "Got it.",
-  "Hmm.",
+  "Alright",
+  "Hmm"
 ];
-
-const getRandomFallback = () =>
-  fallbackReplies[
-    Math.floor(Math.random() * fallbackReplies.length)
-  ];
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({
   config,
   onComplete,
 }) => {
+  const transitionIndexRef = useRef(0);
 
   const [status, setStatus] =
     useState<InterviewStatus>("INITIALIZING");
@@ -181,11 +177,15 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           nextQuestion.text;
 
         if (isFirstQuestion) {
-          aiText =
-            `Greetings, ${config.candidateName}. ` +
-            `I am your ${config.personality} evaluator. ` +
-            `We will now begin the ${config.role} assessment. ` +
-            `${nextQuestion.text}`;
+          const personaTitle = 
+            config.personality === "Professional" ? "professional evaluator" : 
+            config.personality === "Strict" ? "technical lead" : "mentor";
+
+          aiText = `Hello ${config.candidateName}, I’m your ${personaTitle}. We’ll now begin the ${config.role} assessment.\n\nLet’s continue. ${nextQuestion.text}`;
+        } else {
+          const acknowledgment = transitionPhrases[transitionIndexRef.current];
+          transitionIndexRef.current = (transitionIndexRef.current + 1) % transitionPhrases.length;
+          aiText = `${acknowledgment}\n\n${nextQuestion.text}`;
         }
 
         const msgId = `ai-${Date.now()}`;
@@ -287,27 +287,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           ...answersRef.current,
         ]);
 
-        const acknowledgment =
-          evalResult.acknowledgment ||
-          getRandomFallback();
-
         // Simulated processing/thinking delay
         await new Promise(resolve => setTimeout(resolve, 1000));
-
-        const ackId = `ack-${Date.now()}`;
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: ackId,
-            sender: "interviewer",
-            text: acknowledgment,
-            timestamp: Date.now(),
-          },
-        ]);
-
-        setStreamingMessageId(ackId);
-        setStatus("AI_SPEAKING");
-        await speak(acknowledgment);
 
         if (
           answersRef.current.length >=
@@ -331,9 +312,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           return;
         }
 
-        setTimeout(() => {
-          runInterviewCycle();
-        }, 600);
+        runInterviewCycle();
 
       } catch (err) {
         console.error("Evaluation Error:", err);
@@ -606,8 +585,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
       {/* INPUT */}
       <div className="shrink-0 border-t border-white/5 bg-[#050816]">
-        <footer className="p-4 sm:p-8 bg-[#050816] sm:bg-white/[0.01]">
-          <div className="flex gap-3 sm:gap-4 items-end w-full mx-auto relative">
+        <footer className="p-3 sm:p-8 bg-[#050816] sm:bg-white/[0.01]">
+          <div className="flex gap-2 sm:gap-4 items-end w-full mx-auto relative">
             <label htmlFor="manualInput" className="sr-only">Type your answer</label>
             <textarea
               id="manualInput"

@@ -111,7 +111,7 @@ const Platform: React.FC = () => {
   return (
     <div className="relative min-h-screen">
       {/* 1. Hero Section */}
-      <section className="relative pt-20 pb-32 overflow-hidden">
+      <section className="relative pt-12 sm:pt-20 pb-20 sm:pb-32 overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-6">
           <motion.div 
             initial="initial"
@@ -146,9 +146,9 @@ const Platform: React.FC = () => {
       </section>
 
       {/* 2. Platform Purpose */}
-      <section className="py-32 border-t border-white/5 relative bg-[#02040a]/50">
+      <section className="py-20 sm:py-32 border-t border-white/5 relative bg-[#02040a]/50">
         <div className="max-w-[1200px] mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -156,12 +156,12 @@ const Platform: React.FC = () => {
               transition={{ duration: 0.8 }}
               className="flex flex-col items-center lg:items-start text-center lg:text-left"
             >
-              <div className="meta-label text-emerald-500 mb-10">Why ForcePilot AI</div>
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-tight leading-tight">
+              <div className="meta-label text-emerald-500 mb-6 lg:mb-10">Why ForcePilot AI</div>
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 lg:mb-8 tracking-tight leading-tight">
                 Evaluations built on <br />
                 <span className="text-slate-400">technical reasoning.</span>
               </h2>
-              <div className="space-y-6 text-slate-400 text-lg leading-relaxed max-w-lg mx-auto lg:mx-0">
+              <div className="space-y-6 text-slate-400 text-base sm:text-lg leading-relaxed max-w-lg mx-auto lg:mx-0">
                 <p>
                   Most mock interview platforms evaluate memorization through keyword matching. They often overlook the technical depth required of modern Salesforce professionals.
                 </p>
@@ -236,9 +236,9 @@ const Platform: React.FC = () => {
       </section>
 
       {/* 3. Intelligence Philosophy */}
-      <section className="py-32 relative overflow-hidden">
+      <section className="py-20 sm:py-32 relative overflow-hidden">
         <div className="max-w-[1200px] mx-auto px-6">
-          <div className="text-center mb-24">
+          <div className="text-center mb-16 sm:mb-24">
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -257,7 +257,7 @@ const Platform: React.FC = () => {
             </motion.h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
             {[
               {
                 title: "Role-Aware Evaluation",
@@ -281,11 +281,11 @@ const Platform: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="p-8 rounded-3xl premium-card border border-white/5"
+                className="p-6 sm:p-8 rounded-3xl premium-card border border-white/5"
               >
                 <item.icon className="text-cyan-400 mb-6" size={32} />
                 <h3 className="text-xl font-bold text-white mb-4">{item.title}</h3>
-                <p className="text-slate-400 leading-relaxed">{item.desc}</p>
+                <p className="text-slate-400 leading-relaxed text-sm sm:text-base">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -293,11 +293,11 @@ const Platform: React.FC = () => {
       </section>
 
       {/* 4. Platform Capabilities */}
-      <section className="py-32 border-t border-white/5 bg-[#02040a]/30">
+      <section className="py-20 sm:py-32 border-t border-white/5 bg-[#02040a]/30">
         <div className="max-w-[1400px] mx-auto px-6">
-          <div className="mb-20 text-center lg:text-left">
+          <div className="mb-12 sm:mb-20 text-center lg:text-left">
             <div className="meta-label">Capabilities</div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+            <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">
               Engineered for <br />
               <span className="text-slate-400 font-medium">performance.</span>
             </h2>
@@ -311,7 +311,7 @@ const Platform: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.05 }}
-                className="group p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500"
+                className="group p-6 sm:p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500"
               >
                 <div className={`h-12 w-12 rounded-2xl ${cap.bg} ${cap.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500`}>
                   <cap.icon size={24} />
@@ -325,11 +325,11 @@ const Platform: React.FC = () => {
       </section>
 
       {/* 5. Built For */}
-      <section className="py-32 relative">
+      <section className="py-20 sm:py-32 relative">
         <div className="max-w-[1200px] mx-auto px-6">
-          <div className="text-center mb-20">
+          <div className="text-center mb-12 sm:mb-20">
             <div className="meta-label">Audience</div>
-            <h2 className="text-4xl font-bold text-white tracking-tight">Built for Salesforce professionals.</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">Built for Salesforce professionals.</h2>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -339,11 +339,11 @@ const Platform: React.FC = () => {
                 initial={{ opacity: 0, scale: 0.98 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className="p-6 rounded-2xl bg-white/5 border border-white/5 flex flex-col items-center text-center group hover:bg-white/[0.08] transition-all"
+                className="p-5 sm:p-6 rounded-2xl bg-white/5 border border-white/5 flex flex-col items-center text-center group hover:bg-white/[0.08] transition-all"
               >
                 <item.icon className="text-slate-400 mb-4 group-hover:text-emerald-400 transition-colors" size={24} />
-                <h3 className="text-base font-bold text-white mb-2">{item.role}</h3>
-                <p className="text-slate-400 text-xs leading-relaxed">{item.focus}</p>
+                <h3 className="text-sm sm:text-base font-bold text-white mb-2">{item.role}</h3>
+                <p className="text-slate-400 text-[11px] sm:text-xs leading-relaxed">{item.focus}</p>
               </motion.div>
             ))}
           </div>
@@ -351,22 +351,22 @@ const Platform: React.FC = () => {
       </section>
 
       {/* 6. Founder-Led Section */}
-      <section className="py-32 border-t border-white/5 bg-gradient-to-b from-transparent to-cyan-500/[0.02]">
+      <section className="py-20 sm:py-32 border-t border-white/5 bg-gradient-to-b from-transparent to-cyan-500/[0.02]">
         <div className="max-w-[1000px] mx-auto px-6">
-          <div className="premium-glass rounded-[32px] p-8 md:p-16 border border-white/10 relative overflow-hidden">
+          <div className="premium-glass rounded-[2rem] sm:rounded-[32px] p-8 md:p-16 border border-white/10 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-5">
               <BrainCircuit size={120} className="text-cyan-500" />
             </div>
             
             <div className="relative z-10 max-w-2xl">
-              <div className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.25em] text-cyan-400/80 mb-10">Founder-Led</div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 tracking-tight">
+              <div className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.25em] text-cyan-400/80 mb-6 lg:mb-10">Founder-Led</div>
+              <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 lg:mb-8 tracking-tight">
                 Built for recruiter-grade <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
                   interview readiness.
                 </span>
               </h2>
-              <div className="space-y-6 text-slate-400 leading-relaxed text-lg">
+              <div className="space-y-6 text-slate-400 leading-relaxed text-base sm:text-lg">
                 <p>
                   ForcePilot AI was designed and developed by Lalit Maheshwari as a response to the lack of technically rigorous preparation tools for Salesforce professionals.
                 </p>
@@ -375,9 +375,9 @@ const Platform: React.FC = () => {
                 </p>
               </div>
               
-              <div className="mt-12 pt-8 border-t border-white/5 inline-flex flex-col">
-                <div className="text-white font-bold text-base tracking-tight">Lalit Maheshwari</div>
-                <div className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mt-1">Founder, ForcePilot AI</div>
+              <div className="mt-10 lg:mt-12 pt-8 border-t border-white/5 inline-flex flex-col">
+                <div className="text-white font-bold text-sm sm:text-base tracking-tight">Lalit Maheshwari</div>
+                <div className="text-slate-400 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] mt-1">Founder, ForcePilot AI</div>
               </div>
             </div>
           </div>
@@ -385,7 +385,7 @@ const Platform: React.FC = () => {
       </section>
 
       {/* 7. Final Closing Statement */}
-      <section className="py-40 text-center relative overflow-hidden">
+      <section className="py-24 sm:py-40 text-center relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.03)_0%,transparent_70%)]" />
         <div className="max-w-[800px] mx-auto px-6 relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-10 tracking-tight leading-tight">

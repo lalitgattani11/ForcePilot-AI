@@ -96,21 +96,21 @@ const LwcCodingInterview: React.FC = () => {
       </section>
 
       {/* Quick Nav */}
-      <nav className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <nav className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 sm:px-0">
         {[
           { title: "Apex Questions", link: "/apex-interview-questions", color: "emerald", icon: Terminal },
           { title: "Flow Interview", link: "/salesforce-flow-interview-questions", color: "cyan", icon: Zap },
           { title: "Governor Limits", link: "/governor-limits-explained", color: "rose", icon: ShieldCheck },
           { title: "Scenario Based", link: "/scenario-based-salesforce-interview", color: "blue", icon: Search }
         ].map((link, i) => (
-          <Link key={i} to={link.link} className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between">
+          <Link key={i} to={link.link} className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className={`p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
-                <link.icon size={20} />
+              <div className={`p-2.5 sm:p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
+                <link.icon size={18} className="sm:size-[20px]" />
               </div>
-              <span className="font-bold text-white text-sm">{link.title}</span>
+              <span className="font-bold text-white text-xs sm:text-sm">{link.title}</span>
             </div>
-            <ChevronRight size={18} className="text-slate-600 group-hover:translate-x-1 group-hover:text-white transition-all" />
+            <ChevronRight size={16} className="text-slate-600 group-hover:translate-x-1 group-hover:text-white transition-all sm:size-[18px]" />
           </Link>
         ))}
       </nav>

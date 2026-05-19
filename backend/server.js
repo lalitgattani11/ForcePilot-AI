@@ -873,11 +873,11 @@ NO TEACHING STYLE.
 Keep feedback recruiter-style and realistic.
 
 ALLOWED ACKNOWLEDGMENTS:
-- "Alright."
-- "Okay."
+- "Alright, let’s continue."
+- "Moving to the next area."
 - "Understood."
-- "Got it."
-- "Hmm."
+- "Alright"
+- "Hmm"
 
 ==================================================
 

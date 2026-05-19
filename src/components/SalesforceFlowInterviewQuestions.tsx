@@ -100,44 +100,44 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
       </section>
 
       {/* Quick Nav */}
-      <nav className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <nav className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 sm:px-0">
         {[
           { title: "Admin Interview", link: "/salesforce-admin-interview", color: "emerald", icon: Layout },
           { title: "Apex Triggers", link: "/apex-trigger-interview-questions", color: "blue", icon: Database },
           { title: "Governor Limits", link: "/governor-limits-explained", color: "rose", icon: ShieldCheck },
           { title: "Mock Interview", link: "/salesforce-mock-interview", color: "cyan", icon: Zap }
         ].map((link, i) => (
-          <Link key={i} to={link.link} className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between">
+          <Link key={i} to={link.link} className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className={`p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
-                <link.icon size={20} />
+              <div className={`p-2.5 sm:p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
+                <link.icon size={18} className="sm:size-[20px]" />
               </div>
-              <span className="font-bold text-white text-sm">{link.title}</span>
+              <span className="font-bold text-white text-xs sm:text-sm">{link.title}</span>
             </div>
-            <ChevronRight size={18} className="text-slate-600 group-hover:translate-x-1 group-hover:text-white transition-all" />
+            <ChevronRight size={16} className="text-slate-600 group-hover:translate-x-1 group-hover:text-white transition-all sm:size-[18px]" />
           </Link>
         ))}
       </nav>
 
       {/* Categories */}
-      <section className="space-y-16">
+      <section className="space-y-12 sm:space-y-16">
         <div className="text-center space-y-4">
-          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Pillars.</span></h2>
-          <p className="text-slate-500 max-w-2xl mx-auto">Elite Flow developers are judged on their ability to build efficient, scalable, and maintainable automations.</p>
+          <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Pillars.</span></h2>
+          <p className="text-slate-500 text-xs sm:text-base max-w-2xl mx-auto px-4 sm:px-0">Elite Flow developers are judged on their ability to build efficient, scalable, and maintainable automations.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           {categories.map((cat, i) => (
             <motion.div 
               key={i}
               {...fadeIn}
-              className="bg-white/[0.02] border border-white/5 p-8 rounded-[2rem] hover:bg-white/[0.04] transition-all group"
+              className="bg-white/[0.02] border border-white/5 p-6 sm:p-8 rounded-[2rem] hover:bg-white/[0.04] transition-all group"
             >
-              <div className={`mb-6 inline-flex p-4 rounded-2xl bg-${cat.color}-500/10 text-${cat.color}-400 group-hover:scale-110 transition-transform`}>
-                <cat.icon size={28} />
+              <div className={`mb-6 inline-flex p-3 sm:p-4 rounded-2xl bg-${cat.color}-500/10 text-${cat.color}-400 group-hover:scale-110 transition-transform`}>
+                <cat.icon size={24} className="sm:size-[28px]" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">{cat.title}</h3>
-              <p className="text-slate-500 leading-relaxed text-sm">
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">{cat.title}</h3>
+              <p className="text-slate-500 leading-relaxed text-xs sm:text-sm">
                 {cat.desc}
               </p>
             </motion.div>
@@ -146,16 +146,16 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
       </section>
 
       {/* Recruiter Strategy */}
-      <section className="bg-[#0a0c10] border border-white/5 rounded-[3rem] p-8 sm:p-20 flex flex-col lg:flex-row items-center gap-16 overflow-hidden relative">
-        <div className="flex-1 space-y-8 relative z-10">
-          <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
+      <section className="bg-[#0a0c10] border border-white/5 rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-20 flex flex-col lg:flex-row items-center gap-12 sm:gap-16 overflow-hidden relative">
+        <div className="flex-1 space-y-6 sm:space-y-8 relative z-10 text-center lg:text-left">
+          <h2 className="text-3xl sm:text-5xl font-bold text-white leading-tight">
             Design for <br />
             <span className="text-emerald-400">Transaction Scale.</span>
           </h2>
-          <p className="text-slate-400 text-lg leading-relaxed">
+          <p className="text-slate-400 text-base sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
             Interviewer focus has shifted from "Can you build a Flow?" to "Can you build a Flow that won't break the org?". We evaluate your understanding of bulkification and governor limit impacts.
           </p>
-          <div className="space-y-4">
+          <div className="space-y-4 text-left inline-block lg:block">
             {[
               "Bulkified DML & SOQL elements",
               "Before-Save vs After-Save efficiency",
@@ -163,29 +163,29 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
               "Avoiding Flow recursion"
             ].map((text, i) => (
               <div key={i} className="flex items-center gap-3 text-slate-300">
-                <CheckCircle2 size={18} className="text-emerald-500" />
-                <span className="font-medium">{text}</span>
+                <CheckCircle2 size={16} className="text-emerald-500 shrink-0 sm:size-[18px]" />
+                <span className="font-medium text-sm sm:text-base">{text}</span>
               </div>
             ))}
           </div>
         </div>
         <div className="w-full lg:w-[450px] space-y-6 relative z-10">
-           <div className="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl space-y-6">
+           <div className="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
               <div className="flex items-center justify-between">
-                <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">Architect Scorecard</div>
+                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Architect Scorecard</div>
                 <div className="text-emerald-400 font-mono text-xs">PASS</div>
               </div>
               <div className="space-y-4">
-                <div className="flex justify-between items-center text-sm">
+                <div className="flex justify-between items-center text-xs sm:text-sm">
                   <span className="text-slate-400">Bulkification Logic</span>
                   <span className="text-white font-bold">EXCELLENT</span>
                 </div>
-                <div className="flex justify-between items-center text-sm">
+                <div className="flex justify-between items-center text-xs sm:text-sm">
                   <span className="text-slate-400">Limit Awareness</span>
                   <span className="text-white font-bold">ADVANCED</span>
                 </div>
                 <div className="pt-4 border-t border-white/5">
-                  <p className="text-xs text-slate-500 leading-relaxed italic">
+                  <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed italic">
                     "Candidate correctly identified that field updates should happen in a Before-Save Flow to save CPU time."
                   </p>
                 </div>

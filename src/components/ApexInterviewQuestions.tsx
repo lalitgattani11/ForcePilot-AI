@@ -109,45 +109,45 @@ const ApexInterviewQuestions: React.FC = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative text-center space-y-10 py-20">
+      <section className="relative text-center space-y-8 sm:space-y-10 py-12 sm:py-20">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
-          className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-6 py-2 text-xs font-bold tracking-[0.2em] text-emerald-400 uppercase backdrop-blur-md mb-4"
+          className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-6 py-2 text-[10px] sm:text-xs font-bold tracking-[0.2em] text-emerald-400 uppercase backdrop-blur-md mb-2 sm:mb-4"
         >
           <Sparkles size={14} className="animate-pulse" />
           <span>Technical Interview Intelligence</span>
         </motion.div>
-        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight text-white leading-[1.1]">
+        <h1 className="text-3xl sm:text-7xl lg:text-8xl font-black tracking-tight text-white leading-[1.1]">
           Master the{" "}
           <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
             Apex Interview
           </span>
         </h1>
-        <p className="text-sm sm:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium">
+        <p className="text-[13px] sm:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium px-4 sm:px-0">
           The definitive guide to Salesforce Developer interviews. Technical
           deep-dives, recruiter expectations, and production-grade answer
           strategies.
         </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4 sm:pt-8">
           <Link
             to="/#setup"
             state={{ role: "Salesforce Apex Developer" }}
-            className="w-full sm:w-auto px-12 py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
           >
             Practice Real Apex Interviews
             <ArrowRight
-              size={22}
-              className="group-hover:translate-x-1 transition-transform"
+              size={20}
+              className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
             />
           </Link>
         </div>
       </section>
 
       {/* Internal Linking / Resources Bar */}
-      <nav className="grid sm:grid-cols-2 gap-4">
+      <nav className="grid sm:grid-cols-2 gap-4 px-2 sm:px-0">
         <Link
           to="/lwc-interview-guide"
           className="p-4 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800 transition-colors flex items-center justify-between group"
@@ -190,11 +190,11 @@ const ApexInterviewQuestions: React.FC = () => {
               {section.title}
             </h2>
 
-            <div className="grid gap-8">
+            <div className="grid gap-6 sm:gap-8">
               {section.questions.map((item, qIdx) => (
                 <div
                   key={qIdx}
-                  className="bg-slate-900/30 border border-slate-800/80 rounded-2xl p-6 sm:p-8 space-y-6"
+                  className="bg-slate-900/30 border border-slate-800/80 rounded-2xl p-5 sm:p-8 space-y-6"
                 >
                   <h3 className="text-xl sm:text-2xl font-semibold text-white leading-tight">
                     {item.q}

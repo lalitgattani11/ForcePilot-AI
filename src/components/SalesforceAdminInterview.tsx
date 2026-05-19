@@ -42,7 +42,7 @@ const SalesforceAdminInterview: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-32 text-slate-300 antialiased">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-20 sm:space-y-32 text-slate-300 antialiased">
       <Helmet>
         <title>Salesforce Admin Interview Questions 2026 | AI Mock Practice | ForcePilot AI</title>
         <meta
@@ -66,81 +66,81 @@ const SalesforceAdminInterview: React.FC = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative text-center space-y-10 py-20">
+      <section className="relative text-center space-y-8 sm:space-y-10 py-12 sm:py-20">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
-          className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-6 py-2 text-xs font-bold tracking-[0.2em] text-emerald-400 uppercase backdrop-blur-md mb-4"
+          className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-6 py-2 text-[10px] sm:text-xs font-bold tracking-[0.2em] text-emerald-400 uppercase backdrop-blur-md mb-2 sm:mb-4"
         >
           <Settings size={14} className="animate-pulse" />
           <span>Admin Excellence Track</span>
         </motion.div>
         
-        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight text-white leading-[1.1]">
+        <h1 className="text-3xl sm:text-7xl lg:text-8xl font-black tracking-tight text-white leading-[1.1]">
           The Ultimate <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500">
             Salesforce Admin Interview
           </span>
         </h1>
         
-        <p className="text-sm sm:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium">
+        <p className="text-[13px] sm:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium px-4 sm:px-0">
           From Profiles to Permission Sets, Master the core configurations of the Salesforce platform. Get recruiter-grade feedback on your administrative logic.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4 sm:pt-8">
           <Link
             to="/#setup"
             state={{ role: "Salesforce Admin" }}
-            className="w-full sm:w-auto px-12 py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            className="w-full sm:w-auto px-10 sm:px-12 py-4 sm:py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
           >
-            Practice Salesforce Admin Interviews
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+            Practice Admin Interviews
+            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform sm:size-[22px]" />
           </Link>
         </div>
       </section>
 
       {/* Navigation Links */}
-      <nav className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <nav className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 sm:px-0">
         {[
           { title: "Flow Interview", link: "/salesforce-flow-interview-questions", color: "emerald", icon: Workflow },
           { title: "Mock Interview", link: "/salesforce-mock-interview", color: "cyan", icon: Zap },
           { title: "Apex Triggers", link: "/apex-trigger-interview-questions", color: "blue", icon: Database },
           { title: "Scenario Based", link: "/scenario-based-salesforce-interview", color: "rose", icon: Search }
         ].map((link, i) => (
-          <Link key={i} to={link.link} className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between">
+          <Link key={i} to={link.link} className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className={`p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
-                <link.icon size={20} />
+              <div className={`p-2.5 sm:p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
+                <link.icon size={18} className="sm:size-[20px]" />
               </div>
-              <span className="font-bold text-white text-sm">{link.title}</span>
+              <span className="font-bold text-white text-xs sm:text-sm">{link.title}</span>
             </div>
-            <ChevronRight size={18} className="text-slate-600 group-hover:translate-x-1 group-hover:text-white transition-all" />
+            <ChevronRight size={16} className="text-slate-600 group-hover:translate-x-1 group-hover:text-white transition-all sm:size-[18px]" />
           </Link>
         ))}
       </nav>
 
       {/* Core Domains */}
-      <section className="space-y-16">
+      <section className="space-y-12 sm:space-y-16">
         <div className="text-center space-y-4">
-          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Focus <span className="text-emerald-400">Domains.</span></h2>
-          <p className="text-slate-500 max-w-2xl mx-auto">Master the critical areas recruiters focus on during Admin interviews.</p>
+          <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Focus <span className="text-emerald-400">Domains.</span></h2>
+          <p className="text-slate-500 text-xs sm:text-base max-w-2xl mx-auto px-4 sm:px-0">Master the critical areas recruiters focus on during Admin interviews.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           {sections.map((section, i) => (
             <motion.div 
               key={i}
               {...fadeIn}
-              className="bg-white/[0.02] border border-white/5 p-8 rounded-[2rem] hover:bg-white/[0.04] transition-all group"
+              className="bg-white/[0.02] border border-white/5 p-6 sm:p-8 rounded-[2rem] hover:bg-white/[0.04] transition-all group"
             >
-              <h3 className="text-xl font-bold text-white mb-3">{section.title}</h3>
-              <p className="text-slate-500 leading-relaxed text-sm mb-6">
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">{section.title}</h3>
+              <p className="text-slate-500 leading-relaxed text-xs sm:text-sm mb-6">
                 {section.desc}
               </p>
               <div className="space-y-3">
                 {section.topics.map((topic, j) => (
-                  <div key={j} className="flex items-center gap-3 text-sm text-slate-400">
+                  <div key={j} className="flex items-center gap-3 text-xs sm:text-sm text-slate-400">
                     <CheckCircle2 size={14} className="text-emerald-500/60" />
                     <span>{topic}</span>
                   </div>
@@ -152,27 +152,27 @@ const SalesforceAdminInterview: React.FC = () => {
       </section>
 
       {/* Recruiter Intelligence */}
-      <section className="bg-white/[0.01] border border-white/5 rounded-[3rem] p-8 sm:p-20 flex flex-col lg:flex-row items-center gap-16">
-        <div className="flex-1 space-y-8">
-          <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
+      <section className="bg-white/[0.01] border border-white/5 rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-20 flex flex-col lg:flex-row items-center gap-12 sm:gap-16">
+        <div className="flex-1 space-y-6 sm:space-y-8 text-center lg:text-left">
+          <h2 className="text-3xl sm:text-5xl font-bold text-white leading-tight">
             Think like a <br />
             <span className="text-cyan-400">System Architect.</span>
           </h2>
-          <p className="text-slate-400 text-lg leading-relaxed">
+          <p className="text-slate-400 text-base sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
             The best Admins don't just know where the buttons are; they understand the "why" behind every configuration. ForcePilot AI evaluates your ability to balance security with usability.
           </p>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-6 pt-2">
             <div className="space-y-2">
-              <div className="text-4xl font-black text-white">90%</div>
-              <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">Efficiency Boost</div>
+              <div className="text-3xl sm:text-4xl font-black text-white">90%</div>
+              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Efficiency Boost</div>
             </div>
             <div className="space-y-2">
-              <div className="text-4xl font-black text-white">2026</div>
-              <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">Ready Content</div>
+              <div className="text-3xl sm:text-4xl font-black text-white">2026</div>
+              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Ready Content</div>
             </div>
           </div>
         </div>
-        <div className="w-full lg:w-96 bg-slate-900/50 border border-white/10 rounded-[2.5rem] p-8 shadow-2xl space-y-6">
+        <div className="w-full lg:w-96 bg-slate-900/50 border border-white/10 rounded-[2.5rem] p-6 sm:p-8 shadow-2xl space-y-6">
           <div className="flex items-center gap-4">
             <div className="h-10 w-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400">
               <ShieldCheck size={20} />
@@ -191,22 +191,22 @@ const SalesforceAdminInterview: React.FC = () => {
       </section>
 
       {/* Final CTA */}
-      <section className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#020617] via-slate-900 to-[#020617] border border-white/10 px-6 py-24 text-center">
-        <div className="relative z-10 space-y-10 max-w-4xl mx-auto">
-          <h2 className="text-4xl sm:text-7xl font-black text-white leading-tight">
+      <section className="relative overflow-hidden rounded-[2.5rem] sm:rounded-[3rem] bg-gradient-to-br from-[#020617] via-slate-900 to-[#020617] border border-white/10 px-6 py-16 sm:py-24 text-center">
+        <div className="relative z-10 space-y-8 sm:space-y-10 max-w-4xl mx-auto">
+          <h2 className="text-3xl sm:text-7xl font-black text-white leading-tight">
             Ready to Ace <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
               Your Admin Interview?
             </span>
           </h2>
-          <div className="pt-8">
+          <div className="pt-4 sm:pt-8">
             <Link
               to="/#setup"
               state={{ role: "Salesforce Admin" }}
-              className="px-14 py-6 bg-emerald-600 hover:bg-emerald-500 text-white rounded-[2rem] font-black text-xl transition-all shadow-[0_0_50px_rgba(16,185,129,0.3)] flex items-center justify-center gap-4 mx-auto group active:scale-95 text-center"
+              className="px-10 sm:px-14 py-4 sm:py-6 bg-emerald-600 hover:bg-emerald-500 text-white rounded-[1.5rem] sm:rounded-[2rem] font-black text-lg sm:text-xl transition-all shadow-[0_0_50px_rgba(16,185,129,0.3)] flex items-center justify-center gap-4 mx-auto group active:scale-95 text-center"
             >
               Start Practice Now
-              <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform sm:size-[24px]" />
             </Link>
           </div>
         </div>

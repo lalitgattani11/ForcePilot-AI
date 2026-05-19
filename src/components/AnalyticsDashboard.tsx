@@ -143,24 +143,24 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   return (
     <div className="space-y-8">
       {/* 1. Integrated Intelligence Surface: Executive Summary */}
-      <div className="premium-glass rounded-[2.5rem] p-8 sm:p-12 lg:px-16 lg:py-12 border border-white/5 bg-slate-950/20 relative overflow-hidden group">
+      <div className="premium-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-12 lg:px-16 lg:py-12 border border-white/5 bg-slate-950/20 relative overflow-hidden group">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-500/[0.04] blur-[120px] pointer-events-none" />
 
-        <div className="relative z-10 flex flex-col xl:flex-row gap-10 xl:items-center justify-between">
-          <div className="space-y-5 max-w-2xl text-center xl:text-left">
+        <div className="relative z-10 flex flex-col xl:flex-row gap-8 xl:gap-10 xl:items-center justify-between">
+          <div className="space-y-4 sm:space-y-5 max-w-2xl text-center xl:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-300 text-[9px] font-black tracking-[0.3em] uppercase mx-auto xl:mx-0">
               <Activity size={12} className="text-cyan-400" />
               Interview Performance Analysis
             </div>
 
             <div className="space-y-2.5 overflow-visible">
-              <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tighter leading-tight sm:leading-none pb-1 sm:pb-0 overflow-visible">
+              <h2 className="text-2xl sm:text-5xl font-black text-white tracking-tighter leading-tight sm:leading-none pb-1 sm:pb-0 overflow-visible">
                 Performance{" "}
                 <span className="inline-block pr-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]">
                   Insights
                 </span>
               </h2>
-              <p className="text-slate-400 text-xs sm:text-sm font-medium leading-relaxed max-w-xl mx-auto xl:mx-0">
+              <p className="text-slate-400 text-[11px] sm:text-sm font-medium leading-relaxed max-w-xl mx-auto xl:mx-0">
                 Track your technical evolution and career readiness. ForcePilot
                 AI synthesizes thousands of data points from your sessions to
                 map your trajectory toward Salesforce mastery.
@@ -187,7 +187,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-8 sm:gap-12 lg:pr-6 shrink-0">
+          <div className="flex items-center justify-center xl:justify-end gap-8 sm:gap-12 lg:pr-6 shrink-0">
             <div className="space-y-0.5 text-center">
               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
                 OVERALL SCORE
@@ -222,8 +222,8 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       {/* 2. Intelligence Surface: Technical Evolution & Behavioral Analytics */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
         {/* Performance Trends Panel */}
-        <div className="xl:col-span-7 premium-glass rounded-[2.5rem] p-10 border border-white/5 bg-slate-950/20 flex flex-col min-h-[500px] relative">
-          <div className="flex items-center justify-between mb-10">
+        <div className="xl:col-span-7 premium-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 border border-white/5 bg-slate-950/20 flex flex-col min-h-[400px] sm:min-h-[500px] relative">
+          <div className="flex items-center justify-between mb-8 sm:mb-10">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-400">
                 <TrendingUp size={20} />
@@ -372,40 +372,40 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           </div>
 
           {/* Metrics Summary Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 pt-8 mt-8 sm:pt-10 sm:mt-10 border-t border-white/5">
-            <div className="px-5 py-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 pt-8 mt-8 sm:pt-10 sm:mt-10 border-t border-white/5">
+            <div className="px-4 py-3 sm:px-5 sm:py-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
               <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-wider text-slate-400">
                 <ShieldCheck size={12} className="text-emerald-500 shrink-0" />
                 <span>Technical Skills</span>
               </div>
-              <div className="text-xs font-bold text-slate-200 tracking-tight leading-tight">
+              <div className="text-[11px] sm:text-xs font-bold text-slate-200 tracking-tight leading-tight">
                 {stats.techPerformance}
               </div>
             </div>
-            <div className="px-5 py-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
+            <div className="px-4 py-3 sm:px-5 sm:py-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
               <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-wider text-slate-400">
                 <MessageSquare size={12} className="text-cyan-500 shrink-0" />
                 <span>Communication</span>
               </div>
-              <div className="text-xs font-bold text-slate-200 tracking-tight leading-tight">
+              <div className="text-[11px] sm:text-xs font-bold text-slate-200 tracking-tight leading-tight">
                 {stats.commClarity}
               </div>
             </div>
-            <div className="px-5 py-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
+            <div className="px-4 py-3 sm:px-5 sm:py-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
               <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-wider text-slate-400">
                 <Award size={12} className="text-purple-500 shrink-0" />
                 <span>Consistency</span>
               </div>
-              <div className="text-xs font-bold text-slate-200 tracking-tight leading-tight">
+              <div className="text-[11px] sm:text-xs font-bold text-slate-200 tracking-tight leading-tight">
                 {stats.interviewConsistency}
               </div>
             </div>
-            <div className="px-5 py-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
+            <div className="px-4 py-3 sm:px-5 sm:py-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
               <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-wider text-slate-400">
                 <Flame size={12} className="text-orange-500 shrink-0" />
                 <span>Confidence</span>
               </div>
-              <div className="text-xs font-bold text-slate-200 tracking-tight leading-tight">
+              <div className="text-[11px] sm:text-xs font-bold text-slate-200 tracking-tight leading-tight">
                 {stats.responseConfidence}
               </div>
             </div>
@@ -415,7 +415,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         {/* Topic Analysis Panel */}
         <div className="xl:col-span-5 flex flex-col gap-8">
           {/* Topic Intelligence */}
-          <div className="flex-1 premium-glass rounded-[2.5rem] p-10 border border-white/5 bg-slate-950/20 space-y-10">
+          <div className="flex-1 premium-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 border border-white/5 bg-slate-950/20 space-y-8 sm:space-y-10">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-2xl bg-cyan-500/10 text-cyan-400">
                 <Brain size={20} />
@@ -425,7 +425,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </h3>
             </div>
 
-            <div className="space-y-10">
+            <div className="space-y-8 sm:space-y-10">
               <div className="space-y-6">
                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
                   <span>Strongest Topics</span>
@@ -447,8 +447,8 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                           {topic.confidence} Confidence
                         </div>
                       </div>
-                      <div className="flex items-center gap-6">
-                        <div className="w-24 sm:w-32 h-1.5 rounded-full bg-white/5 overflow-hidden">
+                      <div className="flex items-center gap-4 sm:gap-6">
+                        <div className="w-20 sm:w-32 h-1.5 rounded-full bg-white/5 overflow-hidden">
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${topic.avg}%` }}
@@ -464,7 +464,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                           />
                         </div>
                         <span
-                          className={`text-[10px] font-black uppercase tracking-wider min-w-[80px] text-right ${
+                          className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider min-w-[70px] sm:min-w-[80px] text-right ${
                             topic.status === "Expert" ||
                             topic.status === "Strong"
                               ? "text-emerald-400"
@@ -494,9 +494,9 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                     stats.weakestTopics.map((topic, i) => (
                       <div
                         key={i}
-                        className="px-3.5 py-2 rounded-xl bg-rose-500/[0.04] border border-rose-500/10 text-[10px] font-black text-rose-400/80 uppercase tracking-tighter flex items-center gap-2.5 hover:bg-rose-500/[0.08] transition-all"
+                        className="px-3 py-1.5 rounded-xl bg-rose-500/[0.04] border border-rose-500/10 text-[9px] sm:text-[10px] font-black text-rose-400/80 uppercase tracking-tighter flex items-center gap-2.5 hover:bg-rose-500/[0.08] transition-all"
                       >
-                        <div className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                        <div className="w-1 h-1 rounded-full bg-rose-500" />
                         {topic.name}
                         <span className="text-[8px] text-rose-500/70 ml-1">
                           {topic.confidence === "Consistent" ? "!!" : "!"}
@@ -514,13 +514,13 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           </div>
 
           {/* Activity Summary */}
-          <div className="premium-glass rounded-[2.5rem] p-10 border border-white/5 bg-slate-950/20 flex items-center justify-between group hover:bg-slate-950/30 transition-all">
-            <div className="flex items-center gap-8">
-              <div className="space-y-2">
+          <div className="premium-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 border border-white/5 bg-slate-950/20 flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-0 group hover:bg-slate-950/30 transition-all">
+            <div className="flex items-center gap-6 sm:gap-8">
+              <div className="space-y-1.5 sm:space-y-2">
                 <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                   Interview Streak
                 </div>
-                <div className="text-4xl font-black text-white flex items-center gap-3">
+                <div className="text-3xl sm:text-4xl font-black text-white flex items-center gap-3">
                   {stats.streak}
                   <Flame
                     size={24}
@@ -528,12 +528,12 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                   />
                 </div>
               </div>
-              <div className="w-px h-12 bg-white/10" />
-              <div className="space-y-2">
+              <div className="w-px h-10 sm:h-12 bg-white/10" />
+              <div className="space-y-1.5 sm:space-y-2">
                 <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                   Total Interviews
                 </div>
-                <div className="text-4xl font-black text-white group-hover:text-cyan-400 transition-colors">
+                <div className="text-3xl sm:text-4xl font-black text-white group-hover:text-cyan-400 transition-colors">
                   {stats.totalInterviews}
                 </div>
               </div>
@@ -543,7 +543,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               {Array.from({ length: 7 }).map((_, i) => (
                 <div
                   key={i}
-                  className={`w-2 h-8 rounded-full transition-all duration-700 ${i < stats.streak ? "bg-orange-500 shadow-[0_0_12px_rgba(249,115,22,0.4)] scale-y-110" : "bg-white/5"}`}
+                  className={`w-1.5 sm:w-2 h-6 sm:h-8 rounded-full transition-all duration-700 ${i < stats.streak ? "bg-orange-500 shadow-[0_0_12px_rgba(249,115,22,0.4)] scale-y-110" : "bg-white/5"}`}
                 />
               ))}
             </div>

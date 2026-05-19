@@ -102,7 +102,7 @@ const PrepTips: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.1 }}
-            className="p-8 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] bg-slate-950/20 border border-white/5 relative group overflow-hidden"
+            className="p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] bg-slate-950/20 border border-white/5 relative group overflow-hidden"
           >
             <div className="space-y-6 sm:space-y-8 relative z-10">
               <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-${cat.color}-500/10 border border-${cat.color}-500/20 flex items-center justify-center text-${cat.color}-400`}>
@@ -134,7 +134,7 @@ const PrepTips: React.FC = () => {
 
          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             {frameworks.map((f, i) => (
-               <div key={i} className="p-8 sm:p-10 rounded-[2rem] sm:rounded-[3rem] bg-white/[0.01] border border-white/5 space-y-6 sm:space-y-8 relative overflow-hidden">
+               <div key={i} className="p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] bg-white/[0.01] border border-white/5 space-y-6 sm:space-y-8 relative overflow-hidden">
                   <div className="absolute top-0 right-0 p-8 opacity-5">
                      <Target size={100} className="text-emerald-500 sm:w-32 sm:h-32" />
                   </div>
@@ -156,7 +156,7 @@ const PrepTips: React.FC = () => {
 
       {/* Pro Tips Section */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-        <div className="premium-glass p-8 sm:p-12 rounded-[2rem] sm:rounded-[3rem] border border-emerald-500/10 bg-emerald-500/[0.01] flex flex-col justify-center space-y-6">
+        <div className="premium-glass p-6 sm:p-12 rounded-[2rem] sm:rounded-[3rem] border border-emerald-500/10 bg-emerald-500/[0.01] flex flex-col justify-center space-y-6">
            <div className="flex items-center gap-3 text-emerald-400">
              <Zap size={20} className="sm:w-6 sm:h-6" />
              <span className="text-[9px] sm:text-xs font-black uppercase tracking-[0.2em]">The "Power Move" Strategy</span>
@@ -167,7 +167,7 @@ const PrepTips: React.FC = () => {
            </p>
         </div>
 
-        <div className="premium-glass p-8 sm:p-12 rounded-[2rem] sm:rounded-[3rem] border border-rose-500/10 bg-rose-500/[0.01] flex flex-col justify-center space-y-6">
+        <div className="premium-glass p-6 sm:p-12 rounded-[2rem] sm:rounded-[3rem] border border-rose-500/10 bg-rose-500/[0.01] flex flex-col justify-center space-y-6">
            <div className="flex items-center gap-3 text-rose-400">
              <AlertCircle size={20} className="sm:w-6 sm:h-6" />
              <span className="text-[9px] sm:text-xs font-black uppercase tracking-[0.2em]">Common Failure Pattern</span>
@@ -188,7 +188,7 @@ const PrepTips: React.FC = () => {
 
          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
             {pacingTips.map((tip, i) => (
-               <div key={i} className="p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-slate-950/40 border border-white/5 space-y-3 sm:space-y-4">
+               <div key={i} className="p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-slate-950/40 border border-white/5 space-y-3 sm:space-y-4">
                   <div className="text-cyan-400 font-black text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em]">{tip.label}</div>
                   <p className="text-[10px] sm:text-xs text-slate-400 leading-relaxed font-medium">{tip.desc}</p>
                </div>
@@ -197,7 +197,7 @@ const PrepTips: React.FC = () => {
       </section>
 
       {/* Checklist */}
-      <section className="relative p-8 sm:p-20 rounded-[2.5rem] sm:rounded-[4rem] bg-slate-950/40 border border-white/5 overflow-hidden">
+      <section className="relative p-6 sm:p-20 rounded-[2.5rem] sm:rounded-[4rem] bg-slate-950/40 border border-white/5 overflow-hidden">
         <div className="absolute inset-0 bg-aurora opacity-5" />
         <div className="relative z-10 max-w-4xl mx-auto space-y-10 sm:space-y-12">
           <div className="text-center space-y-4">
@@ -207,7 +207,7 @@ const PrepTips: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {checklist.map((item, i) => (
-              <div key={i} className="flex items-center gap-4 sm:gap-5 p-5 sm:p-6 rounded-[1.5rem] sm:rounded-3xl bg-white/[0.03] border border-white/5 group hover:bg-white/[0.05] transition-all">
+              <div key={i} className="flex items-center gap-4 sm:gap-5 p-4 sm:p-6 rounded-[1.5rem] sm:rounded-3xl bg-white/[0.03] border border-white/5 group hover:bg-white/[0.05] transition-all">
                 <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-black text-[10px] sm:text-xs shrink-0">
                   {i + 1}
                 </div>

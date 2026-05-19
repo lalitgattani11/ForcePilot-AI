@@ -97,8 +97,8 @@ function App() {
         <Navbar />
 
         {/* Main Content */}
-        <main className={`relative flex-grow pt-20 sm:pt-28 ${isInterviewPage ? 'pb-0' : 'pb-10'} overflow-visible`}>
-          <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8">
+        <main className={`relative flex-grow pt-20 sm:pt-28 ${isInterviewPage ? 'pb-0' : 'pb-8 sm:pb-10'} overflow-visible`}>
+          <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-4 sm:px-5 lg:px-8">
             <Routes>
               <Route
                 path="/"
@@ -361,11 +361,11 @@ function App() {
           {/* Ambient Depth Glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent"></div>
 
-          <div className="max-w-7xl mx-auto px-8 lg:px-12 py-10 md:py-16 lg:py-24">
+          <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 sm:py-16 lg:py-24">
             {/* Top: Brand & Navigation */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 lg:gap-16 mb-12 md:mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-12 lg:gap-16 mb-12 md:mb-16">
               {/* Brand Intelligence Unit */}
-              <div className="md:col-span-6 flex flex-col items-center md:items-start space-y-4 md:space-y-6">
+              <div className="md:col-span-6 flex flex-col items-center md:items-start space-y-5 md:space-y-6">
                 <div
                   onClick={() => navigate("/")}
                   className="flex items-center justify-center md:justify-start gap-3 group shrink-0 cursor-pointer relative"
@@ -381,7 +381,7 @@ function App() {
                     </div>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[15px] font-black text-white tracking-tight leading-none uppercase">
+                    <span className="text-[14px] sm:text-[15px] font-black text-white tracking-tight leading-none uppercase">
                       FORCE
                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
                         PILOT AI
@@ -392,7 +392,7 @@ function App() {
                     </span>
                   </div>
                 </div>
-                <p className="text-slate-500 text-[13px] leading-relaxed max-w-[280px] font-medium tracking-tight text-center md:text-left">
+                <p className="text-slate-500 text-[12px] sm:text-[13px] leading-relaxed max-w-[280px] font-medium tracking-tight text-center md:text-left">
                   AI-powered Salesforce interview intelligence for modern
                   engineering teams.
                 </p>
@@ -426,7 +426,7 @@ function App() {
                         to="/analytics"
                         className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300"
                       >
-                        Performance
+                        Platform Overview
                       </Link>
                     </li>
                   </ul>

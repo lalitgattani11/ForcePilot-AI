@@ -336,15 +336,15 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 space-y-12">
+    <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12 space-y-8 sm:space-y-12">
       {/* 1. CINEMATIC SESSION HEADER */}
-      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="relative overflow-hidden premium-glass rounded-[2.5rem] border border-white/10 p-8 sm:p-12">
+      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="relative overflow-hidden premium-glass rounded-[2rem] sm:rounded-[2.5rem] border border-white/10 p-6 sm:p-12">
         <div className="absolute top-0 right-0 p-4 sm:p-8 opacity-5 sm:opacity-10 pointer-events-none">
           <Sparkles size={120} className="text-emerald-500" />
         </div>
 
-        <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-12 sm:gap-8">
-          <div className="space-y-6 sm:space-y-4 w-full sm:w-auto">
+        <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-8 sm:gap-8">
+          <div className="space-y-5 sm:space-y-4 w-full sm:w-auto">
             <div className="flex flex-wrap items-center gap-3">
               <div className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-black uppercase tracking-widest text-emerald-400">Session Intelligence</div>
               {date && (
@@ -355,7 +355,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
               )}
             </div>
 
-            <h1 className="text-4xl sm:text-6xl font-black text-white italic tracking-tighter leading-tight break-words">{role}</h1>
+            <h1 className="text-3xl sm:text-6xl font-black text-white italic tracking-tighter leading-tight break-words">{role}</h1>
 
             <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-4 sm:gap-6 pt-2">
               <div className="flex items-center gap-3">
@@ -376,13 +376,13 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
             </div>
           </div>
 
-          <div className="relative w-full sm:w-auto flex justify-center sm:justify-end mt-4 sm:mt-0 py-6 sm:py-0">
-            <div className="text-[80px] sm:text-[160px] font-black text-white/[0.03] sm:text-white/5 leading-none absolute -top-6 sm:-top-12 -right-0 sm:-right-8 select-none italic pointer-events-none">{metrics.avgScore}</div>
+          <div className="relative w-full sm:w-auto flex justify-center sm:justify-end mt-2 sm:mt-0 py-4 sm:py-0">
+            <div className="text-[60px] sm:text-[160px] font-black text-white/[0.03] sm:text-white/5 leading-none absolute -top-4 sm:-top-12 -right-0 sm:-right-8 select-none italic pointer-events-none">{metrics.avgScore}</div>
             <div className="flex flex-col items-center sm:items-end relative">
-              <div className="text-7xl sm:text-8xl font-black text-emerald-500 italic leading-none drop-shadow-[0_0_30px_rgba(16,185,129,0.15)]">
-                {metrics.avgScore}<span className="text-3xl sm:text-4xl">%</span>
+              <div className="text-6xl sm:text-8xl font-black text-emerald-500 italic leading-none drop-shadow-[0_0_30px_rgba(16,185,129,0.15)]">
+                {metrics.avgScore}<span className="text-2xl sm:text-4xl">%</span>
               </div>
-              <div className="text-[10px] font-black text-emerald-500/70 uppercase tracking-[0.4em] mt-3 sm:mt-2 sm:mr-2">OVERALL READINESS</div>
+              <div className="text-[9px] font-black text-emerald-500/70 uppercase tracking-[0.4em] mt-3 sm:mt-2 sm:mr-2">OVERALL READINESS</div>
             </div>
           </div>
         </div>
@@ -390,7 +390,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
 
       {/* 2. INTELLIGENCE INSIGHTS SUMMARY */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className="lg:col-span-2 premium-glass rounded-3xl border border-white/5 p-8 space-y-8">
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className="lg:col-span-2 premium-glass rounded-3xl border border-white/5 p-6 sm:p-8 space-y-8">
           <div className="flex items-center gap-3 border-b border-white/5 pb-6">
             <BarChart3 className="text-cyan-400" size={20} />
             <h2 className="text-sm font-black text-white uppercase tracking-widest">Dimension Analytics</h2>
@@ -417,7 +417,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
           </div>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="premium-glass rounded-3xl border border-white/5 p-8 flex flex-col justify-center gap-4 text-center relative overflow-hidden group">
+        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="premium-glass rounded-3xl border border-white/5 p-6 sm:p-8 flex flex-col justify-center gap-4 text-center relative overflow-hidden group">
           <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
           <Trophy className="mx-auto text-emerald-400 mb-2" size={32} />
           <h2 className="text-lg font-black text-white italic">Technical Verdict</h2>
@@ -455,7 +455,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
                 <AnimatePresence>
                   {isExpanded && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                      <div className="px-8 pb-8 pt-2 space-y-10 border-t border-white/5">
+                      <div className="px-5 sm:px-8 pb-8 pt-2 space-y-10 border-t border-white/5">
                         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                           <div className="space-y-4">
                             <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest"><Sparkles size={12} className="text-cyan-400" />Technical Question</div>

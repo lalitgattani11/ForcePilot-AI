@@ -118,9 +118,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   ];
 
   return (
-    <div className="flex flex-col w-full lg:min-w-[1400px] max-w-[1600px] mx-auto pt-0 pb-4 sm:py-8 px-3 sm:px-5 lg:px-8 gap-2 sm:gap-24 lg:gap-32">
+    <div className="flex flex-col w-full lg:min-w-[1400px] max-w-[1600px] mx-auto pt-0 pb-6 sm:py-8 px-4 sm:px-5 lg:px-8 gap-4 sm:gap-24 lg:gap-32">
       {/* 1. PRIMARY FOCUS: HERO & ROLE SELECTION */}
-      <section className="relative flex flex-col justify-center min-h-0 pt-10 pb-8 lg:min-h-[78vh] lg:pt-0 lg:pb-0 overflow-visible">
+      <section className="relative flex flex-col justify-center min-h-0 pt-12 pb-16 lg:min-h-[78vh] lg:pt-0 lg:pb-0 overflow-visible">
         <div className="text-center space-y-4 md:space-y-8 xl:space-y-10 max-w-4xl lg:max-w-6xl xl:max-w-[90rem] mx-auto overflow-visible">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
@@ -207,7 +207,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
       >
         <div className="bg-slate-950/40 rounded-[1.9rem] sm:rounded-[2.9rem] p-6 sm:p-10 md:p-16 space-y-4 sm:space-y-12 border border-white/[0.02]">
           {/* Top: Identity & Track Intelligence Unit */}
-          <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
             {/* Left Column: Identity Control */}
             <div className="w-full lg:w-80 shrink-0 space-y-3">
               <h2 className="meta-label">Identity</h2>
@@ -237,7 +237,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                   onChange={(e) =>
                     setConfig({ ...config, role: e.target.value as Role })
                   }
-                  className="w-full h-12 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-white focus:outline-none focus:border-emerald-500/50"
+                  className="w-full h-14 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-white focus:outline-none focus:border-emerald-500/50"
                 >
                   {roles.map((role) => (
                     <option key={role} value={role} className="bg-slate-900">
@@ -376,11 +376,10 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             </div>
           </div>
 
-          {/* Bottom: Action */}
           <div className="pt-8 border-t border-white/[0.05] flex justify-center md:justify-end">
             <button
               onClick={handleSubmit}
-              className="cta-button group flex items-center gap-4 sm:gap-6 px-10 sm:px-16 py-4 sm:py-6"
+              className="cta-button group flex items-center gap-4 sm:gap-6 px-8 sm:px-16 py-4 sm:py-6"
             >
               <span className="text-sm sm:text-base uppercase tracking-widest">
                 Initialize Interview

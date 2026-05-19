@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 
 export type LoadingPhase = "analyzing" | "generating" | "idle";
 
@@ -7,54 +7,9 @@ interface InterviewThinkingStateProps {
   phase: LoadingPhase;
 }
 
-const ANALYZING_MESSAGES = [
-  "Evaluating technical depth...",
-  "Reviewing response quality...",
-  "Processing interview signals...",
-  "Understanding candidate reasoning...",
-  "Measuring communication clarity...",
-  "Analyzing Salesforce concepts...",
-  "Interpreting problem-solving approach...",
-];
-
-const GENERATING_MESSAGES = [
-  "Generating next question...",
-  "Preparing adaptive follow-up...",
-  "Building interview context...",
-  "Creating personalized challenge...",
-  "Selecting next assessment topic...",
-  "Designing technical scenario...",
-  "Preparing interviewer response...",
-];
-
 export const InterviewThinkingState: React.FC<InterviewThinkingStateProps> = ({
   phase,
 }) => {
-  const [messageIndex, setMessageIndex] = useState(0);
-
-  const messages =
-    phase === "analyzing"
-      ? ANALYZING_MESSAGES
-      : phase === "generating"
-        ? GENERATING_MESSAGES
-        : [];
-
-  useEffect(() => {
-    if (phase === "idle") return;
-
-    const interval = setInterval(() => {
-      if (messages.length > 0) {
-        setMessageIndex((prev) => (prev + 1) % messages.length);
-      }
-    }, 2500);
-
-    return () => clearInterval(interval);
-  }, [phase, messages.length]);
-
-  useEffect(() => {
-    setMessageIndex(0);
-  }, [phase]);
-
   return (
     <div
       className={`flex justify-start will-change-transform w-full transition-all duration-500 ease-in-out ${
@@ -92,28 +47,13 @@ export const InterviewThinkingState: React.FC<InterviewThinkingStateProps> = ({
             </div>
 
             <div className="flex flex-col flex-1">
-              <AnimatePresence mode="wait">
-                {phase !== "idle" && (
-                  <motion.span
-                    key={`${phase}-${messageIndex}`}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.25 }}
-                    className="text-sm text-slate-300 font-medium tracking-wide"
-                  >
-                    {messages[messageIndex]}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-
-              {/* Lightweight progress indicator */}
+              {/* Subtle progress indicator */}
               {phase !== "idle" && (
-                <div className="mt-2 w-32 h-0.5 bg-white/[0.03] rounded-full overflow-hidden">
+                <div className="w-48 h-0.5 bg-white/[0.03] rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: "0%" }}
                     animate={{ width: "100%" }}
-                    key={messageIndex}
+                    key={phase}
                     transition={{ duration: 2.5, ease: "linear" }}
                     className="h-full bg-emerald-500/40"
                   />

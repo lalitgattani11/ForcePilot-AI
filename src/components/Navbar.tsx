@@ -157,7 +157,7 @@ const Navbar: React.FC = () => {
               </div>
             </div>
             <div className="flex flex-col">
-              <span className="text-base sm:text-lg font-black text-white tracking-tight leading-none uppercase">Force<span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Pilot AI</span></span>
+              <span className="text-sm sm:text-lg font-black text-white tracking-tighter leading-none uppercase">Force<span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Pilot AI</span></span>
               <span className="hidden sm:block text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] leading-none mt-1">Technical Intelligence</span>
             </div>
           </div>

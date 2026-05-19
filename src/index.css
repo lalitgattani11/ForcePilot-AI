@@ -78,11 +78,11 @@ body {
 
 /* Elegant Typography Systems (Restored for Homepage) */
 .hero-title {
-  @apply text-4xl sm:text-6xl md:text-8xl lg:text-[7rem] xl:text-[8.5rem] font-bold tracking-[-0.02em] leading-tight lg:leading-[0.95] text-white;
+  @apply text-[2.5rem] sm:text-6xl md:text-8xl lg:text-[7rem] xl:text-[8.5rem] font-bold tracking-[-0.02em] leading-[1.1] sm:leading-tight lg:leading-[0.95] text-white;
 }
 
 .sub-title {
-  @apply text-xs sm:text-base md:text-xl lg:text-[1.35rem] xl:text-[1.5rem] text-slate-300 font-medium tracking-tight leading-relaxed max-w-2xl lg:max-w-3xl;
+  @apply text-sm sm:text-base md:text-xl lg:text-[1.35rem] xl:text-[1.5rem] text-slate-300 font-medium tracking-tight leading-relaxed max-w-2xl lg:max-w-3xl;
 }
 
 .meta-label {
@@ -91,11 +91,11 @@ body {
 
 /* Platform-Specific Premium Typography (Isolated) */
 .platform-hero-title {
-  @apply text-[2.1rem] sm:text-6xl md:text-7xl lg:text-[7rem] xl:text-[8.5rem] font-bold tracking-[-0.03em] sm:tracking-[-0.03em] leading-[1.1] sm:leading-[1.1] lg:leading-[0.98] text-white;
+  @apply text-[2.4rem] sm:text-6xl md:text-7xl lg:text-[7rem] xl:text-[8.5rem] font-bold tracking-[-0.03em] sm:tracking-[-0.03em] leading-[1.05] sm:leading-[1.1] lg:leading-[0.98] text-white;
 }
 
 .platform-sub-title {
-  @apply text-xs sm:text-base md:text-lg lg:text-[1.2rem] xl:text-[1.3rem] text-slate-300 font-medium tracking-tight leading-relaxed max-w-2xl lg:max-w-4xl;
+  @apply text-sm sm:text-base md:text-lg lg:text-[1.2rem] xl:text-[1.3rem] text-slate-300 font-medium tracking-tight leading-relaxed max-w-2xl lg:max-w-4xl;
 }
 
 .platform-pill-badge {

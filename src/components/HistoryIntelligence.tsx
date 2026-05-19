@@ -888,7 +888,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                               `/session/${getSessionSlug(record.role, record.id)}`,
                             );
                         }}
-                        className="w-full h-full text-left relative group overflow-hidden premium-glass rounded-[2rem] p-8 border border-white/10 hover:border-cyan-500/30 transition-all flex flex-col"
+                        className="w-full h-full text-left relative group overflow-hidden premium-glass rounded-[2rem] p-6 sm:p-8 border border-white/10 hover:border-cyan-500/30 transition-all flex flex-col"
                       >
                         {/* Type Badge */}
                         <div
@@ -1022,7 +1022,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                         whileHover={{
                           backgroundColor: "rgba(255, 255, 255, 0.02)",
                         }}
-                        className="w-full text-left px-8 py-6 flex flex-col md:flex-row md:items-center gap-6 group transition-all relative"
+                        className="w-full text-left px-5 sm:px-8 py-5 sm:py-6 flex flex-col md:flex-row md:items-center gap-6 group transition-all relative"
                       >
                         {/* 1. IDENTITY & METADATA */}
                         <div className="flex items-center gap-6 flex-1 min-w-0">
