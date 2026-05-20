@@ -142,7 +142,7 @@ const Navbar: React.FC = () => {
           : "bg-transparent border-transparent py-5"
       }`}
     >
-      <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-12">
+      <div className="w-full px-6 sm:px-10 lg:px-12">
         <div className="flex items-center justify-between relative">
           
           {/* LEFT: LOGO & BRAND */}
@@ -171,7 +171,7 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* CENTER: DESKTOP NAVIGATION (Truly Viewport Centered) */}
-          <div className="hidden lg:flex items-center gap-1 xl:gap-2 absolute left-1/2 -translate-x-1/2 z-[100]">
+          <div className="hidden lg:flex items-center gap-1 xl:gap-2 absolute left-1/2 -translate-x-1/2 lg:ml-5 z-[100]">
             <NavLink 
               to="/" 
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${

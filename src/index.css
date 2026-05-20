@@ -78,11 +78,11 @@ body {
 
 /* Elegant Typography Systems (Restored for Homepage) */
 .hero-title {
-  @apply text-[2.25rem] sm:text-6xl md:text-8xl lg:text-[7rem] xl:text-[8.5rem] font-bold tracking-[-0.02em] leading-[1.05] sm:leading-tight lg:leading-[0.95] text-white;
+  @apply text-[clamp(1.5rem,9.2vw,2.25rem)] sm:text-[3.5rem] md:text-[5rem] lg:text-[7rem] xl:text-[8.5rem] font-bold tracking-[-0.04em] sm:tracking-[-0.03em] lg:tracking-[-0.02em] leading-[0.92] sm:leading-[0.82] lg:leading-[0.85] text-white;
 }
 
 .sub-title {
-  @apply text-sm sm:text-base md:text-xl lg:text-[1.35rem] xl:text-[1.5rem] text-slate-300 font-medium tracking-tight leading-relaxed max-w-2xl lg:max-w-3xl;
+  @apply text-sm sm:text-base md:text-xl lg:text-[1.35rem] xl:text-[1.5rem] text-slate-300 font-medium tracking-tight leading-[1.5] sm:leading-[1.4] lg:leading-tight max-w-2xl lg:max-w-3xl;
 }
 
 .meta-label {
@@ -91,15 +91,15 @@ body {
 
 /* Platform-Specific Premium Typography (Isolated) */
 .platform-hero-title {
-  @apply text-[2.4rem] sm:text-6xl md:text-7xl lg:text-[7rem] xl:text-[8.5rem] font-bold tracking-[-0.03em] sm:tracking-[-0.03em] leading-[1.05] sm:leading-[1.1] lg:leading-[0.98] text-white;
+  @apply text-[clamp(1.6rem,9.8vw,2.4rem)] sm:text-[3.5rem] md:text-[4.5rem] lg:text-[7rem] xl:text-[8.5rem] font-bold tracking-[-0.05em] sm:tracking-[-0.03em] leading-[1] sm:leading-[0.98] lg:leading-[0.95] text-white;
 }
 
 .platform-sub-title {
-  @apply text-sm sm:text-base md:text-lg lg:text-[1.2rem] xl:text-[1.3rem] text-slate-300 font-medium tracking-tight leading-relaxed max-w-2xl lg:max-w-4xl;
+  @apply text-sm sm:text-base md:text-lg lg:text-[1.2rem] xl:text-[1.3rem] text-slate-300 font-medium tracking-tight leading-[1.5] sm:leading-[1.4] lg:leading-tight max-w-2xl lg:max-w-4xl;
 }
 
 .platform-pill-badge {
-  @apply inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-cyan-500/[0.03] border border-cyan-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(6,182,212,0.05)] mb-6 md:mb-6 mt-6 md:mt-10 transition-all duration-500 hover:border-cyan-500/20;
+  @apply inline-flex items-center gap-2 sm:gap-2.5 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-cyan-500/[0.03] border border-cyan-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(6,182,212,0.05)] mb-4 sm:mb-6 md:mb-6 mt-6 md:mt-10 transition-all duration-500 hover:border-cyan-500/20;
 }
 
 .platform-pill-badge .dot {
@@ -107,7 +107,28 @@ body {
 }
 
 .platform-pill-badge .label-text {
-  @apply text-[10px] md:text-[11px] font-black uppercase tracking-[0.25em] text-cyan-400/80 leading-none;
+  @apply text-[9px] sm:text-[10px] md:text-[11px] font-black uppercase tracking-[0.25em] text-cyan-400/80 leading-none;
+}
+
+/* Guide-Specific Unified Hero System */
+.guide-hero-section {
+  @apply relative text-center pt-12 pb-16 sm:pt-14 sm:pb-20 lg:pt-16 lg:pb-24 px-4 sm:px-6 overflow-hidden;
+}
+
+.guide-hero-badge {
+  @apply inline-flex items-center gap-2 sm:gap-2.5 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full backdrop-blur-md mb-6 sm:mb-4 transition-all duration-500 border;
+}
+
+.guide-hero-badge span {
+  @apply text-[9px] sm:text-[10px] md:text-[11px] font-black uppercase tracking-[0.25em] leading-none;
+}
+
+.guide-hero-title {
+  @apply text-[clamp(2rem,10vw,3.2rem)] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] font-black tracking-tight text-white leading-[1.1] sm:leading-[1.05] lg:leading-[1] mb-6 sm:mb-6;
+}
+
+.guide-hero-subtitle {
+  @apply text-[14px] sm:text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium mb-10 sm:mb-10 px-4 sm:px-0;
 }
 
 /* Polished Interaction Feedback */

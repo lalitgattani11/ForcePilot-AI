@@ -123,9 +123,9 @@ const Platform: React.FC = () => {
               <div className="dot" />
               <span className="label-text">The Intelligence Layer</span>
             </motion.div>
-            <motion.h1 variants={fadeIn} className="platform-hero-title mb-8 lg:mb-8 max-w-[1500px] px-2">
-              Recruiter-grade <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500">
+            <motion.h1 variants={fadeIn} className="platform-hero-title mb-4 sm:mb-8 lg:mb-8 max-w-[1500px] px-6 sm:px-2">
+              <span className="block pb-1 sm:pb-3 overflow-visible">Recruiter-grade</span>
+              <span className="block mt-2 sm:mt-8 md:mt-10 pb-[0.25em] overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500">
                 Interview intelligence.
               </span>
             </motion.h1>

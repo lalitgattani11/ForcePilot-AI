@@ -98,7 +98,7 @@ function App() {
 
         {/* Main Content */}
         <main className={`relative flex-grow pt-20 sm:pt-28 ${isInterviewPage ? 'pb-0' : 'pb-8 sm:pb-10'} overflow-visible`}>
-          <div className="w-full lg:min-w-[1400px] max-w-[1600px] mx-auto px-4 sm:px-5 lg:px-8">
+          <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-5 lg:px-8">
             <Routes>
               <Route
                 path="/"

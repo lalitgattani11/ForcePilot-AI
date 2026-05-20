@@ -65,29 +65,29 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative text-center space-y-10 py-20">
+      <section className="guide-hero-section">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
-          className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/5 px-6 py-2 text-xs font-bold tracking-[0.2em] text-cyan-400 uppercase backdrop-blur-md mb-4"
+          className="guide-hero-badge border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
         >
           <Workflow size={14} className="animate-pulse" />
           <span>Automation Mastery Track</span>
         </motion.div>
         
-        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight text-white leading-[1.1]">
+        <h1 className="guide-hero-title">
           Master Salesforce <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-blue-500">
             Flow Interviews
           </span>
         </h1>
         
-        <p className="text-sm sm:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium">
+        <p className="guide-hero-subtitle">
           The definitive guide to low-code automation. From record-triggered logic to complex subflows. Get evaluated on your architectural decision-making.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
           <Link
             to="/#setup"
             state={{ role: "Salesforce Admin" }}

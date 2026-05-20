@@ -120,7 +120,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   ];
 
   return (
-    <div className="flex flex-col w-full lg:min-w-[1400px] max-w-[1600px] mx-auto pt-0 pb-6 sm:py-8 px-4 sm:px-5 lg:px-8 gap-4 sm:gap-24 lg:gap-32">
+    <div className="flex flex-col w-full max-w-[1600px] mx-auto pt-0 pb-6 sm:py-8 px-4 sm:px-5 lg:px-8 gap-4 sm:gap-24 lg:gap-32">
       {/* 1. PRIMARY FOCUS: HERO & ROLE SELECTION */}
       <section className="relative flex flex-col justify-center min-h-0 pt-12 pb-16 lg:min-h-[78vh] lg:pt-0 lg:pb-0 overflow-visible">
         <div className="text-center space-y-3 md:space-y-8 xl:space-y-10 max-w-4xl lg:max-w-6xl xl:max-w-[90rem] mx-auto overflow-visible">
@@ -136,14 +136,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             </div>
           </motion.div>
 
-         <h1 className="hero-title px-4 overflow-visible will-change-[opacity,transform]">
-            <span className="block">The future of</span>
-            <span className="block">
-              <span className="inline-block pr-2 lg:pr-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] italic overflow-visible">
-                Salesforce
-              </span>{" "}
-              mastery.
-            </span>
+         <h1 className="hero-title px-6 sm:px-0 overflow-visible will-change-[opacity,transform]">
+            The future of<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] italic overflow-visible pr-[0.05em] -mr-[0.05em]">Salesforce</span> mastery.
          </h1>
 
           <motion.p 

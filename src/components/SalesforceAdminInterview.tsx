@@ -66,29 +66,29 @@ const SalesforceAdminInterview: React.FC = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative text-center space-y-8 sm:space-y-10 py-12 sm:py-20">
+      <section className="guide-hero-section">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
-          className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-6 py-2 text-[10px] sm:text-xs font-bold tracking-[0.2em] text-emerald-400 uppercase backdrop-blur-md mb-2 sm:mb-4"
+          className="guide-hero-badge border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
         >
           <Settings size={14} className="animate-pulse" />
           <span>Admin Excellence Track</span>
         </motion.div>
         
-        <h1 className="text-3xl sm:text-7xl lg:text-8xl font-black tracking-tight text-white leading-[1.1]">
+        <h1 className="guide-hero-title">
           The Ultimate <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500">
             Salesforce Admin Interview
           </span>
         </h1>
         
-        <p className="text-[13px] sm:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium px-4 sm:px-0">
+        <p className="guide-hero-subtitle">
           From Profiles to Permission Sets, Master the core configurations of the Salesforce platform. Get recruiter-grade feedback on your administrative logic.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4 sm:pt-8">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
           <Link
             to="/#setup"
             state={{ role: "Salesforce Admin" }}
