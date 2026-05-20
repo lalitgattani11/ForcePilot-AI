@@ -138,7 +138,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
 
          <h1 className="hero-title px-2 sm:px-0 overflow-visible will-change-[opacity,transform]">
             The future of<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] italic overflow-visible pr-[0.05em] -mr-[0.05em]">Salesforce</span> mastery.
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] italic overflow-visible pr-[0.1em] -mr-[0.1em] sm:pr-[0.05em] sm:-mr-[0.05em]">Salesforce</span> mastery.
          </h1>
 
           <motion.p 
