@@ -600,7 +600,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       .sort((a, b) => b.avg - a.avg)
       .slice(0, 3);
 
-    let weakestTopics = Object.entries(weakMap)
+    const weakestTopics = Object.entries(weakMap)
       .map(([name, data]) => ({
         name,
         count: data.count,

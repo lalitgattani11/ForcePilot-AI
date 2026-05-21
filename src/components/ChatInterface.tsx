@@ -131,7 +131,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   }, [isMobile, isSupported]);
 
   const runInterviewCycle =
-    useCallback(async () => {
+    useCallback(async (prefetchedQuestion?: string) => {
 
       if (
         isRunningRef.current ||
@@ -146,15 +146,19 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       setStatus("TRANSITIONING");
 
       try {
-        const askedTexts =
-          Array.isArray(answersRef.current) ? answersRef.current.map(a => a.questionText || "") : [];
-        
-        const nextQuestionText =
-          await generateQuestion(
-            config.role || "Professional Readiness",
-            config.difficulty || "Fresher",
-            askedTexts
-          );
+        let nextQuestionText = prefetchedQuestion;
+
+        if (!nextQuestionText) {
+          const askedTexts =
+            Array.isArray(answersRef.current) ? answersRef.current.map(a => a.questionText || "") : [];
+          
+          nextQuestionText =
+            await generateQuestion(
+              config.role || "Professional Readiness",
+              config.difficulty || "Fresher",
+              askedTexts
+            );
+        }
         
         const nextQuestion: Question = {
           id: `gen-${Date.now()}`,
@@ -165,8 +169,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           concepts: [],
         };
 
-        // Subtle delay for premium "thinking" feel
-        await new Promise(resolve => setTimeout(resolve, 800));
+        // Subtle delay for premium "thinking" feel - skipped on mobile for performance
+        if (!isMobile) {
+          await new Promise(resolve => setTimeout(resolve, 800));
+        }
 
         setCurrentQuestion(nextQuestion);
 
@@ -201,7 +207,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
         setStreamingMessageId(msgId);
         setStatus("AI_SPEAKING");
-        await speak(aiText);
+        
+        // On mobile, don't block the UI for speech synthesis
+        if (isMobile) {
+          speak(aiText); 
+          // Give a tiny head-start for the typewriter but move to next phase immediately
+          await new Promise(resolve => setTimeout(resolve, 300));
+        } else {
+          await speak(aiText);
+        }
+
         setStreamingMessageId(null);
         setStatus("WAITING_FOR_ANSWER");
 
@@ -212,7 +227,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         isRunningRef.current = false;
       }
 
-    }, [config, speak, status]);
+    }, [config, speak, status, isMobile]);
 
   const processUserResponse =
     useCallback(async (
@@ -253,15 +268,35 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           .map(a => a.evaluation)
           .filter((e): e is EvaluationResult => !!e);
 
-        const evalResult =
-          await evaluateAnswer(
-            currentQuestion,
-            cleanedResponse,
-            config.role,
-            config.difficulty,
-            config.personality,
-            prevEvals
+        const isLastQuestion = answersRef.current.length + 1 >= TOTAL_QUESTIONS_GOAL;
+
+        // OPTIMIZATION: Prefetch next question in parallel with evaluation
+        const evaluationPromise = evaluateAnswer(
+          currentQuestion,
+          cleanedResponse,
+          config.role,
+          config.difficulty,
+          config.personality,
+          prevEvals
+        );
+
+       let nextQuestionPromise: Promise<string | null> = Promise.resolve(null);
+        if (!isLastQuestion) {
+          const askedTexts = [
+            ...answersRef.current.map(a => a.questionText || ""),
+            questionTextToLog
+          ];
+          nextQuestionPromise = generateQuestion(
+            config.role || "Professional Readiness",
+            config.difficulty || "Fresher",
+            askedTexts
           );
+        }
+
+        const [evalResult, nextQuestionText] = await Promise.all([
+          evaluationPromise,
+          nextQuestionPromise
+        ]);
 
         const newAnswer: Answer = {
           questionId: currentQuestion.id,
@@ -287,8 +322,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           ...answersRef.current,
         ]);
 
-        // Simulated processing/thinking delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Simulated processing/thinking delay - skipped on mobile
+        if (!isMobile) {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
 
         if (
           answersRef.current.length >=
@@ -312,7 +349,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           return;
         }
 
-        runInterviewCycle();
+        // Pass the prefetched question to the next cycle
+        runInterviewCycle(nextQuestionText || undefined);
 
       } catch (err) {
         console.error("Evaluation Error:", err);
@@ -321,7 +359,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         isProcessingRef.current = false;
       }
 
-    }, [currentQuestion, config, speak, onComplete, status, runInterviewCycle]);
+    }, [currentQuestion, config, speak, onComplete, status, runInterviewCycle, isMobile]);
 
   const triggerAutoListen =
     useCallback(async () => {
