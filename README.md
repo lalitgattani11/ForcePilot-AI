@@ -44,16 +44,15 @@ https://www.forcepilotai.online/
 
 ### Homepage
 
-![Homepage](./public/screenshots/hero.png)
+![Homepage](public/screenshots/hero.png)
 
 ### Interview Experience
 
-![Interview](./public/screenshots/interview.png)
+![Interview](public/screenshots/interview.png)
 
 ### AI Feedback System
 
-![Feedback](./public/screenshots/feedback.png)
-
+![Feedback](public/screenshots/feedback.png)
 
 ---
 
