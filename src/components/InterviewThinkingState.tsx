@@ -1,7 +1,7 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
-export type LoadingPhase = "analyzing" | "generating" | "idle";
+export type LoadingPhase = "analyzing" | "generating" | "initial" | "idle";
 
 interface InterviewThinkingStateProps {
   phase: LoadingPhase;
@@ -10,59 +10,110 @@ interface InterviewThinkingStateProps {
 export const InterviewThinkingState: React.FC<InterviewThinkingStateProps> = ({
   phase,
 }) => {
+  const getLoadingText = () => {
+    switch (phase) {
+      case "analyzing":
+        return "Loading Technical Evaluation";
+      case "generating":
+        return "Preparing Question";
+      case "initial":
+        return "Initializing Interview Session";
+      default:
+        return "Preparing Assessment";
+    }
+  };
+
   return (
-    <div
-      className={`flex justify-start will-change-transform w-full transition-all duration-500 ease-in-out ${
-        phase === "idle"
-          ? "opacity-0 pointer-events-none invisible"
-          : "opacity-100 mb-6"
-      }`}
-    >
-      <div className="w-full text-left">
-        {/* EXACT structural twin of AI message label in ChatInterface.tsx */}
-        <div className="flex items-center gap-2 mb-1.5 sm:mb-2 text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider justify-start">
-          AI Interviewer
-        </div>
+    <AnimatePresence mode="wait">
+      {phase !== "idle" && (
+        <motion.div
+          key={phase}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col items-center justify-center py-12 sm:py-20 w-full"
+        >
+          {/* Premium Orb Animation */}
+          <div className="relative w-24 h-24 flex items-center justify-center">
+            {/* Outer Rotating Ring */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-0 rounded-full border border-emerald-500/10 border-t-emerald-500/40"
+            />
+            
+            {/* Inner Pulsing Orb */}
+            <motion.div
+              animate={{ 
+                scale: [1, 1.15, 1],
+                opacity: [0.3, 0.6, 0.3]
+              }}
+              transition={{ 
+                duration: 3, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+              className="w-8 h-8 rounded-full bg-emerald-500/20 blur-md"
+            />
+            
+            {/* Center Core */}
+            <motion.div
+              animate={{ 
+                scale: [0.9, 1.1, 0.9],
+              }}
+              transition={{ 
+                duration: 2, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+              className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+            />
 
-        {/* EXACT structural twin of AI message bubble in ChatInterface.tsx */}
-        <div className="px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-sm leading-relaxed bg-white/[0.03] text-slate-200 border border-white/[0.05] min-h-[60px] md:min-h-0 flex items-center relative overflow-hidden">
-          {/* Lightweight static gradient */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/[0.03] to-transparent opacity-40" />
-
-          <div className="flex items-center gap-4 relative z-10 w-full">
-            {/* Optimized thinking indicator */}
-            <div className="relative flex items-center justify-center w-5 h-5 shrink-0">
-              {/* Soft opacity pulse only */}
+            {/* Orbiting Particles */}
+            {[0, 120, 240].map((angle, i) => (
               <motion.div
-                initial={{ opacity: 0.2 }}
-                animate={{ opacity: 0.45 }}
-                transition={{
-                  duration: 1.2,
-                  ease: "easeOut",
-                }}
-                className="absolute w-full h-full rounded-full bg-emerald-500/10"
-              />
-              {/* Static center dot */}
-              <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-md" />
-            </div>
-
-            <div className="flex flex-col flex-1">
-              {/* Subtle progress indicator */}
-              {phase !== "idle" && (
-                <div className="w-48 h-0.5 bg-white/[0.03] rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: "0%" }}
-                    animate={{ width: "100%" }}
-                    key={phase}
-                    transition={{ duration: 2.5, ease: "linear" }}
-                    className="h-full bg-emerald-500/40"
-                  />
-                </div>
-              )}
-            </div>
+                key={i}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear", delay: i * 0.2 }}
+                className="absolute inset-0"
+                style={{ transform: `rotate(${angle}deg)` }}
+              >
+                <motion.div 
+                  animate={{ opacity: [0.2, 0.8, 0.2] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="w-1 h-1 rounded-full bg-emerald-400 mt-2 ml-1/2" 
+                />
+              </motion.div>
+            ))}
           </div>
-        </div>
-      </div>
-    </div>
+
+          {/* Loading Typography */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="mt-8 flex flex-col items-center gap-2"
+          >
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-500/70">
+              Processing
+            </span>
+            <h3 className="text-sm font-bold text-slate-200 tracking-tight">
+              {getLoadingText()}
+            </h3>
+            <div className="flex gap-1 mt-1">
+              {[0, 1, 2].map((i) => (
+                <motion.div
+                  key={i}
+                  animate={{ opacity: [0.2, 1, 0.2] }}
+                  transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
+                  className="w-1 h-1 rounded-full bg-emerald-500/40"
+                />
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

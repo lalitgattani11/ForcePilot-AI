@@ -461,10 +461,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   if (!isInterviewReady) {
     return (
       <div className="flex h-[calc(100dvh-theme(spacing.20))] sm:h-[calc(100vh-theme(spacing.28))] items-center justify-center bg-transparent">
-        <div className="flex flex-col items-center gap-6">
-          <div className="h-12 w-12 rounded-full border-2 border-cyan-400/30 border-t-cyan-400 animate-spin" />
-          <p className="text-xs font-bold tracking-[0.2em] text-cyan-400/60 uppercase">Initializing Simulator</p>
-        </div>
+        <InterviewThinkingState phase="initial" />
       </div>
     );
   }

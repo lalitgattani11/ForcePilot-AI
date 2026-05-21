@@ -178,7 +178,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.8, delay: 1.5 }}
               className="absolute bottom-4 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2 cursor-pointer group"
-              onClick={() => window.scrollTo({ top: window.innerHeight * 0.8, behavior: 'smooth' })}
+              onClick={() => document.getElementById('setup')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <span className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 group-hover:text-cyan-400 transition-colors duration-500">Discover</span>
               <motion.div
@@ -196,10 +196,10 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
       {/* 2. INTERVIEW CONFIGURATION LAYER */}
       <motion.div 
         id="setup"
-        className="scroll-mt-32 premium-glass rounded-[2rem] sm:rounded-[3rem] p-1 shadow-2xl w-full mx-auto relative z-10"
+        className="scroll-mt-20 sm:scroll-mt-32 premium-glass rounded-[2rem] sm:rounded-[3rem] p-1 shadow-2xl w-full mx-auto relative z-10"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: "-40px" }}
         transition={{ duration: 1, ease: "easeOut" }}
       >
         <div className="bg-slate-950/40 rounded-[1.9rem] sm:rounded-[2.9rem] p-6 sm:p-10 md:p-16 space-y-4 sm:space-y-12 border border-white/[0.02]">
