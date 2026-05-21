@@ -1,3 +1,5 @@
+![ForcePilot AI Banner](public/screenshots/hero.png)
+
 # ForcePilot AI
 
 AI-powered Salesforce Interview Intelligence Platform.
