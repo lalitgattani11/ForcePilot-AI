@@ -56,3 +56,20 @@ cd ForcePilot-AI
 npm install
 
 npm run dev
+```
+
+---
+
+## Project Structure
+
+```txt
+src/
+backend/
+public/
+```
+
+---
+
+## Author
+
+Lalit Gattani
