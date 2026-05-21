@@ -75,9 +75,9 @@ npm run dev
 ## Project Structure
 
 ```txt
-src/
-backend/
-public/
+src/              Frontend application
+backend/          Express backend server
+public/           Static assets
 ```
 
 ---
