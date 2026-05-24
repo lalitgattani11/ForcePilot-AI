@@ -1,4 +1,4 @@
-![ForcePilot AI Banner](public/screenshots/hero.png)
+![ForcePilot AI Banner](public/screenshots/GitHub_Banner.png)
 
 # ForcePilot AI
 
