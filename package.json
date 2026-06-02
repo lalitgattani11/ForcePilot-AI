@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build --target es2018",
-    "postbuild": "react-snap",
+    "postbuild": "[ -n \"$VERCEL\" ] && echo 'Skipping react-snap on Vercel' || react-snap",
     "lint": "eslint .",
     "preview": "vite preview"
   },
