@@ -11,10 +11,67 @@ import {
   TrendingUp,
   GraduationCap,
   ShieldCheck,
-  AlertCircle
+  AlertCircle,
+  ChevronDown
 } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 const CareerRoadmap: React.FC = () => {
+  React.useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.text = JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is a Salesforce Developer roadmap?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A Salesforce Developer roadmap is a structured learning path that guides candidates from platform administrator configurations to advanced programmatic languages like Apex, LWC, and platform API integrations."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can a fresher become a Salesforce Developer?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Freshers should start by mastering standard database configurations (objects, fields, validation rules), transition to low-code flows, learn core programming logic via Java-like Apex, study reactive web designs via LWC, and build a GitHub portfolio showing real REST API integrations."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How long does it take to learn Salesforce development?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "For candidates with standard programming knowledge, mastering Salesforce development takes 3 to 6 months of consistent study. This includes learning Apex syntax, LWC component architectures, and platform governor limits."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Are certifications enough to get a junior Salesforce Developer job?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No, certifications are not enough. Recruiters look for hands-on playground configurations, GitHub repositories, and coding portfolios. A candidate who can explain trigger recursion or API callout constraints is preferred over someone with multiple certifications but no code examples."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How does ForcePilot AI accelerate career progression?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "ForcePilot AI acts as a technical recruiter simulation engine. It dynamically audits your Apex, LWC, and Flow answers, helping you identify knowledge gaps and practice structural answers in real-time. Practice on our Salesforce Mock Interview Screen."
+                }
+              }
+            ]
+          });
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   const milestones = [
     {
       stage: "Foundation",
@@ -85,18 +142,39 @@ const CareerRoadmap: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 py-8 sm:py-12 px-4 sm:px-0">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-24 text-slate-300 antialiased">
+      <Helmet>
+        <title>Salesforce Developer & Career Roadmap (2026) | ForcePilot AI</title>
+        <meta
+          name="description"
+          content="Navigate your career path with our structured Salesforce developer roadmap. Learn how to become a Salesforce developer with detailed guides for freshers."
+        />
+        <meta name="keywords" content="salesforce developer roadmap, how to become salesforce developer, salesforce career roadmap, salesforce roadmap for freshers, forcepilot ai" />
+        <link rel="canonical" href="https://forcepilotai.online/career-roadmap" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Salesforce Developer & Career Roadmap (2026) | ForcePilot AI" />
+        <meta property="og:description" content="Navigate your career path with our structured Salesforce developer roadmap for freshers and admins." />
+        <meta property="og:url" content="https://forcepilotai.online/career-roadmap" />
+        <meta property="og:image" content="https://forcepilotai.online/pwa-512.png" />
+        <meta property="og:type" content="website" />
+        
+      </Helmet>
+
       {/* Hero Header */}
       <section className="text-center space-y-6 max-w-4xl mx-auto px-4 sm:px-0">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-300 text-[10px] font-black uppercase tracking-[0.3em] backdrop-blur-sm">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-300 text-[10px] font-black uppercase tracking-[0.3em] backdrop-blur-sm mb-4">
           <Map size={14} className="text-emerald-400" />
           Strategic Growth Framework
         </div>
-        <h1 className="text-3xl sm:text-6xl font-black text-white tracking-tighter leading-[1.1]">
-          Salesforce <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">Career Roadmap.</span>
+        <h1 className="text-5xl sm:text-7xl font-black text-white tracking-tighter leading-[1.1]">
+          Salesforce <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">
+            Career Roadmap
+          </span>
         </h1>
         <p className="text-slate-400 text-sm sm:text-lg font-medium leading-relaxed max-w-2xl mx-auto">
-          Navigate your professional evolution with our structured intelligence roadmap. From foundation to architectural mastery.
+          Navigate your professional evolution with our structured salesforce career roadmap. Learn how to become a salesforce developer using our dedicated salesforce roadmap for freshers.
         </p>
       </section>
 
@@ -170,7 +248,7 @@ const CareerRoadmap: React.FC = () => {
           {paths.map((p, i) => (
             <div key={i} className="premium-glass p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] border border-white/5 space-y-6 group hover:bg-white/[0.02] transition-colors">
               <div className="flex items-center gap-4">
-                <div className={`p-2 rounded-xl bg-${p.color}-500/10 text-${p.color}-400`}>
+                <div className={`p-2 rounded-xl bg-slate-800 text-${p.color}-400`}>
                   <p.icon size={18} className="sm:w-5 sm:h-5" />
                 </div>
                 <div>
@@ -187,6 +265,110 @@ const CareerRoadmap: React.FC = () => {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Developer Growth Framework */}
+      <section className="space-y-16">
+        <div className="text-center space-y-4">
+          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">
+            Developer <span className="text-emerald-400">Growth Framework</span>
+          </h2>
+          <p className="text-slate-400 max-w-2xl mx-auto">
+            The technical learning path for freshers and experienced engineers transitioning to Salesforce development.
+          </p>
+        </div>
+
+        <div className="space-y-12">
+          {/* 1. Salesforce Ecosystem Introduction */}
+          <div className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+              <span className="text-emerald-400">01 /</span> Salesforce Ecosystem Introduction
+            </h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Salesforce has evolved from a customer relationship management tool into a multi-cloud enterprise platform. In 2026, the ecosystem focuses heavily on unified profiles via Data Cloud, trusted AI agent architectures, and programmatic platform engineering. Freshers entering this space must understand the multi-tenant architecture: multiple customers share the same infrastructure, which is why Salesforce enforces strict execution boundaries.
+            </p>
+          </div>
+
+          {/* 2. Admin vs Developer Career Paths */}
+          <div className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+              <span className="text-emerald-400">02 /</span> Admin vs Developer Career Paths
+            </h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              The Salesforce ecosystem features two distinct primary career paths. The **Salesforce Administrator** path focuses on business logic configuration, security models, OWD sharing configurations, and low-code flow automations. The **Salesforce Developer** path focuses on software engineering: writing custom Apex triggers, developing reactive LWC user interfaces, and integrating external web services. Review the admin path in our <Link to="/salesforce-admin-interview" className="text-emerald-400 hover:underline">Salesforce Admin Guide</Link>.
+            </p>
+          </div>
+
+          {/* 3. Apex Learning Roadmap */}
+          <div className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+              <span className="text-emerald-400">03 /</span> Apex Learning Roadmap
+            </h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Apex is Salesforce's strongly typed, object-oriented database language. A fresher's learning sequence should be: 1) Core syntax (variables, lists, loops). 2) SOQL/SOSL queries. 3) DML operations. 4) Trigger bulkification patterns (eliminating queries inside loops). 5) Asynchronous Apex (Future, Queueable, Batch). Check coding patterns in our <Link to="/apex-interview-questions" className="text-emerald-400 hover:underline">Apex Interview Questions Guide</Link>.
+            </p>
+          </div>
+
+          {/* 4. LWC Learning Roadmap */}
+          <div className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+              <span className="text-emerald-400">04 /</span> Lightning Web Components (LWC) Roadmap
+            </h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              LWC is the modern frontend framework built on native web standards. To master LWC: 1) Core JavaScript (ES6+ modules, Promises, Array methods). 2) Reactivity model (using <code className="text-emerald-400 bg-slate-950 px-1 rounded font-mono">@api</code> for public properties and <code className="text-emerald-400 bg-slate-950 px-1 rounded font-mono">@track</code> for nested object reactivity). 3) Wire Service for cached data lookups. 4) Shadow DOM styling constraints and Custom Events. Find frontend guides in our <Link to="/lwc-interview-guide" className="text-emerald-400 hover:underline">LWC Interview Guide</Link>.
+            </p>
+          </div>
+
+          {/* 5. Flow Automation Learning */}
+          <div className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+              <span className="text-emerald-400">05 /</span> Flow Automation Learning
+            </h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Before writing code, developers must understand the low-code alternatives. Salesforce Flow is the primary automation engine. Learning sequence: 1) Record-Triggered Flows (before-save for fast updates, after-save for actions). 2) Screen Flows for user-guided wizards. 3) Scheduled Flows for daily batch jobs. 4) Consolidating logic to prevent recursive trigger loops. Access flow tutorials in our <Link to="/salesforce-flow-interview-questions" className="text-emerald-400 hover:underline">Flow Automation Guide</Link>.
+            </p>
+          </div>
+
+          {/* 6. Project Building Strategy */}
+          <div className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+              <span className="text-emerald-400">06 /</span> Project Building Strategy
+            </h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Do not just copy tutorial projects. Build real-world Salesforce solutions that prove architectural capability. Recommended project: Build a custom integration that calls a public REST API, processes the JSON response in Apex, stores data in custom records, and updates a reactive LWC dashboard. Commit all configurations and code to a clean, well-documented **GitHub Portfolio**.
+            </p>
+          </div>
+
+          {/* 7. Certification Guidance */}
+          <div className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+              <span className="text-emerald-400">07 /</span> Certification Guidance
+            </h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Certifications validate baseline knowledge but over-certification without hands-on experience is a major red flag for recruiters. Prioritize certifications in this order: 1) Salesforce Administrator. 2) Platform Developer I (PD1). 3) Platform App Builder. 4) Platform Developer II (PD2). Focus on hands-on playground orgs rather than memorizing exam dumps.
+            </p>
+          </div>
+
+          {/* 8. Resume & Interview Preparation */}
+          <div className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+              <span className="text-emerald-400">08 /</span> Resume & Interview Preparation
+            </h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Your resume should highlight problem-solving results (e.g. "Optimized trigger handlers, reducing CPU timeouts by 40%") rather than listings of objects. To prepare for interviews, study governor limits exceptions, sharing settings exceptions, and LWC lifecycle methods. Practice technical conversations on our <Link to="/salesforce-mock-interview" className="text-emerald-400 hover:underline">Salesforce Mock Interview Screen</Link> to build confidence.
+            </p>
+          </div>
+
+          {/* 9. Job Search Strategy */}
+          <div className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+              <span className="text-emerald-400">09 /</span> Job Search Strategy & Fresher Tips
+            </h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              To land junior roles or internships, freshers must show consistency. Network with Salesforce Partners, join local Trailblazer Community groups, and contribute to open-source Salesforce tools. Avoid common beginner mistakes like hardcoding record IDs in Apex, putting query selectors inside loops, or neglecting test coverage logic.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -209,6 +391,84 @@ const CareerRoadmap: React.FC = () => {
             </p>
           </motion.div>
         ))}
+      </section>
+
+      {/* FAQ Section */}
+      <section className="space-y-8">
+        <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-emerald-500 pl-4">
+          Frequently Asked Questions (FAQ)
+        </h2>
+        <div className="space-y-4">
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                What is a Salesforce Developer roadmap?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              A Salesforce Developer roadmap is a structured learning path that guides candidates from platform administrator configurations to advanced programmatic languages like Apex, LWC, and platform API integrations.
+            </div>
+          </details>
+
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                How can a fresher become a Salesforce Developer?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              Freshers should start by mastering standard database configurations (objects, fields, validation rules), transition to low-code flows, learn core programming logic via Java-like Apex, study reactive web designs via LWC, and build a GitHub portfolio showing real REST API integrations.
+            </div>
+          </details>
+
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                How long does it take to learn Salesforce development?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              For candidates with standard programming knowledge, mastering Salesforce development takes 3 to 6 months of consistent study. This includes learning Apex syntax, LWC component architectures, and platform governor limits.
+            </div>
+          </details>
+
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                Are certifications enough to get a junior Salesforce Developer job?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              No, certifications are not enough. Recruiters look for hands-on playground configurations, GitHub repositories, and coding portfolios. A candidate who can explain trigger recursion or API callout constraints is preferred over someone with multiple certifications but no code examples.
+            </div>
+          </details>
+
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                How does ForcePilot AI accelerate career progression?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              ForcePilot AI acts as a technical recruiter simulation engine. It dynamically audits your Apex, LWC, and Flow answers, helping you identify knowledge gaps and practice structural answers in real-time. Practice on our <Link to="/salesforce-mock-interview" className="text-emerald-400 hover:underline">Salesforce Mock Interview Screen</Link>.
+            </div>
+          </details>
+        </div>
       </section>
 
       {/* Enterprise Expectations */}
@@ -267,7 +527,8 @@ const CareerRoadmap: React.FC = () => {
             className="w-full sm:w-auto px-8 py-4 rounded-xl sm:rounded-2xl bg-emerald-500 text-slate-950 font-black uppercase tracking-widest text-[10px] sm:text-xs hover:scale-105 transition-transform shadow-[0_0_30px_rgba(16,185,129,0.3)] inline-block"
           >
             Launch Assessment
-          </Link>        </div>
+          </Link>
+        </div>
       </section>
     </div>
   );

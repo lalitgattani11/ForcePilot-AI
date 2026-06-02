@@ -16,13 +16,81 @@ import {
   Cpu,
   Search,
   Rocket,
-  ShieldAlert
+  ShieldAlert,
+  ChevronDown
 } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 
+interface QuestionItem {
+  title: string;
+  desc: React.ReactNode;
+  icon: React.ComponentType<any>;
+  color: string;
+}
+
+interface QuestionSection {
+  title: string;
+  items: QuestionItem[];
+}
+
 const SalesforceMockInterview: React.FC = () => {
+  React.useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.text = JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is ForcePilot AI and how does it work?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "ForcePilot AI is an advanced mock interview simulator trained specifically on Salesforce architectures, Apex code development guidelines, and LWC framework rules. It evaluates your text or voice answers dynamically, adjusts standard question difficulty levels based on previous answers, and provides structural scorecards."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How does ForcePilot AI differ from generic interview tools?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Generic platforms evaluate generic software practices or simple data structures. ForcePilot AI is explicitly engineered for Salesforce, assessing your knowledge of governor limits exceptions, LWC Shadow DOM encapsulation, custom sharing rules (OWD), and Apex triggers."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What Salesforce roles are supported?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We offer specialized mock interview tracks for Salesforce Apex Developers, LWC Engineers, Flow Automators, Salesforce Administrators, and Technical Architects."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I use this for LWC and Apex coding assessments?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. The coding assessment simulation checks if DML statements are bulkified, registers syntax issues, and checks if your trigger handler designs comply with governor limits."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does the platform provide actionable developer scorecards?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Upon completing a practice session, you will receive a detailed scorecard evaluating your technical depth, communication clarity, governor limits awareness, and security design logic with direct advice on how to improve."
+                }
+              }
+            ]
+          });
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   const navigate = useNavigate();
 
   const fadeIn = {
@@ -93,29 +161,108 @@ const SalesforceMockInterview: React.FC = () => {
     }
   ];
 
+  const simulatorSections: QuestionSection[] = [
+    {
+      title: "Detailed Simulators",
+      items: [
+        {
+          title: "AI Mock Interview Overview",
+          desc: (
+            <span>
+              ForcePilot AI delivers a highly realistic, interactive Salesforce interview experience. The engine dynamically evaluates your responses, adjusting the complexity of questions on-the-fly to test your technical limits and build true interview readiness.
+            </span>
+          ),
+          icon: Zap,
+          color: "emerald"
+        },
+        {
+          title: "Salesforce Admin Interview Simulation",
+          desc: (
+            <span>
+              Simulate administrator rounds covering OWD, role hierarchies, dynamic layouts, and record sharing models. Master permissions configuration by visiting our <Link to="/salesforce-admin-interview" className="text-cyan-400 hover:underline">Salesforce Admin Guide</Link> or the <Link to="/salesforce-flow-interview-questions" className="text-cyan-400 hover:underline">Flow Automation Guide</Link>.
+            </span>
+          ),
+          icon: UserCheck,
+          color: "violet"
+        },
+        {
+          title: "Apex & Trigger Interview Practice",
+          desc: (
+            <span>
+              Practice answering questions on synchronous limits, trigger context, batch transactions, and async options. Refresh your knowledge with our <Link to="/apex-interview-questions" className="text-cyan-400 hover:underline">Apex Interview Questions</Link> or the <Link to="/apex-trigger-interview-questions" className="text-cyan-400 hover:underline">Apex Trigger Guide</Link>.
+            </span>
+          ),
+          icon: Terminal,
+          color: "blue"
+        },
+        {
+          title: "LWC Coding Interview Preparation",
+          desc: (
+            <span>
+              Prepare for advanced client-side coding challenges, including LDS caching controls, Shadow DOM styles overrides, event bubbling, and reactive states. Learn more in our <Link to="/lwc-interview-guide" className="text-cyan-400 hover:underline">LWC Interview Guide</Link>.
+            </span>
+          ),
+          icon: Layers,
+          color: "cyan"
+        },
+        {
+          title: "Scenario-Based Interview Training",
+          desc: (
+            <span>
+              Assess your ability to solve complex scenarios: Large Data Volume (LDV) constraints, CPU timeout errors, and integration failures. Study scenario patterns on our <Link to="/scenario-based-salesforce-interview" className="text-cyan-400 hover:underline">Scenario Interview Page</Link>.
+            </span>
+          ),
+          icon: Search,
+          color: "rose"
+        },
+        {
+          title: "Recruiter-Style Evaluation",
+          desc: (
+            <span>
+              Receive a multidimensional recruiter scorecard covering communication clarity, platform design thinking, and governor limits compliance, replicating evaluation criteria used by Salesforce Partners.
+            </span>
+          ),
+          icon: LineChart,
+          color: "amber"
+        },
+        {
+          title: "Real-Time AI Feedback",
+          desc: (
+            <span>
+              Get immediate, actionable feedback on every response. Our AI highlights technical gaps, validates code optimizations, and provides advice to improve your explanations.
+            </span>
+          ),
+          icon: BrainCircuit,
+          color: "emerald"
+        }
+      ]
+    }
+  ];
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-32 text-slate-300 antialiased">
       <Helmet>
-        <title>Salesforce Mock Interview Platform 2026 | Apex, LWC & Admin Practice | ForcePilot AI</title>
+        <title>Salesforce Mock Interview Platform (2026) | AI Interview Practice | ForcePilot AI</title>
         <meta
           name="description"
-          content="Practice real Salesforce mock interviews with AI-powered recruiter-style evaluation for Apex, LWC, Flow, and Salesforce Admin interview preparation."
+          content="Practice Salesforce mock interviews with ForcePilot AI. Get real-time technical evaluation and feedback for Salesforce Developer, Architect, and Admin roles."
         />
-        <meta name="keywords" content="salesforce mock interview, salesforce interview practice, apex mock interview, lwc interview questions, salesforce admin interview, salesforce ai interview" />
+        <meta name="keywords" content="salesforce mock interview, salesforce ai mock interview, salesforce interview practice, salesforce developer mock interview, ai salesforce interview preparation, forcepilot ai" />
         <link rel="canonical" href="https://forcepilotai.online/salesforce-mock-interview" />
         
         {/* Open Graph */}
-        <meta property="og:title" content="Salesforce Mock Interview Platform 2026 | ForcePilot AI" />
-        <meta property="og:description" content="Practice real Salesforce mock interviews with AI-powered recruiter-style evaluation for Apex, LWC, and Admin." />
+        <meta property="og:title" content="Salesforce Mock Interview Platform (2026) | ForcePilot AI" />
+        <meta property="og:description" content="Practice Salesforce mock interviews with ForcePilot AI. Get real-time technical evaluation for Salesforce Developer, Architect, and Admin roles." />
         <meta property="og:url" content="https://forcepilotai.online/salesforce-mock-interview" />
         <meta property="og:image" content="https://forcepilotai.online/pwa-512.png" />
         <meta property="og:type" content="website" />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Salesforce Mock Interview Platform 2026 | ForcePilot AI" />
-        <meta name="twitter:description" content="Master your Salesforce interview with AI-powered technical simulations." />
+        <meta name="twitter:title" content="Salesforce Mock Interview Platform (2026) | ForcePilot AI" />
+        <meta name="twitter:description" content="AI-powered Salesforce mock interview practice." />
         <meta name="twitter:image" content="https://forcepilotai.online/pwa-512.png" />
+        
       </Helmet>
 
       {/* SECTION 1 — HERO */}
@@ -131,24 +278,24 @@ const SalesforceMockInterview: React.FC = () => {
         </motion.div>
         
         <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight text-white leading-[1.1]">
-          Master your <br />
+          Salesforce AI <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 drop-shadow-[0_0_20px_rgba(52,211,153,0.3)]">
-            Salesforce Mock Interview
+            Mock Interview Platform
           </span>
         </h1>
         
         <p className="text-sm sm:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium">
-          The elite technical simulator for SFDC professionals. Stop guessing. Start practicing with the platform that thinks like a Technical Architect.
+          The elite technical simulator for SFDC professionals. Practice salesforce developer mock interviews and ai salesforce interview preparation. Get evaluated on your code optimization, sharing models, and system architecture.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
-          <Link
-            to="/#setup"
+          <button
+            onClick={() => navigate('/#setup')}
             className="w-full sm:w-auto px-12 py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
           >
             Start Salesforce Mock Interview
             <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
+          </button>
           
           <Link
             to="/apex-interview-questions"
@@ -162,10 +309,23 @@ const SalesforceMockInterview: React.FC = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-emerald-500/5 blur-[120px] -z-10 rounded-full"></div>
       </section>
 
+      {/* Differentiating Banner */}
+      <section className="bg-gradient-to-r from-emerald-500/5 to-cyan-500/5 border border-emerald-500/10 rounded-3xl p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="space-y-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-white">How ForcePilot AI differs from generic interview tools:</h2>
+          <p className="text-slate-400 text-sm max-w-2xl">
+            Generic platforms ask generic software engineering questions. ForcePilot AI is engineered exclusively for Salesforce, auditing your understanding of governor limits, LWC shadow DOM, OWD sharing configurations, and Apex triggers.
+          </p>
+        </div>
+        <div className="shrink-0 p-4 bg-emerald-500/10 rounded-2xl text-emerald-400 font-bold text-sm">
+          Salesforce-Specific Engine
+        </div>
+      </section>
+
       {/* SECTION 2 — WHY FORCEPILOT AI */}
       <section className="space-y-16">
         <div className="text-center space-y-4">
-          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Why <span className="text-emerald-400">ForcePilot AI?</span></h2>
+          <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Why <span className="text-emerald-400">ForcePilot AI?</span></h2>
           <p className="text-slate-400 max-w-2xl mx-auto">Engineered to simulate the intensity of Tier-1 Salesforce technical rounds.</p>
         </div>
 
@@ -217,7 +377,7 @@ const SalesforceMockInterview: React.FC = () => {
                 <item.icon size={28} />
               </div>
               <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
-              <p className="text-slate-400 leading-relaxed text-sm sm:text-base">
+              <p className="text-slate-400 leading-relaxed text-sm">
                 {item.desc}
               </p>
             </motion.div>
@@ -229,7 +389,7 @@ const SalesforceMockInterview: React.FC = () => {
       <section className="space-y-16">
         <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 text-center md:text-left">
           <div className="space-y-4 w-full">
-            <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Tracks.</span></h2>
+            <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Tracks.</span></h2>
             <p className="text-slate-400 max-w-xl mx-auto md:mx-0">Choose your specialization and start a targeted simulation.</p>
           </div>
         </div>
@@ -260,10 +420,43 @@ const SalesforceMockInterview: React.FC = () => {
         </div>
       </section>
 
+      {/* SECTION 3B — DETAILED SIMULATORS */}
+      <section className="space-y-16">
+        {simulatorSections.map((section, idx) => (
+          <div key={idx} className="space-y-12">
+            <div className="text-center space-y-4">
+              <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Simulator <span className="text-emerald-400">Breakdown.</span></h2>
+              <p className="text-slate-400 max-w-2xl mx-auto">Explore the detailed specialized modules available in our practice platform.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {section.items.map((item, qIdx) => (
+                <div
+                  key={qIdx}
+                  className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:bg-white/[0.03] transition-all"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`p-3 rounded-xl bg-${item.color}-500/10 text-${item.color}-400`}>
+                      <item.icon size={22} />
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-bold text-white leading-tight">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <div className="text-slate-400 text-sm leading-relaxed">
+                    {item.desc}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+
       {/* SECTION 4 — INTERVIEW PROCESS */}
       <section className="bg-white/[0.01] border border-white/5 rounded-[3rem] p-8 sm:p-20 space-y-20">
         <div className="text-center space-y-4">
-          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">The <span className="text-emerald-400">Experience.</span></h2>
+          <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">The <span className="text-emerald-400">Experience.</span></h2>
           <p className="text-slate-400">How ForcePilot AI elevates your preparation.</p>
         </div>
 
@@ -372,7 +565,7 @@ const SalesforceMockInterview: React.FC = () => {
       {/* SECTION 6 — SCENARIO QUESTIONS */}
       <section className="space-y-16">
         <div className="text-center space-y-4">
-          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Scenario <span className="text-rose-400">Intelligence.</span></h2>
+          <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Scenario <span className="text-rose-400">Intelligence.</span></h2>
           <p className="text-slate-400 max-w-2xl mx-auto">Real problems. Production-grade solutions.</p>
         </div>
 
@@ -384,7 +577,7 @@ const SalesforceMockInterview: React.FC = () => {
               className="bg-white/[0.01] border border-white/5 p-8 rounded-[2rem] space-y-4 hover:border-white/10 transition-all"
             >
               <div className="flex items-start justify-between">
-                <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">{item.title}</h3>
+                <h3 className="text-xl font-bold text-white">{item.title}</h3>
                 <div className="p-2 rounded-lg bg-white/5"><Code2 size={16} className="text-slate-400" /></div>
               </div>
               <p className="text-slate-400 text-sm leading-relaxed">{item.context}</p>
@@ -396,6 +589,84 @@ const SalesforceMockInterview: React.FC = () => {
               </div>
             </motion.div>
           ))}
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="space-y-8">
+        <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-emerald-500 pl-4">
+          Frequently Asked Questions (FAQ)
+        </h2>
+        <div className="space-y-4">
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                What is ForcePilot AI and how does it work?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              ForcePilot AI is an advanced mock interview simulator trained specifically on Salesforce architectures, Apex code development guidelines, and LWC framework rules. It evaluates your text or voice answers dynamically, adjusts standard question difficulty levels based on previous answers, and provides structural scorecards.
+            </div>
+          </details>
+
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                How does ForcePilot AI differ from generic interview tools?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              Generic platforms evaluate generic software practices or simple data structures. ForcePilot AI is explicitly engineered for Salesforce, assessing your knowledge of governor limits exceptions, LWC Shadow DOM encapsulation, custom sharing rules (OWD), and Apex triggers.
+            </div>
+          </details>
+
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                What Salesforce roles are supported?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              We offer specialized mock interview tracks for Salesforce Apex Developers, LWC Engineers, Flow Automators, Salesforce Administrators, and Technical Architects.
+            </div>
+          </details>
+
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                Can I use this for LWC and Apex coding assessments?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              Yes. The coding assessment simulation checks if DML statements are bulkified, registers syntax issues, and checks if your trigger handler designs comply with governor limits.
+            </div>
+          </details>
+
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                Does the platform provide actionable developer scorecards?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              Yes. Upon completing a practice session, you will receive a detailed scorecard evaluating your technical depth, communication clarity, governor limits awareness, and security design logic with direct advice on how to improve.
+            </div>
+          </details>
         </div>
       </section>
 
@@ -438,13 +709,13 @@ const SalesforceMockInterview: React.FC = () => {
             Your next Salesforce role is within reach. Give your technical confidence the elite upgrade it deserves.
           </p>
           <div className="pt-8">
-            <Link
-              to="/#setup"
+            <button
+              onClick={() => navigate('/#setup')}
               className="px-14 py-6 bg-emerald-600 hover:bg-emerald-500 text-white rounded-[2rem] font-black text-xl transition-all shadow-[0_0_50px_rgba(16,185,129,0.3)] flex items-center justify-center gap-4 mx-auto group active:scale-95"
             >
               Start Your Salesforce Mock Interview
               <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
+            </button>
           </div>
         </div>
 

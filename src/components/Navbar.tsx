@@ -18,7 +18,8 @@ import {
   Rocket,
   Settings,
   Zap,
-  LogOut
+  LogOut,
+  BookOpen
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import AuthButton from "./AuthButton";
@@ -49,6 +50,7 @@ const Navbar: React.FC = () => {
     { name: "Salesforce Career Roadmap", href: "/career-roadmap", icon: Target, color: "emerald" },
     { name: "AI Interview Insights", href: "/ai-interview-insights", icon: BrainCircuit, color: "amber" },
     { name: "Interview Preparation Tips", href: "/interview-preparation-tips", icon: Rocket, color: "cyan" },
+    { name: "Technical Blog", href: "/blog", icon: BookOpen, color: "emerald" },
   ];
 
   // Logic-based active states
@@ -57,7 +59,7 @@ const Navbar: React.FC = () => {
   const isAnalyticsActive = location.pathname === "/analytics" || (location.pathname === "/" && activeSection === "analytics");
   const isInterviewActive = ["/salesforce-mock-interview", "/interview", "/results"].includes(location.pathname);
   const isGuidesActive = guideLinks.some(link => location.pathname === link.href);
-  const isResourcesActive = resourceLinks.some(link => location.pathname === link.href);
+  const isResourcesActive = resourceLinks.some(link => location.pathname === link.href || (link.href === '/blog' && location.pathname.startsWith('/blog/')));
 
   const handleAnalyticsClick = (e: React.MouseEvent) => {
     e.preventDefault();

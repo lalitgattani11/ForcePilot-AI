@@ -40,6 +40,8 @@ const CareerRoadmap = lazy(() => import("./components/CareerRoadmap"));
 const AIInsights = lazy(() => import("./components/AIInsights"));
 const PrepTips = lazy(() => import("./components/PrepTips"));
 const Platform = lazy(() => import("./components/Platform"));
+const BlogList = lazy(() => import("./components/BlogList"));
+const BlogPostDetail = lazy(() => import("./components/BlogPostDetail"));
 const NotFound = lazy(() => import("./components/NotFound"));
 
 function App() {
@@ -349,6 +351,36 @@ function App() {
               />
 
               <Route
+                path="/blog"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
+                    <BlogList />
+                  </Suspense>
+                }
+              />
+
+              <Route
+                path="/blog/:slug"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
+                    <BlogPostDetail />
+                  </Suspense>
+                }
+              />
+
+              <Route
                 path="*"
                 element={
                   <Suspense
@@ -468,6 +500,14 @@ function App() {
                         className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300"
                       >
                         Insights
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/blog"
+                        className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300"
+                      >
+                        Blog
                       </Link>
                     </li>
                   </ul>

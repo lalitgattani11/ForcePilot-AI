@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { 
   Rocket, 
   Target, 
@@ -10,10 +11,82 @@ import {
   AlertCircle,
   ShieldCheck,
   Star,
-  Users
+  Users,
+  ChevronDown,
+  Layout,
+  Terminal,
+  Search
 } from "lucide-react";
+import { Helmet } from "react-helmet-async";
+
+interface QuestionItem {
+  title: string;
+  desc: React.ReactNode;
+  icon: React.ComponentType<any>;
+  color: string;
+}
+
+interface QuestionSection {
+  title: string;
+  items: QuestionItem[];
+}
 
 const PrepTips: React.FC = () => {
+  React.useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.text = JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What are the best Salesforce interview preparation tips?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Focus on explaining project architectures using structured frameworks (like SALO), prepare for scenario-based governor limits checks, review core sharing rules, build a clean GitHub portfolio, and run simulated sessions to evaluate technical answers."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How should I prepare for a Salesforce Developer interview?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Developers must master Apex bulkification (preventing SOQL queries inside loops), transaction boundaries, asynchronous executions (Queueable classes, Batch Apex, and Future methods), and LWC reactivity models."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the SALO framework?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "SALO stands for Situation, Action, Logic, and Outcome. It is a mental model that prompt candidates to explain the 'Logic' (the technical why) behind architectural and coding choices rather than just stating actions."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do I handle behavioral interview questions in Salesforce rounds?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Structure your answers around project collaboration, managing conflicting stakeholder requirements, resolving production issues under pressure, and explaining technical limitations to non-technical users."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How does ForcePilot AI help prepare for interviews?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "ForcePilot AI generates technical mock interviews, provides immediate verbal/text assessments, checks DML and query optimizations, and outputs multidimensional scorecards mapping your progression against top platform developers."
+                }
+              }
+            ]
+          });
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   const categories = [
     {
       title: "Mindset & Strategy",
@@ -77,19 +150,128 @@ const PrepTips: React.FC = () => {
     "Openness to detailed AI-driven constructive criticism"
   ];
 
+  const prepSections: QuestionSection[] = [
+    {
+      title: "Recruiter-Grade Prep Strategies",
+      items: [
+        {
+          title: "Resume Preparation Tips",
+          desc: (
+            <span>
+              Format your experience around architectural impact. Instead of listing basic objects, highlight database optimization results: <em>"Optimized custom triggers, reducing CPU timeouts by 35%."</em> Add your clean GitHub portfolio link directly on the header.
+            </span>
+          ),
+          icon: Layout,
+          color: "emerald"
+        },
+        {
+          title: "Salesforce Project Preparation",
+          desc: (
+            <span>
+              When explaining projects, outline integration topology, API authentication models, and data synchronization patterns. Detail the trade-offs of low-code configurations like flows vs custom Apex triggers. Learn more on our <Link to="/apex-trigger-interview-questions" className="text-cyan-400 hover:underline">Apex Trigger Guide</Link>.
+            </span>
+          ),
+          icon: Terminal,
+          color: "violet"
+        },
+        {
+          title: "Technical Revision Strategy",
+          desc: (
+            <span>
+              Allocate revision time targeting platform core limits, transaction save order sequences, and asynchronous executions. Study these boundaries in our <Link to="/governor-limits-explained" className="text-cyan-400 hover:underline">Governor Limits Explained Guide</Link>.
+            </span>
+          ),
+          icon: Search,
+          color: "rose"
+        },
+        {
+          title: "Scenario Question Preparation",
+          desc: (
+            <span>
+              Recruiters test your limits via scenario questions (e.g. mixed DML exceptions, loop queries, data pagination lag). Study scenario patterns on our <Link to="/scenario-based-salesforce-interview" className="text-cyan-400 hover:underline">Scenario Interview Page</Link> and <Link to="/lwc-interview-guide" className="text-cyan-400 hover:underline">LWC Guide</Link>.
+            </span>
+          ),
+          icon: ShieldAlert,
+          color: "blue"
+        },
+        {
+          title: "Communication & Confidence Tips",
+          desc: (
+            <span>
+              If you don't know the answer, explain your logical debugging process rather than guessing. Discuss checking debug logs, running Query Plan tests, or referencing documentation to demonstrate platform maturity.
+            </span>
+          ),
+          icon: MessageSquare,
+          color: "purple"
+        },
+        {
+          title: "Mock Interview Strategy",
+          desc: (
+            <span>
+              Test your logic using specialized mock simulators. AI mock platforms evaluate technical depth, confidence, and limit compliance. Initiate a simulation on our <Link to="/salesforce-mock-interview" className="text-cyan-400 hover:underline">Salesforce Mock Interview Screen</Link>.
+            </span>
+          ),
+          icon: Zap,
+          color: "amber"
+        },
+        {
+          title: "Common Interview Mistakes",
+          desc: (
+            <span>
+              Avoid common beginner mistakes like hardcoding Salesforce record IDs, placing queries or DML statements inside loop iterations, or failing to mention mock stubs when writing test classes. Study progression stages on our <Link to="/career-roadmap" className="text-cyan-400 hover:underline">Career Roadmap Page</Link>.
+            </span>
+          ),
+          icon: AlertCircle,
+          color: "rose"
+        },
+        {
+          title: "Interview Day Preparation",
+          desc: (
+            <span>
+              Perform environmental audio checks, secure a high-speed connection, open your local developer console for code scratchpad routing, and read your portfolio project architectures before the session.
+            </span>
+          ),
+          icon: ShieldCheck,
+          color: "emerald"
+        }
+      ]
+    }
+  ];
+
   return (
-    <div className="space-y-16 sm:space-y-24 py-8 sm:py-12 px-4 sm:px-0">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-24 text-slate-300 antialiased">
+      <Helmet>
+        <title>Salesforce Interview Preparation Tips Guide (2026) | ForcePilot AI</title>
+        <meta
+          name="description"
+          content="Master your technical interview with our salesforce interview preparation tips. Learn how to prepare for salesforce developer, admin, and architect interviews."
+        />
+        <meta name="keywords" content="salesforce interview preparation tips, how to prepare for salesforce interview, salesforce interview tips, salesforce developer interview preparation, forcepilot ai" />
+        <link rel="canonical" href="https://forcepilotai.online/interview-preparation-tips" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Salesforce Interview Preparation Tips Guide (2026) | ForcePilot AI" />
+        <meta property="og:description" content="Master your technical interview with our salesforce interview preparation tips and mental frameworks." />
+        <meta property="og:url" content="https://forcepilotai.online/interview-preparation-tips" />
+        <meta property="og:image" content="https://forcepilotai.online/pwa-512.png" />
+        <meta property="og:type" content="website" />
+        
+      </Helmet>
+
       {/* Hero Header */}
       <section className="text-center space-y-6 max-w-4xl mx-auto px-4 sm:px-0">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-purple-500/20 bg-purple-500/5 text-purple-300 text-[10px] font-black uppercase tracking-[0.3em] backdrop-blur-sm">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-purple-500/20 bg-purple-500/5 text-purple-300 text-[10px] font-black uppercase tracking-[0.3em] backdrop-blur-sm mb-4">
           <Star size={14} className="text-purple-400" />
           Elite Preparation Framework
         </div>
-        <h1 className="text-3xl sm:text-6xl font-black text-white tracking-tighter leading-[1.1]">
-          Interview <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">Preparation Tips.</span>
+        <h1 className="text-5xl sm:text-7xl font-black text-white tracking-tighter leading-[1.1]">
+          Interview <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">
+            Preparation Tips
+          </span>
         </h1>
         <p className="text-slate-400 text-sm sm:text-lg font-medium leading-relaxed max-w-2xl mx-auto">
-          Maximize your performance with actionable strategies and insights used by top 1% Salesforce professionals.
+          Maximize your performance with our salesforce interview preparation tips. Learn how to prepare for salesforce developer interview rounds using recruiter-ready structures.
         </p>
       </section>
 
@@ -122,6 +304,39 @@ const PrepTips: React.FC = () => {
             </div>
             <div className={`absolute -bottom-10 -right-10 w-40 h-40 bg-${cat.color}-500/5 blur-[60px] rounded-full`} />
           </motion.div>
+        ))}
+      </section>
+
+      {/* Structured Content Sections */}
+      <section className="space-y-16">
+        {prepSections.map((section, idx) => (
+          <div key={idx} className="space-y-12">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Preparation <span className="text-emerald-400">Pillars.</span></h2>
+              <p className="text-slate-400 max-w-2xl mx-auto">Master the key preparation topics that top candidates focus on.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {section.items.map((item, qIdx) => (
+                <div
+                  key={qIdx}
+                  className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:bg-white/[0.03] transition-all"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`p-3 rounded-xl bg-${item.color}-500/10 text-${item.color}-400`}>
+                      <item.icon size={22} />
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-bold text-white leading-tight">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <div className="text-slate-400 text-sm leading-relaxed">
+                    {item.desc}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         ))}
       </section>
 
@@ -163,7 +378,7 @@ const PrepTips: React.FC = () => {
            </div>
            <h2 className="text-xl sm:text-2xl font-black text-white italic">Explain trade-offs automatically.</h2>
            <p className="text-slate-400 text-sm leading-relaxed font-medium">
-             Don't just provide a solution. Explain why you chose it over an alternative. 
+             Don't just provide a solution. Explain why you chose it over an alternative. Show how you balance technical debt with business velocity.
            </p>
         </div>
 
@@ -174,7 +389,7 @@ const PrepTips: React.FC = () => {
            </div>
            <h2 className="text-xl sm:text-2xl font-black text-white italic">The "Definition Trap".</h2>
            <p className="text-slate-400 text-sm leading-relaxed font-medium">
-             Avoid just reciting definitions. Describe a real scenario where you solved a business problem.
+             Avoid just reciting definitions. Describe a real scenario where you solved a business problem, showing limits awareness.
            </p>
         </div>
       </section>
@@ -194,6 +409,84 @@ const PrepTips: React.FC = () => {
                </div>
             ))}
          </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="space-y-8">
+        <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-emerald-500 pl-4">
+          Frequently Asked Questions (FAQ)
+        </h2>
+        <div className="space-y-4">
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                What are the best Salesforce interview preparation tips?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              Focus on explaining project architectures using structured frameworks (like SALO), prepare for scenario-based governor limits checks, review core sharing rules, build a clean GitHub portfolio, and run simulated sessions to evaluate technical answers.
+            </div>
+          </details>
+
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                How should I prepare for a Salesforce Developer interview?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              Developers must master Apex bulkification (preventing SOQL queries inside loops), transaction boundaries, asynchronous executions (Queueable classes, Batch Apex, and Future methods), and LWC reactivity models.
+            </div>
+          </details>
+
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                What is the SALO framework?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              SALO stands for Situation, Action, Logic, and Outcome. It is a mental model that prompt candidates to explain the "Logic" (the technical why) behind architectural and coding choices rather than just stating actions.
+            </div>
+          </details>
+
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                How do I handle behavioral interview questions in Salesforce rounds?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              Structure your answers around project collaboration, managing conflicting stakeholder requirements, resolving production issues under pressure, and explaining technical limitations to non-technical users.
+            </div>
+          </details>
+
+          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+              <h3 className="text-lg font-semibold text-white group-open:text-emerald-400 transition-colors">
+                How does ForcePilot AI help prepare for interviews?
+              </h3>
+              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                <ChevronDown size={16} />
+              </span>
+            </summary>
+            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+              ForcePilot AI generates technical mock interviews, provides immediate verbal/text assessments, checks DML and query optimizations, and outputs multidimensional scorecards mapping your progression against top platform developers.
+            </div>
+          </details>
+        </div>
       </section>
 
       {/* Checklist */}
@@ -232,5 +525,23 @@ const PrepTips: React.FC = () => {
     </div>
   );
 };
+
+const ShieldAlert = ({ size, className }: { size?: number, className?: string }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </svg>
+);
 
 export default PrepTips;

@@ -2,11 +2,33 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
+import fs from "fs";
+import path from "path";
+
+const previewRedirectPlugin = () => ({
+  name: "preview-redirect",
+  configurePreviewServer(server: any) {
+    server.middlewares.stack.unshift({
+      route: "",
+      handle: (req: any, _res: any, next: any) => {
+        if (req.url && !req.url.includes(".") && !req.url.startsWith("/@")) {
+          const urlPath = req.url.split("?")[0];
+          const fullPath = path.join(process.cwd(), "dist", urlPath, "index.html");
+          if (fs.existsSync(fullPath)) {
+            req.url = urlPath + "/index.html" + (req.url.includes("?") ? "?" + req.url.split("?")[1] : "");
+          }
+        }
+        next();
+      }
+    });
+  }
+});
 
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    previewRedirectPlugin(),
 
     VitePWA({
       registerType: "autoUpdate",
@@ -61,6 +83,9 @@ export default defineConfig({
     }),
   ],
 
+  preview: {
+    port: 4173,
+  },
   build: {
     chunkSizeWarningLimit: 1000,
 
