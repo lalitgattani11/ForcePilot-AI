@@ -40,6 +40,7 @@ const CareerRoadmap = lazy(() => import("./components/CareerRoadmap"));
 const AIInsights = lazy(() => import("./components/AIInsights"));
 const PrepTips = lazy(() => import("./components/PrepTips"));
 const Platform = lazy(() => import("./components/Platform"));
+const NotFound = lazy(() => import("./components/NotFound"));
 
 function App() {
   const navigate = useNavigate();
@@ -347,7 +348,20 @@ function App() {
                 }
               />
 
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route
+                path="*"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-rose-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
+                    <NotFound />
+                  </Suspense>
+                }
+              />
             </Routes>
           </div>
         </main>
@@ -427,7 +441,7 @@ function App() {
                     </li>
                     <li>
                       <Link
-                        to="/analytics"
+                        to="/#analytics"
                         className="text-[12px] font-semibold text-slate-400 hover:text-cyan-400 transition-all duration-300"
                       >
                         Platform Overview

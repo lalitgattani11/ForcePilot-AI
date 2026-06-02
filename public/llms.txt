@@ -1,0 +1,36 @@
+# ForcePilot AI
+
+ForcePilot AI is a premium, high-fidelity AI-powered Salesforce mock interview and interview intelligence platform. It provides interactive, adaptive, real-time audio and text mock interview simulations designed specifically for Salesforce developers, administrators, architects, and consultants.
+
+---
+
+## Core Interview Domains
+
+### 1. Salesforce Admin
+Focuses on declarative administration, data sharing model (OWD, sharing rules, profiles, permission sets), security configuration, standard object relationships, reporting/dashboards, user management, and enterprise app setup.
+
+### 2. Apex (Asynchronous & Core Development)
+Deep dive into programmatic Salesforce engineering. Covers Apex classes, OOP design patterns, asynchronous Apex (Queueable, Batchable, Schedulable, Future methods), custom exceptions, testing strategies, mock frameworks, and performance profiling.
+
+### 3. Apex Triggers
+Focuses on writing scalable, bulkified, and modern programmatic database logic. Covers trigger events, trigger context variables, handler frameworks, recursion control, best practices, and integration with declarative automation.
+
+### 4. Lightning Web Components (LWC)
+Covers modern Salesforce front-end development. Includes component lifecycle hooks, reactive properties (`@track`, `@api`), Wire service vs. imperative Apex, parent-child communication (CustomEvents), Lightning Message Service (LMS), performance optimizations, and security (Lightning Locker/LWS).
+
+### 5. Salesforce Flow Automation
+Covers enterprise declarative orchestration. Evaluates Screen Flows, Record-Triggered Flows, Schedule-Triggered Flows, Autolaunched Flows, subflows, loop optimization, bulkification patterns, custom Apex Actions, and flow error handling.
+
+### 6. Governor Limits
+Evaluates architectural knowledge of multi-tenant environments. Includes SOQL limit (100 synchronous / 200 asynchronous), DML limit (150 statements / 10,000 records), CPU time limit (10,000ms), heap size limit, and strategies for avoiding LimitExceptions (e.g. bulkification, async processing).
+
+### 7. Scenario-Based & Technical Architecture Interviews
+Integrates real-world system design challenges, data migrations, integration patterns (REST/SOAP, Pub/Sub API, Event-Driven Architecture), single sign-on (SSO), OAuth flows, multi-org strategy, and large data volumes (LDV) strategies.
+
+---
+
+## AI Interview Evaluation & Analytics
+
+- **Adaptive Recruiter-Style Evaluator**: The AI adaptively adjusts interview complexity based on user responses and domain experience.
+- **Detailed Evaluation Report**: Generates granular feedback on communication skills, technical correctness, coding speed, and architectural suitability.
+- **Apex Governor Limit Checks**: Evaluates code submissions and design plans for multi-tenant scalability and performance bottlenecks.
