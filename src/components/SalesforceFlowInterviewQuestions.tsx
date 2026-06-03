@@ -15,6 +15,7 @@ import {
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
+import Breadcrumbs from "./Breadcrumbs";
 
 interface QuestionItem {
   q: string;
@@ -79,8 +80,40 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
             ]
           });
     document.head.appendChild(script);
+
+    const articleScript = document.createElement("script");
+    articleScript.type = "application/ld+json";
+    articleScript.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Salesforce Flow Interview Questions & Answers Guide (2026)",
+      "description": "Master your Salesforce developer or architect interview with expert-verified Salesforce Flow interview questions and answers. Study record-triggered flows, bulkification, and recursion.",
+      "image": "https://forcepilotai.online/pwa-512.png",
+      "datePublished": "2026-02-10T08:00:00Z",
+      "dateModified": "2026-06-03T12:00:00Z",
+      "author": {
+        "@type": "Person",
+        "name": "Sarah Jenkins",
+        "jobTitle": "Senior Salesforce Developer"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "ForcePilot AI",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://forcepilotai.online/pwa-512.png"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://forcepilotai.online/salesforce-flow-interview-questions"
+      }
+    });
+    document.head.appendChild(articleScript);
+
     return () => {
       document.head.removeChild(script);
+      document.head.removeChild(articleScript);
     };
   }, []);
 
@@ -311,40 +344,52 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
         
       </Helmet>
 
-      {/* Hero Section */}
-      <section className="guide-hero-section">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="guide-hero-badge border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
-        >
-          <Workflow size={14} className="animate-pulse" />
-          <span>Automation Mastery Track</span>
-        </motion.div>
-        
-        <h1 className="guide-hero-title">
-          Salesforce Flow <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-blue-500">
-            Interview Questions
-          </span>
-        </h1>
-        
-        <p className="guide-hero-subtitle">
-          The definitive guide to low-code automation. Master record triggered flow interview questions and salesforce automation interview questions. Prepare for complex scenario-based designs.
-        </p>
+      {/* Breadcrumbs & Hero Container to avoid space-y-32 gap */}
+      <div className="space-y-8">
+        <Breadcrumbs 
+          items={[
+            { name: "Home", path: "/" },
+            { name: "Interview Guides", path: "/blog" },
+            { name: "Flow Questions", path: "/salesforce-flow-interview-questions" }
+          ]} 
+          themeColor="cyan"
+        />
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <Link
-            to="/#setup"
-            state={{ role: "Salesforce Admin" }}
-            className="w-full sm:w-auto px-12 py-5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(34,211,238,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+        {/* Hero Section */}
+        <section className="guide-hero-section">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="guide-hero-badge border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
           >
-            Master Salesforce Flow Interviews
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
-      </section>
+            <Workflow size={14} className="animate-pulse" />
+            <span>Automation Mastery Track</span>
+          </motion.div>
+          
+          <h1 className="guide-hero-title">
+            Salesforce Flow <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-blue-500">
+              Interview Questions
+            </span>
+          </h1>
+          
+          <p className="guide-hero-subtitle">
+            The definitive guide to low-code automation. Master record triggered flow interview questions and salesforce automation interview questions. Prepare for complex scenario-based designs.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Link
+              to="/#setup"
+              state={{ role: "Salesforce Admin" }}
+              className="w-full sm:w-auto px-12 py-5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(34,211,238,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            >
+              Master Salesforce Flow Interviews
+              <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </section>
+      </div>
 
       {/* Quick Nav */}
       <nav className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 sm:px-0">
@@ -365,6 +410,59 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
           </Link>
         ))}
       </nav>
+
+      {/* AI Overview & Quick Definitions Block */}
+      <section className="bg-slate-950/40 border border-white/5 rounded-3xl p-6 sm:p-8 space-y-8 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
+        <div className="space-y-2">
+          <h2 className="text-xs font-black text-cyan-400 uppercase tracking-[0.2em]">
+            AI Overview & Flow Automation Basics
+          </h2>
+          <p className="text-slate-400 text-xs sm:text-sm font-medium">
+            Core declarative concepts optimized for search bots, AI engines, and technical recruiters.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* What is a Salesforce Flow? */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold text-white">What is a Salesforce Flow?</h3>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              A <strong>Salesforce Flow</strong> is a declarative, low-code tool that automates complex business processes by executing database transactions, user-guided visual forms (Screen Flows), and scheduled background jobs. With the deprecation of Workflow Rules and Process Builder, Flow is the native declarative standard for automation, executing directly on the platform kernel with high CPU efficiency.
+            </p>
+          </div>
+
+          {/* Key Takeaways */}
+          <div className="bg-slate-900/30 border border-white/[0.03] p-5 rounded-2xl space-y-3">
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Flow Optimization Rules</h4>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+              <li className="flex items-start gap-2">
+                <span className="text-cyan-400 mt-1">•</span>
+                <span><strong>No DML inside Loops:</strong> Never place 'Get Records', 'Update Records', or other database action elements inside loop cycles.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-cyan-400 mt-1">•</span>
+                <span><strong>Entry Condition Filtering:</strong> Set strict conditions to avoid trigger cycles that exhaust CPU execution time limits.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Comparison Block */}
+        <div className="border-t border-white/[0.05] pt-6 space-y-4">
+          <h3 className="text-base font-bold text-white">Before-Save vs. After-Save Record-Triggered Flows</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+            <div className="p-4 rounded-xl bg-slate-900/20 border border-white/5 space-y-1">
+              <span className="font-bold text-cyan-400">Fast Field Updates (Before-Save)</span>
+              <p className="text-slate-400 leading-relaxed">Executes before database commits. Designed for same-record field updates. Executes up to 10 times faster than after-save equivalents.</p>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-900/20 border border-white/5 space-y-1">
+              <span className="font-bold text-emerald-400">Actions & Related Records (After-Save)</span>
+              <p className="text-slate-400 leading-relaxed">Executes after database commits. Allows updating related records, calling actions, and using system IDs.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Categories / Pillars */}
       <section className="space-y-12 sm:space-y-16">
@@ -595,6 +693,73 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
               </div>
             </motion.div>
           ))}
+        </div>
+      </section>
+
+      {/* Related Guides */}
+      <section className="space-y-8">
+        <div className="flex items-center justify-between border-b border-white/5 pb-4">
+          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase">
+            Related Guides
+          </h2>
+          <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/5 px-3 py-1 rounded-full border border-cyan-500/10">
+            Continue Learning
+          </span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Link
+            to="/governor-limits-explained"
+            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-cyan-500/30 transition-all group flex flex-col justify-between h-40"
+          >
+            <div>
+              <Cpu className="text-cyan-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">
+                Salesforce Governor Limits Explained
+              </h3>
+              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
+                Learn synchronous vs asynchronous quotas, SOQL constraints, and CPU time.
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+              Explore Guide <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            to="/scenario-based-salesforce-interview"
+            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-cyan-500/30 transition-all group flex flex-col justify-between h-40"
+          >
+            <div>
+              <Layout className="text-cyan-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">
+                Scenario-Based Interview Questions
+              </h3>
+              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
+                Navigate complex architecture problems, mixed DML, and sharing hierarchies.
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+              Explore Guide <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            to="/salesforce-mock-interview"
+            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-cyan-500/30 transition-all group flex flex-col justify-between h-40"
+          >
+            <div>
+              <Zap className="text-cyan-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">
+                Salesforce Mock Interview
+              </h3>
+              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
+                Practice explaining your flow designs and trigger patterns to our voice AI recruiter.
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+              Practice Live <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
         </div>
       </section>
 

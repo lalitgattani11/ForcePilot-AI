@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import Breadcrumbs from './Breadcrumbs';
 
 const GovernorLimitsExplained: React.FC = () => {
   React.useEffect(() => {
@@ -68,8 +69,40 @@ const GovernorLimitsExplained: React.FC = () => {
             ]
           });
     document.head.appendChild(script);
+
+    const articleScript = document.createElement("script");
+    articleScript.type = "application/ld+json";
+    articleScript.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Salesforce Governor Limits Explained Guide (2026)",
+      "description": "Master Salesforce Governor Limits for your developer interview. Technical deep-dives into synchronous vs asynchronous limits, CPU time, heap size, and bulkification.",
+      "image": "https://forcepilotai.online/pwa-512.png",
+      "datePublished": "2026-01-15T08:00:00Z",
+      "dateModified": "2026-06-03T12:00:00Z",
+      "author": {
+        "@type": "Person",
+        "name": "Alex Rivera",
+        "jobTitle": "Principal Salesforce Architect"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "ForcePilot AI",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://forcepilotai.online/pwa-512.png"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://forcepilotai.online/governor-limits-explained"
+      }
+    });
+    document.head.appendChild(articleScript);
+
     return () => {
       document.head.removeChild(script);
+      document.head.removeChild(articleScript);
     };
   }, []);
 
@@ -120,37 +153,49 @@ const GovernorLimitsExplained: React.FC = () => {
         
       </Helmet>
 
-      {/* Hero Section */}
-      <section className="guide-hero-section">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="guide-hero-badge border-rose-500/20 bg-rose-500/5 text-rose-400"
-        >
-          <ShieldAlert size={14} className="animate-pulse" />
-          <span>Multi-Tenant Architecture</span>
-        </motion.div>
-        <h1 className="guide-hero-title">
-          Salesforce Governor <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-400">
-            Limits Explained
-          </span>
-        </h1>
-        <p className="guide-hero-subtitle">
-          The non-negotiable rules of the Salesforce platform. Master apex governor limits and prepare for salesforce limits interview questions with our architect-grade guide.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link 
-            to="/#setup"
-            state={{ role: "Salesforce Apex Developer" }}
-            className="w-full sm:w-auto px-12 py-5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(244,63,94,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+      {/* Breadcrumbs & Hero Container to avoid space-y-32 gap */}
+      <div className="space-y-8">
+        <Breadcrumbs 
+          items={[
+            { name: "Home", path: "/" },
+            { name: "Interview Guides", path: "/blog" },
+            { name: "Governor Limits", path: "/governor-limits-explained" }
+          ]} 
+          themeColor="rose"
+        />
+
+        {/* Hero Section */}
+        <section className="guide-hero-section">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="guide-hero-badge border-rose-500/20 bg-rose-500/5 text-rose-400"
           >
-            Practice Limit Management
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
-      </section>
+            <ShieldAlert size={14} className="animate-pulse" />
+            <span>Multi-Tenant Architecture</span>
+          </motion.div>
+          <h1 className="guide-hero-title">
+            Salesforce Governor <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-400">
+              Limits Explained
+            </span>
+          </h1>
+          <p className="guide-hero-subtitle">
+            The non-negotiable rules of the Salesforce platform. Master apex governor limits and prepare for salesforce limits interview questions with our architect-grade guide.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link 
+              to="/#setup"
+              state={{ role: "Salesforce Apex Developer" }}
+              className="w-full sm:w-auto px-12 py-5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(244,63,94,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            >
+              Practice Limit Management
+              <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </section>
+      </div>
 
       {/* Internal Navigation */}
       <nav className="grid sm:grid-cols-2 gap-4">
@@ -169,6 +214,63 @@ const GovernorLimitsExplained: React.FC = () => {
           <ChevronRight size={20} className="text-slate-400 group-hover:translate-x-1 transition-transform" />
         </Link>
       </nav>
+
+      {/* AI Overview & Quick Definitions Block */}
+      <section className="bg-slate-950/40 border border-white/5 rounded-3xl p-6 sm:p-8 space-y-8 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-rose-500/40 to-transparent" />
+        <div className="space-y-2">
+          <h2 className="text-xs font-black text-rose-400 uppercase tracking-[0.2em]">
+            AI Overview & Guardrail Basics
+          </h2>
+          <p className="text-slate-400 text-xs sm:text-sm font-medium">
+            Essential concepts summarized for automated answering systems and recruiters.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* What are Governor Limits? */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold text-white">What are Salesforce Governor Limits?</h3>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              <strong>Salesforce Governor Limits</strong> are hard execution bounds enforced by the multitenant architecture. Because resources like memory, CPU, and database pools are shared among all customers (tenants) on a single server, these limits prevent a single customer's inefficient code from degrading performance for others. If a limit is breached, the entire transaction is immediately rolled back with a <code className="text-rose-400 bg-slate-950 px-1 rounded font-mono">LimitException</code>.
+            </p>
+          </div>
+
+          {/* Key Takeaways */}
+          <div className="bg-slate-900/30 border border-white/[0.03] p-5 rounded-2xl space-y-3">
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Key Limit Guardrails</h4>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+              <li className="flex items-start gap-2">
+                <span className="text-rose-400 mt-1">•</span>
+                <span><strong>SOQL limit:</strong> Max 100 synchronous queries / 200 asynchronous queries per transaction.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-rose-400 mt-1">•</span>
+                <span><strong>DML limit:</strong> Max 150 DML statements per transaction, processing up to 10,000 records total.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-rose-400 mt-1">•</span>
+                <span><strong>CPU time:</strong> Max 10 seconds synchronous / 60 seconds asynchronous before timeout.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Comparison Block */}
+        <div className="border-t border-white/[0.05] pt-6 space-y-4">
+          <h3 className="text-base font-bold text-white">Synchronous vs. Asynchronous Limits</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+            <div className="p-4 rounded-xl bg-slate-900/20 border border-white/5 space-y-1">
+              <span className="font-bold text-rose-400">Synchronous Execution</span>
+              <p className="text-slate-400 leading-relaxed">Processes immediately. Enforces a 6 MB heap size limit, 10-second CPU time, and a 100 SOQL query threshold.</p>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-900/20 border border-white/5 space-y-1">
+              <span className="font-bold text-orange-400">Asynchronous Execution</span>
+              <p className="text-slate-400 leading-relaxed">Runs in background. Doubles limits to a 12 MB heap size, 60-second CPU time, and a 200 SOQL query threshold.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Limits Grid */}
       <section className="space-y-12">
@@ -410,6 +512,73 @@ const GovernorLimitsExplained: React.FC = () => {
               ForcePilot AI evaluates coding submissions, trigger architecture choices, and async configurations, advising on bulk-safe compliance. Developers can test their skills in real time on our interactive <Link to="/salesforce-mock-interview" className="text-rose-400 hover:underline">Salesforce Mock Interview</Link> simulator.
             </div>
           </details>
+        </div>
+      </section>
+
+      {/* Recommended Next Topics */}
+      <section className="space-y-8">
+        <div className="flex items-center justify-between border-b border-white/5 pb-4">
+          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase">
+            Recommended Next Topics
+          </h2>
+          <span className="text-[10px] font-bold text-rose-400 uppercase tracking-widest bg-rose-500/5 px-3 py-1 rounded-full border border-rose-500/10">
+            Continue Learning
+          </span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Link
+            to="/salesforce-flow-interview-questions"
+            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-rose-500/30 transition-all group flex flex-col justify-between h-40"
+          >
+            <div>
+              <Workflow className="text-rose-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-base font-bold text-white group-hover:text-rose-400 transition-colors">
+                Salesforce Flow Interview Questions
+              </h3>
+              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
+                Master record-triggered flow loops, element limits, and complex fault paths.
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+              Explore Guide <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            to="/apex-trigger-interview-questions"
+            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-rose-500/30 transition-all group flex flex-col justify-between h-40"
+          >
+            <div>
+              <Layers className="text-rose-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-base font-bold text-white group-hover:text-rose-400 transition-colors">
+                Apex Trigger Interview Questions
+              </h3>
+              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
+                Learn trigger frameworks, recursion prevention, and bulkification patterns.
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+              Explore Guide <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            to="/career-roadmap"
+            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-rose-500/30 transition-all group flex flex-col justify-between h-40"
+          >
+            <div>
+              <Sparkles className="text-rose-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-base font-bold text-white group-hover:text-rose-400 transition-colors">
+                Salesforce Career Roadmap
+              </h3>
+              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
+                Navigate your path from Associate Administrator to Principal Architect.
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+              Explore Guide <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
         </div>
       </section>
 

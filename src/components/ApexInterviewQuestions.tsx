@@ -4,6 +4,7 @@ import { ArrowRight, ChevronRight, Sparkles, ChevronDown } from "lucide-react";
 
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import Breadcrumbs from "./Breadcrumbs";
 
 interface QuestionItem {
   q: string;
@@ -240,42 +241,54 @@ const ApexInterviewQuestions: React.FC = () => {
         />
       </Helmet>
 
-      {/* Hero Section */}
-      <section className="guide-hero-section">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="guide-hero-badge border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
-        >
-          <Sparkles size={14} className="animate-pulse" />
-          <span>Technical Interview Intelligence</span>
-        </motion.div>
-        <h1 className="guide-hero-title">
-          Salesforce Apex <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
-            Interview Questions
-          </span>
-        </h1>
-        <p className="guide-hero-subtitle">
-          The definitive guide to Salesforce Developer interviews. Technical
-          deep-dives, recruiter expectations, and production-grade answer
-          strategies.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <Link
-            to="/#setup"
-            state={{ role: "Salesforce Apex Developer" }}
-            className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+      {/* Breadcrumbs & Hero Container to avoid space-y-32 gap */}
+      <div className="space-y-8">
+        <Breadcrumbs 
+          items={[
+            { name: "Home", path: "/" },
+            { name: "Interview Guides", path: "/blog" },
+            { name: "Apex Questions", path: "/apex-interview-questions" }
+          ]} 
+          themeColor="emerald"
+        />
+
+        {/* Hero Section */}
+        <section className="guide-hero-section">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="guide-hero-badge border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
           >
-            Practice Real Apex Interviews
-            <ArrowRight
-              size={20}
-              className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
-            />
-          </Link>
-        </div>
-      </section>
+            <Sparkles size={14} className="animate-pulse" />
+            <span>Technical Interview Intelligence</span>
+          </motion.div>
+          <h1 className="guide-hero-title">
+            Salesforce Apex <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+              Interview Questions
+            </span>
+          </h1>
+          <p className="guide-hero-subtitle">
+            The definitive guide to Salesforce Developer interviews. Technical
+            deep-dives, recruiter expectations, and production-grade answer
+            strategies.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Link
+              to="/#setup"
+              state={{ role: "Salesforce Apex Developer" }}
+              className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            >
+              Practice Real Apex Interviews
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
+              />
+            </Link>
+          </div>
+        </section>
+      </div>
 
       {/* Internal Linking / Resources Bar */}
       <nav className="grid sm:grid-cols-2 gap-4 px-2 sm:px-0">
@@ -312,6 +325,59 @@ const ApexInterviewQuestions: React.FC = () => {
           />
         </Link>
       </nav>
+
+      {/* AI Overview & Quick Definitions Block */}
+      <section className="bg-slate-950/40 border border-white/5 rounded-3xl p-6 sm:p-8 space-y-8 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
+        <div className="space-y-2">
+          <h2 className="text-xs font-black text-emerald-400 uppercase tracking-[0.2em]">
+            AI Overview & Core Concepts
+          </h2>
+          <p className="text-slate-400 text-xs sm:text-sm font-medium">
+            Quick answers optimized for search engines, LLMs, and technical recruiters.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* What is Apex? */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold text-white">What is Apex in Salesforce?</h3>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              <strong>Apex</strong> is a strongly typed, object-oriented programming language executed on the Salesforce multitenant platform. It allows developers to write transactional flow and control logic, execute DML actions, and create custom REST/SOAP web services. It compiles into bytecode and runs in a cloud environment governed by strict platform limits.
+            </p>
+          </div>
+
+          {/* Core Takeaways */}
+          <div className="bg-slate-900/30 border border-white/[0.03] p-5 rounded-2xl space-y-3">
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Apex Execution Rules</h4>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400 mt-1">•</span>
+                <span><strong>Bulk by Default:</strong> Triggers must be bulkified to process lists of up to 200 records without hitting governor execution limits.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400 mt-1">•</span>
+                <span><strong>No DML/SOQL in Loops:</strong> Never place database queries or update commands inside loops to prevent the SOQL 101 error.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Comparison Block */}
+        <div className="border-t border-white/[0.05] pt-6 space-y-4">
+          <h3 className="text-base font-bold text-white">Trigger Save Order vs. Database Saves</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+            <div className="p-4 rounded-xl bg-slate-900/20 border border-white/5 space-y-1">
+              <span className="font-bold text-emerald-400">Before Triggers</span>
+              <p className="text-slate-400 leading-relaxed">Runs prior to database saving. Used to perform same-record validations and field updates in memory without DML overhead.</p>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-900/20 border border-white/5 space-y-1">
+              <span className="font-bold text-cyan-400">After Triggers</span>
+              <p className="text-slate-400 leading-relaxed">Runs post-saving. Provides access to system fields like Id or CreatedDate; used to perform DML on related child records.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Questions Section */}
       <div className="space-y-24">

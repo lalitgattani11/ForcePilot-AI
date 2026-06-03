@@ -12,7 +12,8 @@ import {
   GraduationCap,
   ShieldCheck,
   AlertCircle,
-  ChevronDown
+  ChevronDown,
+  ChevronRight
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 
@@ -67,8 +68,40 @@ const CareerRoadmap: React.FC = () => {
             ]
           });
     document.head.appendChild(script);
+
+    const articleScript = document.createElement("script");
+    articleScript.type = "application/ld+json";
+    articleScript.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Salesforce Developer & Career Roadmap (2026)",
+      "description": "Navigate your career path with our structured Salesforce developer roadmap. Learn how to become a Salesforce developer with detailed guides for freshers.",
+      "image": "https://forcepilotai.online/pwa-512.png",
+      "datePublished": "2026-03-05T08:00:00Z",
+      "dateModified": "2026-06-03T12:00:00Z",
+      "author": {
+        "@type": "Person",
+        "name": "Alex Rivera",
+        "jobTitle": "Principal Salesforce Architect"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "ForcePilot AI",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://forcepilotai.online/pwa-512.png"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://forcepilotai.online/career-roadmap"
+      }
+    });
+    document.head.appendChild(articleScript);
+
     return () => {
       document.head.removeChild(script);
+      document.head.removeChild(articleScript);
     };
   }, []);
 
@@ -176,6 +209,67 @@ const CareerRoadmap: React.FC = () => {
         <p className="text-slate-400 text-sm sm:text-lg font-medium leading-relaxed max-w-2xl mx-auto">
           Navigate your professional evolution with our structured salesforce career roadmap. Learn how to become a salesforce developer using our dedicated salesforce roadmap for freshers.
         </p>
+      </section>
+
+      {/* AI Overview & Quick Definitions Block */}
+      <section className="bg-slate-950/40 border border-white/5 rounded-3xl p-6 sm:p-8 space-y-8 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
+        <div className="space-y-2">
+          <h2 className="text-xs font-black text-emerald-400 uppercase tracking-[0.2em]">
+            AI Overview & Career Path Basics
+          </h2>
+          <p className="text-slate-400 text-xs sm:text-sm font-medium">
+            Core Salesforce trajectory insights optimized for automated scanners, search engines, and recruiters.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* How to Become a Salesforce Developer? */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold text-white">How to Become a Salesforce Developer?</h3>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              To become a <strong>Salesforce Developer</strong>, candidates must transition from declarative administration to programmatic engineering. The career roadmap begins with mastering low-code tools like Flow Builder, followed by learning Apex (Salesforce's strongly typed, object-oriented OOP language), understanding multi-tenant Governor Limits, implementing Lightning Web Components (LWC), and adopting modern CI/CD DevOps workflows.
+            </p>
+          </div>
+
+          {/* Key Takeaways */}
+          <div className="bg-slate-900/30 border border-white/[0.03] p-5 rounded-2xl space-y-3">
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Strategic Milestones</h4>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400 mt-1">•</span>
+                <span><strong>Admin Base:</strong> Master record sharing models, validation rules, Flow automations, and basic object design.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400 mt-1">•</span>
+                <span><strong>Developer Core:</strong> Write trigger handlers, build LWC interfaces, query via SOQL, and handle async processing.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400 mt-1">•</span>
+                <span><strong>Architect Horizon:</strong> Design multi-org environments, design integrations, and enforce system security.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Comparison Block */}
+        <div className="border-t border-white/[0.05] pt-6 space-y-4">
+          <h3 className="text-base font-bold text-white">Salesforce Roles and Trajectories</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs sm:text-sm">
+            <div className="p-4 rounded-xl bg-slate-900/20 border border-white/5 space-y-1">
+              <span className="font-bold text-emerald-400">Salesforce Admin</span>
+              <p className="text-slate-400 leading-relaxed">Manages users, designs fields, configures standard sharing, and builds declarative flows to solve business problems.</p>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-900/20 border border-white/5 space-y-1">
+              <span className="font-bold text-cyan-400">Salesforce Developer</span>
+              <p className="text-slate-400 leading-relaxed">Writes Apex classes, triggers, Lightning Web Components, integrates APIs, and builds programmatic unit tests.</p>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-900/20 border border-white/5 space-y-1">
+              <span className="font-bold text-purple-400">Salesforce Architect</span>
+              <p className="text-slate-400 leading-relaxed">Designs end-to-end system landscapes, outlines integration strategy, minimizes technical debt, and leads governance teams.</p>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Roadmap Timeline */}
@@ -511,6 +605,73 @@ const CareerRoadmap: React.FC = () => {
                 </div>
               ))}
            </div>
+        </div>
+      </section>
+
+      {/* Recommended Next Topics */}
+      <section className="space-y-8">
+        <div className="flex items-center justify-between border-b border-white/5 pb-4">
+          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase">
+            Recommended Next Topics
+          </h2>
+          <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/5 px-3 py-1 rounded-full border border-emerald-500/10">
+            Continue Learning
+          </span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Link
+            to="/interview-preparation-tips"
+            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-emerald-500/30 transition-all group flex flex-col justify-between h-40"
+          >
+            <div>
+              <GraduationCap className="text-emerald-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-base font-bold text-white group-hover:text-emerald-400 transition-colors">
+                Interview Preparation Tips
+              </h3>
+              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
+                Master the SALO framework, behavioral answers, and scenario interview structures.
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+              Explore Tips <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            to="/salesforce-mock-interview"
+            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-emerald-500/30 transition-all group flex flex-col justify-between h-40"
+          >
+            <div>
+              <Zap className="text-emerald-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-base font-bold text-white group-hover:text-emerald-400 transition-colors">
+                Salesforce Mock Interview
+              </h3>
+              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
+                Practice explaining your experience level, project designs, and platform architecture.
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+              Practice Live <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            to="/blog"
+            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-emerald-500/30 transition-all group flex flex-col justify-between h-40"
+          >
+            <div>
+              <Rocket className="text-emerald-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-base font-bold text-white group-hover:text-emerald-400 transition-colors">
+                ForcePilot AI Blog
+              </h3>
+              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
+                Read deep-dives on LWC performance, Flow scenarios, and platform updates.
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+              Read Articles <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
         </div>
       </section>
 

@@ -241,6 +241,114 @@ const BlogList: React.FC = () => {
             </div>
           )}
         </section>
+
+        {/* Curated Developer Interview Guides */}
+        <section className="max-w-6xl mx-auto px-4 pb-20 border-t border-white/5 pt-16 space-y-10">
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-300 text-[10px] font-black uppercase tracking-[0.25em] backdrop-blur-sm">
+              <Layers size={12} className="text-cyan-400" />
+              Specialized Interview Playbooks
+            </div>
+            <h2 className="text-2xl sm:text-4xl font-bold text-white tracking-tight">
+              Curated <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Developer Guides</span>
+            </h2>
+            <p className="text-slate-400 text-sm max-w-xl font-medium leading-relaxed">
+              Explore structural, recruiter-grade answers to the most common technical questions across Salesforce topics.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Link
+              to="/top-apex-interview-questions"
+              className="group p-6 rounded-2xl border border-white/5 bg-slate-950/20 hover:bg-slate-900/40 hover:border-emerald-500/30 transition-all duration-300 flex flex-col justify-between min-h-[160px]"
+            >
+              <div>
+                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Apex Track</span>
+                <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors mt-3">
+                  Top Apex Interview Questions
+                </h3>
+                <p className="text-slate-500 text-xs mt-1.5 line-clamp-2">
+                  Master transaction boundaries, bulkification, and async architecture for senior apex roles.
+                </p>
+              </div>
+              <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+                View Playbook <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </Link>
+
+            <Link
+              to="/top-lwc-interview-questions"
+              className="group p-6 rounded-2xl border border-white/5 bg-slate-950/20 hover:bg-slate-900/40 hover:border-cyan-500/30 transition-all duration-300 flex flex-col justify-between min-h-[160px]"
+            >
+              <div>
+                <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">LWC Track</span>
+                <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors mt-3">
+                  Top LWC Interview Questions
+                </h3>
+                <p className="text-slate-500 text-xs mt-1.5 line-clamp-2">
+                  Prepare for Lightning Data Service, wire adapters, custom events, and rendering cache limits.
+                </p>
+              </div>
+              <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+                View Playbook <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </Link>
+
+            <Link
+              to="/salesforce-flow-questions-for-freshers"
+              className="group p-6 rounded-2xl border border-white/5 bg-slate-950/20 hover:bg-slate-900/40 hover:border-teal-500/30 transition-all duration-300 flex flex-col justify-between min-h-[160px]"
+            >
+              <div>
+                <span className="text-[10px] font-bold text-teal-400 uppercase tracking-wider bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">Automation Track</span>
+                <h3 className="text-lg font-bold text-white group-hover:text-teal-400 transition-colors mt-3">
+                  Flow Questions for Freshers
+                </h3>
+                <p className="text-slate-500 text-xs mt-1.5 line-clamp-2">
+                  Build a solid foundation around loop limits, record triggers, fast field updates, and debugging.
+                </p>
+              </div>
+              <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+                View Playbook <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </Link>
+
+            <Link
+              to="/scenario-based-salesforce-questions"
+              className="group p-6 rounded-2xl border border-white/5 bg-slate-950/20 hover:bg-slate-900/40 hover:border-purple-500/30 transition-all duration-300 flex flex-col justify-between min-h-[160px]"
+            >
+              <div>
+                <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">Architecture Track</span>
+                <h3 className="text-lg font-bold text-white group-hover:text-purple-400 transition-colors mt-3">
+                  Scenario-Based Salesforce Questions
+                </h3>
+                <p className="text-slate-500 text-xs mt-1.5 line-clamp-2">
+                  Solve complex mixed DML errors, experience cloud security architecture, and system integration patterns.
+                </p>
+              </div>
+              <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+                View Playbook <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </Link>
+
+            <Link
+              to="/governor-limits-interview-questions"
+              className="group p-6 rounded-2xl border border-white/5 bg-slate-950/20 hover:bg-slate-900/40 hover:border-rose-500/30 transition-all duration-300 flex flex-col justify-between min-h-[160px]"
+            >
+              <div>
+                <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">Guardrails Track</span>
+                <h3 className="text-lg font-bold text-white group-hover:text-rose-400 transition-colors mt-3">
+                  Governor Limits Questions
+                </h3>
+                <p className="text-slate-500 text-xs mt-1.5 line-clamp-2">
+                  Explain the root cause of SOQL 101, CPU timeouts, and heap management practices.
+                </p>
+              </div>
+              <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+                View Playbook <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </Link>
+          </div>
+        </section>
       </div>
     </>
   );

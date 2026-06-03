@@ -82,6 +82,55 @@ const BlogPostDetail: React.FC = () => {
 
   const post = BLOG_POSTS.find(p => p.slug === slug);
 
+  React.useEffect(() => {
+    if (!post) return;
+
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+
+    let isoDate = "2026-06-02T00:00:00Z";
+    try {
+      if (post.publishDate) {
+        isoDate = new Date(post.publishDate).toISOString();
+      }
+    } catch {
+      console.warn("Invalid date format:", post.publishDate);
+    }
+
+    script.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": post.title,
+      "description": post.description,
+      "image": "https://forcepilotai.online/pwa-512.png",
+      "datePublished": isoDate,
+      "dateModified": isoDate,
+      "author": {
+        "@type": "Person",
+        "name": post.author,
+        "jobTitle": post.authorRole
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "ForcePilot AI",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://forcepilotai.online/pwa-512.png"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `https://forcepilotai.online/blog/${post.slug}`
+      }
+    });
+
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, [post]);
+
   if (!post) {
     return <NotFound />;
   }

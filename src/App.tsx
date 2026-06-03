@@ -43,6 +43,7 @@ const Platform = lazy(() => import("./components/Platform"));
 const BlogList = lazy(() => import("./components/BlogList"));
 const BlogPostDetail = lazy(() => import("./components/BlogPostDetail"));
 const NotFound = lazy(() => import("./components/NotFound"));
+const SeoLandingTemplate = lazy(() => import("./components/SeoLandingTemplate"));
 
 function App() {
   const navigate = useNavigate();
@@ -376,6 +377,80 @@ function App() {
                     }
                   >
                     <BlogPostDetail />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/top-apex-interview-questions"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
+                    <SeoLandingTemplate pageId="top-apex-interview-questions" />
+                  </Suspense>
+                }
+              />
+
+              <Route
+                path="/top-lwc-interview-questions"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
+                    <SeoLandingTemplate pageId="top-lwc-interview-questions" />
+                  </Suspense>
+                }
+              />
+
+              <Route
+                path="/salesforce-flow-questions-for-freshers"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
+                    <SeoLandingTemplate pageId="salesforce-flow-questions-for-freshers" />
+                  </Suspense>
+                }
+              />
+
+              <Route
+                path="/scenario-based-salesforce-questions"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
+                    <SeoLandingTemplate pageId="scenario-based-salesforce-questions" />
+                  </Suspense>
+                }
+              />
+
+              <Route
+                path="/governor-limits-interview-questions"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-rose-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
+                    <SeoLandingTemplate pageId="governor-limits-interview-questions" />
                   </Suspense>
                 }
               />

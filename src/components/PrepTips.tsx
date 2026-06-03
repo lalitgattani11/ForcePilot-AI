@@ -13,6 +13,7 @@ import {
   Star,
   Users,
   ChevronDown,
+  ChevronRight,
   Layout,
   Terminal,
   Search
@@ -82,8 +83,40 @@ const PrepTips: React.FC = () => {
             ]
           });
     document.head.appendChild(script);
+
+    const articleScript = document.createElement("script");
+    articleScript.type = "application/ld+json";
+    articleScript.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Salesforce Interview Preparation Tips Guide (2026)",
+      "description": "Master your technical interview with our salesforce interview preparation tips. Learn how to prepare for salesforce developer, admin, and architect interviews.",
+      "image": "https://forcepilotai.online/pwa-512.png",
+      "datePublished": "2026-04-12T08:00:00Z",
+      "dateModified": "2026-06-03T12:00:00Z",
+      "author": {
+        "@type": "Person",
+        "name": "Marcus Chen",
+        "jobTitle": "Lead LWC Engineer"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "ForcePilot AI",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://forcepilotai.online/pwa-512.png"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://forcepilotai.online/interview-preparation-tips"
+      }
+    });
+    document.head.appendChild(articleScript);
+
     return () => {
       document.head.removeChild(script);
+      document.head.removeChild(articleScript);
     };
   }, []);
 
@@ -508,6 +541,73 @@ const PrepTips: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Recommended Next Topics */}
+      <section className="space-y-8">
+        <div className="flex items-center justify-between border-b border-white/5 pb-4">
+          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase">
+            Continue Learning
+          </h2>
+          <span className="text-[10px] font-bold text-purple-400 uppercase tracking-widest bg-purple-500/5 px-3 py-1 rounded-full border border-purple-500/10">
+            Next Steps
+          </span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Link
+            to="/career-roadmap"
+            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-purple-500/30 transition-all group flex flex-col justify-between h-40"
+          >
+            <div>
+              <Target className="text-purple-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-base font-bold text-white group-hover:text-purple-400 transition-colors">
+                Salesforce Career Roadmap
+              </h3>
+              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
+                Chart your career progression path and acquire critical programmatic skills.
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+              Explore Roadmap <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            to="/governor-limits-explained"
+            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-purple-500/30 transition-all group flex flex-col justify-between h-40"
+          >
+            <div>
+              <ShieldCheck className="text-purple-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-base font-bold text-white group-hover:text-purple-400 transition-colors">
+                Governor Limits Explained
+              </h3>
+              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
+                Deep-dive into Salesforce platform quotas, synchronous execution limits, and CPU time.
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+              Explore Limits <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            to="/salesforce-flow-interview-questions"
+            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-purple-500/30 transition-all group flex flex-col justify-between h-40"
+          >
+            <div>
+              <Rocket className="text-purple-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-base font-bold text-white group-hover:text-purple-400 transition-colors">
+                Salesforce Flow Questions
+              </h3>
+              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
+                Practice advanced automation scenario queries, fault paths, and flow design patterns.
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+              Explore Guide <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
         </div>
       </section>
 
