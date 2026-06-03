@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import Breadcrumbs from "./Breadcrumbs";
+import { useJsonLd } from "../hooks/useJsonLd";
 
 interface QuestionItem {
   q: string;
@@ -30,92 +31,82 @@ interface QuestionSection {
 }
 
 const SalesforceFlowInterviewQuestions: React.FC = () => {
-  React.useEffect(() => {
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.text = JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "What is Salesforce Flow, and when should I use it?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Salesforce Flow is a low-code visual tool used to build complex, trigger-based, and screen-guided business automations. It is Salesforce's primary declarative tool and should be used to model most automation rules before relying on developer code."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Can a Record-Triggered Flow execute after a record has been deleted?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes, record-triggered flows can execute in a 'Before-Delete' context. This allows you to inspect field values, validate conditions, or clean up associated configurations before the record is officially removed from the database."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How do you bypass a Salesforce Flow for large data migrations?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "The best practice is to reference a custom bypass hierarchical setting or custom metadata permission flag in the Flow's Start Element entry condition. During data loading, admins can assign this custom permission to the integration user to deactivate all flows programmatically."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How do I call Apex code from a Salesforce Flow?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "You can invoke Apex classes using the 'Apex Action' element inside Flow Builder, provided the static method is decorated with the @InvocableMethod annotation. This enables passing parameters from the Flow and receiving calculated results back."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How does ForcePilot AI help prepare for Salesforce Flow interviews?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "ForcePilot AI simulates technical interview sessions that test your automation architectural choices, governor limits knowledge, and bulkification patterns. You can practice in real-time on our interactive Salesforce Mock Interview engine."
-                }
-              }
-            ]
-          });
-    document.head.appendChild(script);
-
-    const articleScript = document.createElement("script");
-    articleScript.type = "application/ld+json";
-    articleScript.text = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "Salesforce Flow Interview Questions & Answers Guide (2026)",
-      "description": "Master your Salesforce developer or architect interview with expert-verified Salesforce Flow interview questions and answers. Study record-triggered flows, bulkification, and recursion.",
-      "image": "https://forcepilotai.online/pwa-512.png",
-      "datePublished": "2026-02-10T08:00:00Z",
-      "dateModified": "2026-06-03T12:00:00Z",
-      "author": {
-        "@type": "Person",
-        "name": "Sarah Jenkins",
-        "jobTitle": "Senior Salesforce Developer"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "ForcePilot AI",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://forcepilotai.online/pwa-512.png"
+  const faqSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Salesforce Flow, and when should I use it?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Salesforce Flow is a low-code visual tool used to build complex, trigger-based, and screen-guided business automations. It is Salesforce's primary declarative tool and should be used to model most automation rules before relying on developer code."
         }
       },
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https://forcepilotai.online/salesforce-flow-interview-questions"
+      {
+        "@type": "Question",
+        "name": "Can a Record-Triggered Flow execute after a record has been deleted?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, record-triggered flows can execute in a 'Before-Delete' context. This allows you to inspect field values, validate conditions, or clean up associated configurations before the record is officially removed from the database."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do you bypass a Salesforce Flow for large data migrations?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The best practice is to reference a custom bypass hierarchical setting or custom metadata permission flag in the Flow's Start Element entry condition. During data loading, admins can assign this custom permission to the integration user to deactivate all flows programmatically."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I call Apex code from a Salesforce Flow?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can invoke Apex classes using the 'Apex Action' element inside Flow Builder, provided the static method is decorated with the @InvocableMethod annotation. This enables passing parameters from the Flow and receiving calculated results back."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does ForcePilot AI help prepare for Salesforce Flow interviews?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ForcePilot AI simulates technical interview sessions that test your automation architectural choices, governor limits knowledge, and bulkification patterns. You can practice in real-time on our interactive Salesforce Mock Interview engine."
+        }
       }
-    });
-    document.head.appendChild(articleScript);
+    ]
+  }), []);
 
-    return () => {
-      document.head.removeChild(script);
-      document.head.removeChild(articleScript);
-    };
-  }, []);
+  const articleSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Salesforce Flow Interview Questions & Answers Guide (2026)",
+    "description": "Master your Salesforce developer or architect interview with expert-verified Salesforce Flow interview questions and answers. Study record-triggered flows, bulkification, and recursion.",
+    "image": "https://forcepilotai.online/pwa-512.png",
+    "datePublished": "2026-02-10T08:00:00Z",
+    "dateModified": "2026-06-03T12:00:00Z",
+    "author": {
+      "@type": "Person",
+      "name": "Sarah Jenkins",
+      "jobTitle": "Senior Salesforce Developer"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ForcePilot AI",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://forcepilotai.online/pwa-512.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://forcepilotai.online/salesforce-flow-interview-questions"
+    }
+  }), []);
+
+  useJsonLd(faqSchema, "schema-faq");
+  useJsonLd(articleSchema, "schema-article");
 
 
   const fadeIn = {

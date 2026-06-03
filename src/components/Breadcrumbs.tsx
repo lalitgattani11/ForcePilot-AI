@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
+import { useJsonLd } from "../hooks/useJsonLd";
 
 export interface BreadcrumbItem {
   name: string;
@@ -13,27 +14,18 @@ interface BreadcrumbsProps {
 }
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, themeColor = "emerald" }) => {
-  React.useEffect(() => {
-    const schema = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": items.map((item, index) => ({
-        "@type": "ListItem",
-        "position": index + 1,
-        "name": item.name,
-        "item": `https://forcepilotai.online${item.path}`
-      }))
-    };
+  const schema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": items.map((item, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": item.name,
+      "item": `https://forcepilotai.online${item.path}`
+    }))
+  }), [items]);
 
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.text = JSON.stringify(schema);
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, [items]);
+  useJsonLd(schema, "schema-breadcrumbs");
 
   const hoverColors = {
     emerald: "hover:text-emerald-400",

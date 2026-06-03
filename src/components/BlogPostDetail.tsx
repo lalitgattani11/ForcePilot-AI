@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { BLOG_POSTS } from '../data/blogPosts';
 import NotFound from './NotFound';
+import { useJsonLd } from '../hooks/useJsonLd';
 
 // Regex-based dynamic helper to replace keywords with SPA <Link> elements
 const renderParagraphWithLinks = (text: string) => {
@@ -82,11 +83,8 @@ const BlogPostDetail: React.FC = () => {
 
   const post = BLOG_POSTS.find(p => p.slug === slug);
 
-  React.useEffect(() => {
-    if (!post) return;
-
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
+  const articleSchema = React.useMemo(() => {
+    if (!post) return null;
 
     let isoDate = "2026-06-02T00:00:00Z";
     try {
@@ -97,7 +95,7 @@ const BlogPostDetail: React.FC = () => {
       console.warn("Invalid date format:", post.publishDate);
     }
 
-    script.text = JSON.stringify({
+    return {
       "@context": "https://schema.org",
       "@type": "Article",
       "headline": post.title,
@@ -122,14 +120,10 @@ const BlogPostDetail: React.FC = () => {
         "@type": "WebPage",
         "@id": `https://forcepilotai.online/blog/${post.slug}`
       }
-    });
-
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script);
     };
   }, [post]);
+
+  useJsonLd(articleSchema, "schema-article");
 
   if (!post) {
     return <NotFound />;

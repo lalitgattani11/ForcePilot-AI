@@ -14,6 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
+import { useJsonLd } from "../hooks/useJsonLd";
 
 interface QuestionItem {
   q: string;
@@ -28,60 +29,54 @@ interface QuestionSection {
 }
 
 const LwcCodingInterview: React.FC = () => {
-  React.useEffect(() => {
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.text = JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "What is the main difference between LWC and Aura?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "LWC is a modern, lightweight framework built on native web standards (like Custom Elements, Shadow DOM, and ES6+ modules), which allows it to execute directly in browser engines without heavy abstraction layers. Aura is a legacy framework created before these native web standards existed, requiring a heavier JavaScript runtime and producing slower rendering cycles."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How do you handle styling overrides inside Shadow DOM boundaries in LWC?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Due to shadow encapsulation, global styles cannot target elements inside a component. To override styles, use CSS Custom Properties (variables) defined by standard Salesforce styling hooks (e.g., --sds-c-*), declare styling hooks in the parent, or configure the component to render in the Light DOM (which bypasses shadow DOM styling constraints)."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Can you call an Apex method with parameters imperatively in LWC?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes. You import the Apex method inside JavaScript and call it imperatively like a standard function, passing an object representing the parameters: apexMethodName({ paramName: value }). This returns a Promise that resolves with the return value or rejects with an error."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How can we run a performance audit on LWC components?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "You can perform audits using standard browser Developer Tools (Chrome DevTools Performance and Lighthouse panels), or install the Salesforce Lightning Inspector Extension. These tools track layout recalculations, evaluate script compile sizes, and record wire service latency rates."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Does LWC support double-data binding in templates?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "No. LWC enforces a strict one-way data flow model from JavaScript properties to HTML template elements. To pass values back to JavaScript, you must capture input events (e.g., onchange) and update JavaScript properties manually."
-                }
-              }
-            ]
-          });
-    document.head.appendChild(script);
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
+  const faqSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the main difference between LWC and Aura?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "LWC is a modern, lightweight framework built on native web standards (like Custom Elements, Shadow DOM, and ES6+ modules), which allows it to execute directly in browser engines without heavy abstraction layers. Aura is a legacy framework created before these native web standards existed, requiring a heavier JavaScript runtime and producing slower rendering cycles."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do you handle styling overrides inside Shadow DOM boundaries in LWC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Due to shadow encapsulation, global styles cannot target elements inside a component. To override styles, use CSS Custom Properties (variables) defined by standard Salesforce styling hooks (e.g., --sds-c-*), declare styling hooks in the parent, or configure the component to render in the Light DOM (which bypasses shadow DOM styling constraints)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can you call an Apex method with parameters imperatively in LWC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You import the Apex method inside JavaScript and call it imperatively like a standard function, passing an object representing the parameters: apexMethodName({ paramName: value }). This returns a Promise that resolves with the return value or rejects with an error."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can we run a performance audit on LWC components?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can perform audits using standard browser Developer Tools (Chrome DevTools Performance and Lighthouse panels), or install the Salesforce Lightning Inspector Extension. These tools track layout recalculations, evaluate script compile sizes, and record wire service latency rates."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does LWC support double-data binding in templates?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. LWC enforces a strict one-way data flow model from JavaScript properties to HTML template elements. To pass values back to JavaScript, you must capture input events (e.g., onchange) and update JavaScript properties manually."
+        }
+      }
+    ]
+  }), []);
+
+  useJsonLd(faqSchema, "schema-faq");
 
 
   const fadeIn = {

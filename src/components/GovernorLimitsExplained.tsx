@@ -17,94 +17,85 @@ import {
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Breadcrumbs from './Breadcrumbs';
+import { useJsonLd } from "../hooks/useJsonLd";
 
 const GovernorLimitsExplained: React.FC = () => {
-  React.useEffect(() => {
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.text = JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "What is a transaction boundary in Salesforce?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "A transaction boundary defines the lifetime of a single execution block. A transaction begins when an event occurs (such as a user DML save, a flow trigger, or an API callout) and ends when all downstream validation rules, database triggers, and commits complete. Governor limits are reset at each new transaction boundary."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Why does Salesforce enforce Governor Limits?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Salesforce is built on a multi-tenant architecture, meaning multiple customer orgs (tenants) share physical hardware, memory, and database servers. Governor limits ensure that a single tenant's poorly optimized script cannot monopolize system resource pools, guaranteeing platform stability for all."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What is the difference between synchronous and asynchronous limits?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Synchronous tasks execute immediately, blocking user threads and enforcing tighter limits (100 SOQL queries, 10s CPU, 6 MB heap). Asynchronous tasks (Queueables, Batch Apex, @future calls) run in the background, allowing Salesforce to schedule resource usage. This grants higher thresholds (200 SOQL queries, 60s CPU, 12 MB heap)."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How do you resolve a System.LimitException: Too many SOQL queries: 101 error?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "This exception is triggered when SOQL queries are placed inside loop statements. To resolve it, gather the query parameters in a Set, execute a single bulk SOQL query outside the loop, and load the results into a Map. This allows retrieving data inside loops in-memory without making additional database calls."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How does ForcePilot AI help developers master limits?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "ForcePilot AI evaluates coding submissions, trigger architecture choices, and async configurations, advising on bulk-safe compliance. Developers can test their skills in real time on our interactive Salesforce Mock Interview simulator."
-                }
-              }
-            ]
-          });
-    document.head.appendChild(script);
-
-    const articleScript = document.createElement("script");
-    articleScript.type = "application/ld+json";
-    articleScript.text = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "Salesforce Governor Limits Explained Guide (2026)",
-      "description": "Master Salesforce Governor Limits for your developer interview. Technical deep-dives into synchronous vs asynchronous limits, CPU time, heap size, and bulkification.",
-      "image": "https://forcepilotai.online/pwa-512.png",
-      "datePublished": "2026-01-15T08:00:00Z",
-      "dateModified": "2026-06-03T12:00:00Z",
-      "author": {
-        "@type": "Person",
-        "name": "Alex Rivera",
-        "jobTitle": "Principal Salesforce Architect"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "ForcePilot AI",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://forcepilotai.online/pwa-512.png"
+  const faqSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a transaction boundary in Salesforce?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A transaction boundary defines the lifetime of a single execution block. A transaction begins when an event occurs (such as a user DML save, a flow trigger, or an API callout) and ends when all downstream validation rules, database triggers, and commits complete. Governor limits are reset at each new transaction boundary."
         }
       },
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https://forcepilotai.online/governor-limits-explained"
+      {
+        "@type": "Question",
+        "name": "Why does Salesforce enforce Governor Limits?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Salesforce is built on a multi-tenant architecture, meaning multiple customer orgs (tenants) share physical hardware, memory, and database servers. Governor limits ensure that a single tenant's poorly optimized script cannot monopolize system resource pools, guaranteeing platform stability for all."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between synchronous and asynchronous limits?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Synchronous tasks execute immediately, blocking user threads and enforcing tighter limits (100 SOQL queries, 10s CPU, 6 MB heap). Asynchronous tasks (Queueables, Batch Apex, @future calls) run in the background, allowing Salesforce to schedule resource usage. This grants higher thresholds (200 SOQL queries, 60s CPU, 12 MB heap)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do you resolve a System.LimitException: Too many SOQL queries: 101 error?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This exception is triggered when SOQL queries are placed inside loop statements. To resolve it, gather the query parameters in a Set, execute a single bulk SOQL query outside the loop, and load the results into a Map. This allows retrieving data inside loops in-memory without making additional database calls."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does ForcePilot AI help developers master limits?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ForcePilot AI evaluates coding submissions, trigger architecture choices, and async configurations, advising on bulk-safe compliance. Developers can test their skills in real time on our interactive Salesforce Mock Interview simulator."
+        }
       }
-    });
-    document.head.appendChild(articleScript);
+    ]
+  }), []);
 
-    return () => {
-      document.head.removeChild(script);
-      document.head.removeChild(articleScript);
-    };
-  }, []);
+  const articleSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Salesforce Governor Limits Explained Guide (2026)",
+    "description": "Master Salesforce Governor Limits for your developer interview. Technical deep-dives into synchronous vs asynchronous limits, CPU time, heap size, and bulkification.",
+    "image": "https://forcepilotai.online/pwa-512.png",
+    "datePublished": "2026-01-15T08:00:00Z",
+    "dateModified": "2026-06-03T12:00:00Z",
+    "author": {
+      "@type": "Person",
+      "name": "Alex Rivera",
+      "jobTitle": "Principal Salesforce Architect"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ForcePilot AI",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://forcepilotai.online/pwa-512.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://forcepilotai.online/governor-limits-explained"
+    }
+  }), []);
+
+  useJsonLd(faqSchema, "schema-faq");
+  useJsonLd(articleSchema, "schema-article");
 
 
   const limits = [

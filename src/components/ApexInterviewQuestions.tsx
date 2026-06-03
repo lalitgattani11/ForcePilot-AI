@@ -5,6 +5,7 @@ import { ArrowRight, ChevronRight, Sparkles, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Breadcrumbs from "./Breadcrumbs";
+import { useJsonLd } from "../hooks/useJsonLd";
 
 interface QuestionItem {
   q: string;
@@ -19,28 +20,22 @@ interface SectionItem {
 }
 
 const ApexInterviewQuestions: React.FC = () => {
-  React.useEffect(() => {
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.text = `{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is Apex in Salesforce?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Apex is Salesforce’s strongly typed object-oriented programming language."
+  const faqSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Apex in Salesforce?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Apex is Salesforce’s strongly typed object-oriented programming language."
+        }
       }
-    }
-  ]
-}`;
-    document.head.appendChild(script);
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
+    ]
+  }), []);
+
+  useJsonLd(faqSchema, "schema-faq");
 
   const sections: SectionItem[] = [
     {

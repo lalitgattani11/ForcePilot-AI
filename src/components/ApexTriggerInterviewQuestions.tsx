@@ -14,6 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
+import { useJsonLd } from "../hooks/useJsonLd";
 
 interface QuestionItem {
   q: string;
@@ -28,60 +29,54 @@ interface QuestionSection {
 }
 
 const ApexTriggerInterviewQuestions: React.FC = () => {
-  React.useEffect(() => {
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.text = JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "What are Salesforce Apex triggers?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Apex triggers are database scripts that run before or after DML transactions (inserts, updates, deletes, merges) execute on Salesforce records. They enable developers to build custom validations, propagate related updates, and interface with third-party software."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Why is putting business logic directly in the trigger body considered a red flag?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Putting logic directly inside the trigger body makes code difficult to maintain, test, and reuse. It prevents developers from implementing bypass structures or controlling recursion. Best practices dictate using a Trigger Handler pattern."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How do you handle trigger exceptions gracefully in bulk operations?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Use the addError() method on specific records inside the trigger to display user-friendly error messages on screen without rolling back the entire DML batch, keeping partial updates intact."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What is the CPU time limit and how does it affect triggers?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Apex triggers share the synchronous transaction CPU time limit (10 seconds). To prevent CPU time outs, avoid nested loop structures, use indexing, and offload calculations to Queueable jobs."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How does ForcePilot AI help developers master trigger architecture?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "ForcePilot AI assesses your trigger code structure, recursion handling, and bulkification patterns. You can practice responding to recruiter questions in real-time on our interactive Salesforce Mock Interview screen."
-                }
-              }
-            ]
-          });
-    document.head.appendChild(script);
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
+  const faqSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What are Salesforce Apex triggers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Apex triggers are database scripts that run before or after DML transactions (inserts, updates, deletes, merges) execute on Salesforce records. They enable developers to build custom validations, propagate related updates, and interface with third-party software."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is putting business logic directly in the trigger body considered a red flag?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Putting logic directly inside the trigger body makes code difficult to maintain, test, and reuse. It prevents developers from implementing bypass structures or controlling recursion. Best practices dictate using a Trigger Handler pattern."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do you handle trigger exceptions gracefully in bulk operations?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use the addError() method on specific records inside the trigger to display user-friendly error messages on screen without rolling back the entire DML batch, keeping partial updates intact."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the CPU time limit and how does it affect triggers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Apex triggers share the synchronous transaction CPU time limit (10 seconds). To prevent CPU time outs, avoid nested loop structures, use indexing, and offload calculations to Queueable jobs."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does ForcePilot AI help developers master trigger architecture?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ForcePilot AI assesses your trigger code structure, recursion handling, and bulkification patterns. You can practice responding to recruiter questions in real-time on our interactive Salesforce Mock Interview screen."
+        }
+      }
+    ]
+  }), []);
+
+  useJsonLd(faqSchema, "schema-faq");
 
 
   const fadeIn = {

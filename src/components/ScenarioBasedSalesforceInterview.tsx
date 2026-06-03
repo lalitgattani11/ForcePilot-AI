@@ -14,6 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
+import { useJsonLd } from "../hooks/useJsonLd";
 
 interface QuestionItem {
   q: string;
@@ -28,60 +29,54 @@ interface QuestionSection {
 }
 
 const ScenarioBasedSalesforceInterview: React.FC = () => {
-  React.useEffect(() => {
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.text = JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "What are Salesforce scenario-based interview questions?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Scenario-based questions present hypothetical real-world technical problems (such as Governor Limit errors, concurrency lockouts, or sharing discrepancies) to assess a developer's design methodology, architectural choices, and technical depth."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How do you approach performance-related scenarios in interviews?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Always analyze diagnostic strategies (Query Plan tool, debug logs), query optimization (selective indexing, parent-child subqueries), low-code vs. code trade-offs, and asynchronous delegation (Queueables, Batch Apex) to show a comprehensive understanding of resources."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What is the difference between with sharing and without sharing?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "with sharing enforces the sharing rules of the running user, preventing data leakages. without sharing executes database actions in system mode, ignoring sharing settings. Best practices suggest using inherited sharing to resolve permissions dynamically."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How do you handle high-volume data operations without crashing Salesforce?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Process database updates asynchronously in batches of 200 using Batch Apex, use selective query filters on indexed fields, define skinny tables for heavy objects, and design clean archiving mechanisms."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How does ForcePilot AI help prepare for scenario-based interviews?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "ForcePilot AI serves as an interactive simulator that generates complex architectural and code failure scenarios. It audits your responses for security standards, limit compliance, and design patterns in real-time. Practice on our interactive Salesforce Mock Interview screen."
-                }
-              }
-            ]
-          });
-    document.head.appendChild(script);
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
+  const faqSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What are Salesforce scenario-based interview questions?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Scenario-based questions present hypothetical real-world technical problems (such as Governor Limit errors, concurrency lockouts, or sharing discrepancies) to assess a developer's design methodology, architectural choices, and technical depth."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do you approach performance-related scenarios in interviews?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Always analyze diagnostic strategies (Query Plan tool, debug logs), query optimization (selective indexing, parent-child subqueries), low-code vs. code trade-offs, and asynchronous delegation (Queueables, Batch Apex) to show a comprehensive understanding of resources."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between with sharing and without sharing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "with sharing enforces the sharing rules of the running user, preventing data leakages. without sharing executes database actions in system mode, ignoring sharing settings. Best practices suggest using inherited sharing to resolve permissions dynamically."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do you handle high-volume data operations without crashing Salesforce?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Process database updates asynchronously in batches of 200 using Batch Apex, use selective query filters on indexed fields, define skinny tables for heavy objects, and design clean archiving mechanisms."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does ForcePilot AI help prepare for scenario-based interviews?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ForcePilot AI serves as an interactive simulator that generates complex architectural and code failure scenarios. It audits your responses for security standards, limit compliance, and design patterns in real-time. Practice on our interactive Salesforce Mock Interview screen."
+        }
+      }
+    ]
+  }), []);
+
+  useJsonLd(faqSchema, "schema-faq");
 
 
   const fadeIn = {

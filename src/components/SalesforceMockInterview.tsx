@@ -22,6 +22,7 @@ import {
 import { useNavigate, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
+import { useJsonLd } from "../hooks/useJsonLd";
 
 interface QuestionItem {
   title: string;
@@ -36,60 +37,54 @@ interface QuestionSection {
 }
 
 const SalesforceMockInterview: React.FC = () => {
-  React.useEffect(() => {
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.text = JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "What is ForcePilot AI and how does it work?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "ForcePilot AI is an advanced mock interview simulator trained specifically on Salesforce architectures, Apex code development guidelines, and LWC framework rules. It evaluates your text or voice answers dynamically, adjusts standard question difficulty levels based on previous answers, and provides structural scorecards."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How does ForcePilot AI differ from generic interview tools?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Generic platforms evaluate generic software practices or simple data structures. ForcePilot AI is explicitly engineered for Salesforce, assessing your knowledge of governor limits exceptions, LWC Shadow DOM encapsulation, custom sharing rules (OWD), and Apex triggers."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What Salesforce roles are supported?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "We offer specialized mock interview tracks for Salesforce Apex Developers, LWC Engineers, Flow Automators, Salesforce Administrators, and Technical Architects."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Can I use this for LWC and Apex coding assessments?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes. The coding assessment simulation checks if DML statements are bulkified, registers syntax issues, and checks if your trigger handler designs comply with governor limits."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Does the platform provide actionable developer scorecards?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes. Upon completing a practice session, you will receive a detailed scorecard evaluating your technical depth, communication clarity, governor limits awareness, and security design logic with direct advice on how to improve."
-                }
-              }
-            ]
-          });
-    document.head.appendChild(script);
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
+  const faqSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is ForcePilot AI and how does it work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ForcePilot AI is an advanced mock interview simulator trained specifically on Salesforce architectures, Apex code development guidelines, and LWC framework rules. It evaluates your text or voice answers dynamically, adjusts standard question difficulty levels based on previous answers, and provides structural scorecards."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does ForcePilot AI differ from generic interview tools?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Generic platforms evaluate generic software practices or simple data structures. ForcePilot AI is explicitly engineered for Salesforce, assessing your knowledge of governor limits exceptions, LWC Shadow DOM encapsulation, custom sharing rules (OWD), and Apex triggers."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What Salesforce roles are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We offer specialized mock interview tracks for Salesforce Apex Developers, LWC Engineers, Flow Automators, Salesforce Administrators, and Technical Architects."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use this for LWC and Apex coding assessments?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The coding assessment simulation checks if DML statements are bulkified, registers syntax issues, and checks if your trigger handler designs comply with governor limits."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does the platform provide actionable developer scorecards?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Upon completing a practice session, you will receive a detailed scorecard evaluating your technical depth, communication clarity, governor limits awareness, and security design logic with direct advice on how to improve."
+        }
+      }
+    ]
+  }), []);
+
+  useJsonLd(faqSchema, "schema-faq");
 
   const navigate = useNavigate();
 

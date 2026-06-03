@@ -19,6 +19,7 @@ import {
   Search
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { useJsonLd } from "../hooks/useJsonLd";
 
 interface QuestionItem {
   title: string;
@@ -33,92 +34,82 @@ interface QuestionSection {
 }
 
 const PrepTips: React.FC = () => {
-  React.useEffect(() => {
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.text = JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "What are the best Salesforce interview preparation tips?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Focus on explaining project architectures using structured frameworks (like SALO), prepare for scenario-based governor limits checks, review core sharing rules, build a clean GitHub portfolio, and run simulated sessions to evaluate technical answers."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How should I prepare for a Salesforce Developer interview?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Developers must master Apex bulkification (preventing SOQL queries inside loops), transaction boundaries, asynchronous executions (Queueable classes, Batch Apex, and Future methods), and LWC reactivity models."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What is the SALO framework?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "SALO stands for Situation, Action, Logic, and Outcome. It is a mental model that prompt candidates to explain the 'Logic' (the technical why) behind architectural and coding choices rather than just stating actions."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How do I handle behavioral interview questions in Salesforce rounds?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Structure your answers around project collaboration, managing conflicting stakeholder requirements, resolving production issues under pressure, and explaining technical limitations to non-technical users."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How does ForcePilot AI help prepare for interviews?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "ForcePilot AI generates technical mock interviews, provides immediate verbal/text assessments, checks DML and query optimizations, and outputs multidimensional scorecards mapping your progression against top platform developers."
-                }
-              }
-            ]
-          });
-    document.head.appendChild(script);
-
-    const articleScript = document.createElement("script");
-    articleScript.type = "application/ld+json";
-    articleScript.text = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "Salesforce Interview Preparation Tips Guide (2026)",
-      "description": "Master your technical interview with our salesforce interview preparation tips. Learn how to prepare for salesforce developer, admin, and architect interviews.",
-      "image": "https://forcepilotai.online/pwa-512.png",
-      "datePublished": "2026-04-12T08:00:00Z",
-      "dateModified": "2026-06-03T12:00:00Z",
-      "author": {
-        "@type": "Person",
-        "name": "Marcus Chen",
-        "jobTitle": "Lead LWC Engineer"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "ForcePilot AI",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://forcepilotai.online/pwa-512.png"
+  const faqSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What are the best Salesforce interview preparation tips?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Focus on explaining project architectures using structured frameworks (like SALO), prepare for scenario-based governor limits checks, review core sharing rules, build a clean GitHub portfolio, and run simulated sessions to evaluate technical answers."
         }
       },
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https://forcepilotai.online/interview-preparation-tips"
+      {
+        "@type": "Question",
+        "name": "How should I prepare for a Salesforce Developer interview?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Developers must master Apex bulkification (preventing SOQL queries inside loops), transaction boundaries, asynchronous executions (Queueable classes, Batch Apex, and Future methods), and LWC reactivity models."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the SALO framework?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SALO stands for Situation, Action, Logic, and Outcome. It is a mental model that prompt candidates to explain the 'Logic' (the technical why) behind architectural and coding choices rather than just stating actions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I handle behavioral interview questions in Salesforce rounds?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Structure your answers around project collaboration, managing conflicting stakeholder requirements, resolving production issues under pressure, and explaining technical limitations to non-technical users."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does ForcePilot AI help prepare for interviews?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ForcePilot AI generates technical mock interviews, provides immediate verbal/text assessments, checks DML and query optimizations, and outputs multidimensional scorecards mapping your progression against top platform developers."
+        }
       }
-    });
-    document.head.appendChild(articleScript);
+    ]
+  }), []);
 
-    return () => {
-      document.head.removeChild(script);
-      document.head.removeChild(articleScript);
-    };
-  }, []);
+  const articleSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Salesforce Interview Preparation Tips Guide (2026)",
+    "description": "Master your technical interview with our salesforce interview preparation tips. Learn how to prepare for salesforce developer, admin, and architect interviews.",
+    "image": "https://forcepilotai.online/pwa-512.png",
+    "datePublished": "2026-04-12T08:00:00Z",
+    "dateModified": "2026-06-03T12:00:00Z",
+    "author": {
+      "@type": "Person",
+      "name": "Marcus Chen",
+      "jobTitle": "Lead LWC Engineer"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ForcePilot AI",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://forcepilotai.online/pwa-512.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://forcepilotai.online/interview-preparation-tips"
+    }
+  }), []);
+
+  useJsonLd(faqSchema, "schema-faq");
+  useJsonLd(articleSchema, "schema-article");
 
   const categories = [
     {

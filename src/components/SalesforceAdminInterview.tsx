@@ -14,6 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
+import { useJsonLd } from "../hooks/useJsonLd";
 
 interface QuestionItem {
   q: string;
@@ -28,60 +29,54 @@ interface QuestionSection {
 }
 
 const SalesforceAdminInterview: React.FC = () => {
-  React.useEffect(() => {
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.text = JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "What is the difference between a role and a profile?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Profiles determine what permissions a user has (object access, fields, page layouts). Roles determine which data records a user can access based on the organization hierarchy."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How does Salesforce enforce field-level security?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Field-Level Security (FLS) controls whether a user can see, edit, or delete specific fields on an object. Admins configure FLS on Profiles or Permission Sets, and it is automatically respected across page layouts, search results, reports, and list views."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What is a validation rule?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "A Validation Rule contains a formula that evaluates record fields on save. If the formula evaluates to True, it blocks the save operation and displays a custom error message to ensure data quality."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How do you migrate legacy Workflow Rules to Flow?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Salesforce provides a native 'Migrate to Flow' tool that converts legacy Workflow Rules and Process Builders into record-triggered flows. Admins should use this tool to consolidate and optimize automations."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How does ForcePilot AI help admins prepare for certification and job interviews?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "ForcePilot AI generates real-world scenario questions and mock interview simulations that assess your security design, automation configuration, and data integrity logic. Practice in real-time on our Salesforce Mock Interview Screen."
-                }
-              }
-            ]
-          });
-    document.head.appendChild(script);
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
+  const faqSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the difference between a role and a profile?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Profiles determine what permissions a user has (object access, fields, page layouts). Roles determine which data records a user can access based on the organization hierarchy."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does Salesforce enforce field-level security?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Field-Level Security (FLS) controls whether a user can see, edit, or delete specific fields on an object. Admins configure FLS on Profiles or Permission Sets, and it is automatically respected across page layouts, search results, reports, and list views."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a validation rule?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Validation Rule contains a formula that evaluates record fields on save. If the formula evaluates to True, it blocks the save operation and displays a custom error message to ensure data quality."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do you migrate legacy Workflow Rules to Flow?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Salesforce provides a native 'Migrate to Flow' tool that converts legacy Workflow Rules and Process Builders into record-triggered flows. Admins should use this tool to consolidate and optimize automations."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does ForcePilot AI help admins prepare for certification and job interviews?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ForcePilot AI generates real-world scenario questions and mock interview simulations that assess your security design, automation configuration, and data integrity logic. Practice in real-time on our Salesforce Mock Interview Screen."
+        }
+      }
+    ]
+  }), []);
+
+  useJsonLd(faqSchema, "schema-faq");
 
 
   const fadeIn = {

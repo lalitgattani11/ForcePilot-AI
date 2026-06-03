@@ -16,94 +16,85 @@ import {
   ChevronRight
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { useJsonLd } from "../hooks/useJsonLd";
 
 const CareerRoadmap: React.FC = () => {
-  React.useEffect(() => {
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.text = JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "What is a Salesforce Developer roadmap?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "A Salesforce Developer roadmap is a structured learning path that guides candidates from platform administrator configurations to advanced programmatic languages like Apex, LWC, and platform API integrations."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How can a fresher become a Salesforce Developer?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Freshers should start by mastering standard database configurations (objects, fields, validation rules), transition to low-code flows, learn core programming logic via Java-like Apex, study reactive web designs via LWC, and build a GitHub portfolio showing real REST API integrations."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How long does it take to learn Salesforce development?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "For candidates with standard programming knowledge, mastering Salesforce development takes 3 to 6 months of consistent study. This includes learning Apex syntax, LWC component architectures, and platform governor limits."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Are certifications enough to get a junior Salesforce Developer job?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "No, certifications are not enough. Recruiters look for hands-on playground configurations, GitHub repositories, and coding portfolios. A candidate who can explain trigger recursion or API callout constraints is preferred over someone with multiple certifications but no code examples."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How does ForcePilot AI accelerate career progression?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "ForcePilot AI acts as a technical recruiter simulation engine. It dynamically audits your Apex, LWC, and Flow answers, helping you identify knowledge gaps and practice structural answers in real-time. Practice on our Salesforce Mock Interview Screen."
-                }
-              }
-            ]
-          });
-    document.head.appendChild(script);
-
-    const articleScript = document.createElement("script");
-    articleScript.type = "application/ld+json";
-    articleScript.text = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "Salesforce Developer & Career Roadmap (2026)",
-      "description": "Navigate your career path with our structured Salesforce developer roadmap. Learn how to become a Salesforce developer with detailed guides for freshers.",
-      "image": "https://forcepilotai.online/pwa-512.png",
-      "datePublished": "2026-03-05T08:00:00Z",
-      "dateModified": "2026-06-03T12:00:00Z",
-      "author": {
-        "@type": "Person",
-        "name": "Alex Rivera",
-        "jobTitle": "Principal Salesforce Architect"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "ForcePilot AI",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://forcepilotai.online/pwa-512.png"
+  const faqSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a Salesforce Developer roadmap?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Salesforce Developer roadmap is a structured learning path that guides candidates from platform administrator configurations to advanced programmatic languages like Apex, LWC, and platform API integrations."
         }
       },
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https://forcepilotai.online/career-roadmap"
+      {
+        "@type": "Question",
+        "name": "How can a fresher become a Salesforce Developer?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Freshers should start by mastering standard database configurations (objects, fields, validation rules), transition to low-code flows, learn core programming logic via Java-like Apex, study reactive web designs via LWC, and build a GitHub portfolio showing real REST API integrations."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How long does it take to learn Salesforce development?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For candidates with standard programming knowledge, mastering Salesforce development takes 3 to 6 months of consistent study. This includes learning Apex syntax, LWC component architectures, and platform governor limits."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are certifications enough to get a junior Salesforce Developer job?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, certifications are not enough. Recruiters look for hands-on playground configurations, GitHub repositories, and coding portfolios. A candidate who can explain trigger recursion or API callout constraints is preferred over someone with multiple certifications but no code examples."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does ForcePilot AI accelerate career progression?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ForcePilot AI acts as a technical recruiter simulation engine. It dynamically audits your Apex, LWC, and Flow answers, helping you identify knowledge gaps and practice structural answers in real-time. Practice on our Salesforce Mock Interview Screen."
+        }
       }
-    });
-    document.head.appendChild(articleScript);
+    ]
+  }), []);
 
-    return () => {
-      document.head.removeChild(script);
-      document.head.removeChild(articleScript);
-    };
-  }, []);
+  const articleSchema = React.useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Salesforce Developer & Career Roadmap (2026)",
+    "description": "Navigate your career path with our structured Salesforce developer roadmap. Learn how to become a Salesforce developer with detailed guides for freshers.",
+    "image": "https://forcepilotai.online/pwa-512.png",
+    "datePublished": "2026-03-05T08:00:00Z",
+    "dateModified": "2026-06-03T12:00:00Z",
+    "author": {
+      "@type": "Person",
+      "name": "Alex Rivera",
+      "jobTitle": "Principal Salesforce Architect"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ForcePilot AI",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://forcepilotai.online/pwa-512.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://forcepilotai.online/career-roadmap"
+    }
+  }), []);
+
+  useJsonLd(faqSchema, "schema-faq");
+  useJsonLd(articleSchema, "schema-article");
 
   const milestones = [
     {

@@ -23,6 +23,7 @@ import {
 import { SEO_LANDING_PAGES } from "../data/seoLandingPages";
 import NotFound from "./NotFound";
 import Breadcrumbs from "./Breadcrumbs";
+import { useJsonLd } from "../hooks/useJsonLd";
 
 const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   Code2,
@@ -51,62 +52,50 @@ interface SeoLandingTemplateProps {
 const SeoLandingTemplate: React.FC<SeoLandingTemplateProps> = ({ pageId }) => {
   const page = SEO_LANDING_PAGES[pageId];
 
-  React.useEffect(() => {
-    if (!page) return;
-
-    // FAQ Schema
-    const faqScript = document.createElement("script");
-    faqScript.type = "application/ld+json";
-    faqScript.text = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": page.faqs.map(f => ({
-        "@type": "Question",
-        "name": f.q,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": f.a
-        }
-      }))
-    });
-    document.head.appendChild(faqScript);
-
-    // Article Schema
-    const articleScript = document.createElement("script");
-    articleScript.type = "application/ld+json";
-    articleScript.text = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": page.title.split(" | ")[0],
-      "description": page.description,
-      "image": "https://forcepilotai.online/pwa-512.png",
-      "datePublished": page.datePublished,
-      "dateModified": page.dateModified,
-      "author": {
-        "@type": "Person",
-        "name": page.author,
-        "jobTitle": page.authorRole
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "ForcePilot AI",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://forcepilotai.online/pwa-512.png"
-        }
-      },
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": page.canonicalUrl
+  // FAQ Schema
+  const faqSchema = page ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": page.faqs.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": f.a
       }
-    });
-    document.head.appendChild(articleScript);
+    }))
+  } : null;
 
-    return () => {
-      document.head.removeChild(faqScript);
-      document.head.removeChild(articleScript);
-    };
-  }, [page]);
+  // Article Schema
+  const articleSchema = page ? {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": page.title.split(" | ")[0],
+    "description": page.description,
+    "image": "https://forcepilotai.online/pwa-512.png",
+    "datePublished": page.datePublished,
+    "dateModified": page.dateModified,
+    "author": {
+      "@type": "Person",
+      "name": page.author,
+      "jobTitle": page.authorRole
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ForcePilot AI",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://forcepilotai.online/pwa-512.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": page.canonicalUrl
+    }
+  } : null;
+
+  useJsonLd(faqSchema, "schema-faq");
+  useJsonLd(articleSchema, "schema-article");
 
   if (!page) {
     return <NotFound />;
