@@ -343,7 +343,8 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
           <Sparkles size={120} className="text-emerald-500" />
         </div>
 
-        <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-8 sm:gap-8">
+        {/* Desktop Layout (sm and up) */}
+        <div className="hidden sm:flex relative z-10 flex-col sm:flex-row justify-between items-start sm:items-center gap-8 sm:gap-8">
           <div className="space-y-5 sm:space-y-4 w-full sm:w-auto">
             <div className="flex flex-wrap items-center gap-3">
               <div className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-black uppercase tracking-widest text-emerald-400">Session Intelligence</div>
@@ -357,8 +358,8 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
 
             <h1 className="text-3xl sm:text-6xl font-black text-white italic tracking-tighter leading-tight break-words">{role}</h1>
 
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-4 sm:gap-6 pt-2">
-              <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 sm:gap-6 pt-2">
+              <div className="flex items-center gap-4 sm:gap-3">
                 <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-emerald-400 border border-white/10 shrink-0"><Target size={20} /></div>
                 <div>
                   <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Readiness</div>
@@ -366,7 +367,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4 sm:gap-3">
                 <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-cyan-400 border border-white/10 shrink-0"><ShieldCheck size={20} /></div>
                 <div>
                   <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Evaluation Index</div>
@@ -377,12 +378,56 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
           </div>
 
           <div className="relative w-full sm:w-auto flex justify-center sm:justify-end mt-2 sm:mt-0 py-4 sm:py-0">
-            <div className="text-[60px] sm:text-[160px] font-black text-white/[0.03] sm:text-white/5 leading-none absolute -top-4 sm:-top-12 -right-0 sm:-right-8 select-none italic pointer-events-none">{metrics.avgScore}</div>
+            <div className="text-[60px] sm:text-[160px] font-black text-white/[0.03] sm:text-white/5 leading-none absolute -top-4 sm:-top-12 right-4 sm:-right-8 select-none italic pointer-events-none">{metrics.avgScore}</div>
             <div className="flex flex-col items-center sm:items-end relative">
               <div className="text-6xl sm:text-8xl font-black text-emerald-500 italic leading-none drop-shadow-[0_0_30px_rgba(16,185,129,0.15)]">
                 {metrics.avgScore}<span className="text-2xl sm:text-4xl">%</span>
               </div>
               <div className="text-[9px] font-black text-emerald-500/70 uppercase tracking-[0.4em] mt-3 sm:mt-2 sm:mr-2">OVERALL READINESS</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Layout (below sm) */}
+        <div className="flex sm:hidden relative z-10 flex-col gap-6">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-black uppercase tracking-widest text-emerald-400">Session Intelligence</div>
+            {date && (
+              <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                <Calendar size={10} />
+                {new Date(date).toLocaleDateString()}
+              </div>
+            )}
+          </div>
+
+          <h1 className="text-2xl font-black text-white italic tracking-tighter leading-tight break-words">{role}</h1>
+
+          <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-5 flex flex-col gap-5 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/[0.03] blur-2xl rounded-full select-none pointer-events-none"></div>
+            
+            <div className="flex items-baseline justify-between border-b border-white/5 pb-4">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Overall Readiness</span>
+              <div className="text-4xl font-black text-emerald-500 italic leading-none drop-shadow-[0_0_20px_rgba(16,185,129,0.15)]">
+                {metrics.avgScore}<span className="text-lg font-bold">%</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-1.5">
+                  <Target size={14} className="text-emerald-400" />
+                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Readiness</span>
+                </div>
+                <span className="text-xs font-black text-white pl-5">{metrics.readiness}</span>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-1.5">
+                  <ShieldCheck size={14} className="text-cyan-400" />
+                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Evaluation</span>
+                </div>
+                <span className="text-xs font-black text-white pl-5">{metrics.avgScore}%</span>
+              </div>
             </div>
           </div>
         </div>

@@ -168,3 +168,358 @@ body {
     display: none;
   }
 }
+
+/* ==========================================================================
+   MOBILE-FIRST PREMIUM SaaS OVERRIDES (< 768px)
+   Desktop layout remains 100% pixel-perfect unchanged.
+   ========================================================================== */
+@media (max-width: 767px) {
+  /* 1. Spacing Rhythm & Page Gaps */
+  .space-y-32 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(3rem * calc(1 - var(--tw-space-y-reverse))) !important;
+    margin-bottom: calc(3rem * var(--tw-space-y-reverse)) !important;
+  }
+  .space-y-24 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse))) !important;
+    margin-bottom: calc(2rem * var(--tw-space-y-reverse)) !important;
+  }
+  .space-y-16 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse))) !important;
+    margin-bottom: calc(1.5rem * var(--tw-space-y-reverse)) !important;
+  }
+  .gap-32, .gap-24, .gap-12 {
+    gap: 1rem !important;
+  }
+  .py-20 {
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+  .py-32 {
+    padding-top: 3.5rem !important;
+    padding-bottom: 3.5rem !important;
+  }
+
+  /* 2. Mobile Hero Layout & Typography */
+  .hero-title {
+    font-size: 2.25rem !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.04em !important;
+  }
+  .guide-hero-title, .platform-hero-title {
+    font-size: 1.85rem !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 0.75rem !important;
+    text-wrap: balance !important;
+  }
+  .sub-title, .guide-hero-subtitle, .platform-sub-title {
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+    color: #94a3b8 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-bottom: 1.25rem !important;
+    max-width: 100% !important;
+  }
+  .guide-hero-section {
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* 3. Section Titles & Spacing */
+  h2.text-3xl, h2.text-4xl, h2.text-5xl, h2.text-2xl {
+    font-size: 1.5rem !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  /* 4. Touch Targets & Mobile Nav */
+  nav button[aria-label="Open navigation menu"], 
+  nav button[aria-label="Close navigation menu"] {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+  }
+  
+  /* Tap targets for Drawer Links */
+  nav div.fixed.z-\[9999\] a, nav div.fixed.z-\[9999\] button {
+    min-height: 44px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 13px !important;
+  }
+
+  /* 5. Mobile Friendly CTA Buttons */
+  .cta-button, .w-full.sm\:w-auto {
+    width: 100% !important;
+    padding-top: 0.85rem !important;
+    padding-bottom: 0.85rem !important;
+    min-height: 48px !important;
+    font-size: 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 0.75rem !important;
+  }
+
+  /* 6. Card System Adjustments */
+  .premium-glass, .premium-card {
+    padding: 1.25rem !important;
+    border-radius: 1.25rem !important;
+  }
+  .p-8, .p-10, .p-16 {
+    padding: 1.25rem !important;
+  }
+  .rounded-\[2rem\], .rounded-\[3rem\], .rounded-\[32px\] {
+    border-radius: 1.25rem !important;
+  }
+
+  /* Bug #3: Trust Cards Stacked & Readable on Mobile */
+  .bg-slate-950\/20 .grid-cols-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    gap: 1.25rem !important;
+  }
+  .bg-slate-950\/20 .premium-glass {
+    padding: 1.5rem !important;
+  }
+  
+  /* 7. Setup Experience & Inputs */
+  input.card-selector, .input-glass, #roleSelect {
+    font-size: 16px !important; /* Prevents auto-zoom on iOS */
+    height: 52px !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 0.75rem !important;
+  }
+
+  /* Bug #5: Setup Screen Button Text Cut-Off (Intermediate, Advanced, Professional) */
+  #setup button {
+    min-height: 44px !important;
+    font-size: 8.5px !important;
+    letter-spacing: -0.02em !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+    white-space: nowrap !important;
+    border-radius: 0.5rem !important;
+  }
+  @media (max-width: 360px) {
+    #setup button {
+      font-size: 7.5px !important;
+    }
+  }
+
+  #setup .flex-col.lg\:flex-row {
+    gap: 1.25rem !important;
+  }
+  #setup .grid-cols-3 {
+    gap: 0.5rem !important;
+  }
+  #setup .pt-8.border-t {
+    padding-top: 1.25rem !important;
+    margin-top: 1rem !important;
+  }
+
+  /* Bug #6: Audio Switch Toggle sizing and alignment */
+  #setup button[aria-label="Disable voice audio"],
+  #setup button[aria-label="Enable voice audio"] {
+    width: 2.25rem !important;
+    height: 1.15rem !important;
+    min-height: unset !important;
+    margin-top: 0.25rem !important;
+  }
+  #setup button[aria-label*="voice audio"] div {
+    width: 0.85rem !important;
+    height: 0.85rem !important;
+    top: 0.1rem !important;
+  }
+
+  /* 8. Platform Showcase Dashboard Scales Down Safely */
+  .lg\:col-span-4, .lg\:col-span-5, .lg\:col-span-3 {
+    width: 100% !important;
+    margin-bottom: 0px !important;
+  }
+
+  /* Bug #2: Performance Forensics Circular Score Overflow fix */
+  .premium-glass .relative.w-28.h-28 {
+    width: 7.25rem !important;
+    height: 7.25rem !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .premium-glass .relative.w-28.h-28 svg {
+    width: 100% !important;
+    height: 100% !important;
+    transform: rotate(-90deg) !important;
+    transform-origin: center !important;
+  }
+  .premium-glass .relative.w-28.h-28 .absolute.flex {
+    transform: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .premium-glass .relative.w-28.h-28 .absolute.flex span:first-child {
+    font-size: 2.25rem !important;
+    line-height: 1 !important;
+    margin-bottom: 0.15rem !important;
+  }
+  .premium-glass .relative.w-28.h-28 .absolute.flex span:last-child {
+    font-size: 9.5px !important;
+    letter-spacing: 0.08em !important;
+    color: #94a3b8 !important;
+  }
+
+  /* Bug #1: Streaming Audio Overflow protection */
+  .premium-glass .flex.items-end.gap-1 {
+    max-width: 100% !important;
+    overflow: hidden !important;
+    mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent) !important;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent) !important;
+  }
+  @media (max-width: 420px) {
+    .premium-glass .flex.items-end.gap-1 > div:nth-child(n+10),
+    .premium-glass .flex.items-end.gap-1 > span:nth-child(n+10) {
+      display: none !important;
+    }
+  }
+
+  /* Bug #4: Configure Simulation CTA visual connection and centering */
+  .premium-glass .flex.justify-end {
+    justify-content: center !important;
+    width: 100% !important;
+    margin-top: 1rem !important;
+  }
+  .premium-glass .flex.justify-end > div {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  /* Bug #7: Recharts interview trends chart zero-height collapse fix */
+  .premium-glass .h-full.-ml-6.pr-2 {
+    min-height: 250px !important;
+    height: 250px !important;
+    position: relative !important;
+    margin-left: -1rem !important;
+  }
+
+  /* Bug #8: Prevent badge overlap in featured intelligence cards */
+  .premium-glass .absolute.top-0.right-0.rounded-bl-2xl {
+    position: relative !important;
+    top: unset !important;
+    right: unset !important;
+    align-self: flex-start !important;
+    margin-bottom: 1rem !important;
+    border-radius: 0.5rem !important;
+    padding: 0.25rem 0.75rem !important;
+    width: fit-content !important;
+  }
+
+  /* Override premium-glass padding for timeline session container list on mobile to prevent double padding */
+  .premium-glass.timeline-container {
+    padding: 0px !important;
+  }
+  
+  /* 9. FAQ / Details Optimization */
+  details.group {
+    padding: 1rem !important;
+    border-radius: 1rem !important;
+  }
+  details summary h3 {
+    font-size: 0.95rem !important;
+    line-height: 1.35 !important;
+  }
+
+  /* 10. Performance Glows scaling to prevent rendering lag */
+  .blur-\[120px\], .blur-\[140px\], .blur-\[160px\] {
+    filter: blur(80px) !important;
+    opacity: 0.15 !important;
+  }
+
+  /* 11. Premium AI Voice Conversation Chat Bubbles Optimization */
+  .flex-1.min-h-0.overflow-y-auto .flex.justify-end,
+  .flex-1.min-h-0.overflow-y-auto .flex.justify-start {
+    width: 100% !important;
+    padding: 0.25rem 0.5rem !important;
+  }
+
+  .flex-1.min-h-0.overflow-y-auto .flex.justify-end > div {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    max-width: 85% !important;
+    width: 85% !important;
+  }
+  
+  .flex-1.min-h-0.overflow-y-auto .flex.justify-start > div {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    max-width: 85% !important;
+    width: 85% !important;
+  }
+
+  .flex-1.min-h-0.overflow-y-auto .flex.justify-end .rounded-xl,
+  .flex-1.min-h-0.overflow-y-auto .flex.justify-end .rounded-2xl {
+    width: 100% !important;
+    text-align: left !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+    display: block !important;
+    max-width: 100% !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 1.25rem 1.25rem 0.25rem 1.25rem !important;
+  }
+
+  .flex-1.min-h-0.overflow-y-auto .flex.justify-start .rounded-xl,
+  .flex-1.min-h-0.overflow-y-auto .flex.justify-start .rounded-2xl {
+    width: 100% !important;
+    text-align: left !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+    display: block !important;
+    max-width: 100% !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 1.25rem 1.25rem 1.25rem 0.25rem !important;
+  }
+
+  .flex-1.min-h-0.overflow-y-auto .flex.justify-end .flex.items-center.gap-2 {
+    width: auto !important;
+    justify-content: flex-end !important;
+    margin-right: 0.5rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+  
+  .flex-1.min-h-0.overflow-y-auto .flex.justify-start .flex.items-center.gap-2 {
+    width: auto !important;
+    justify-content: flex-start !important;
+    margin-left: 0.5rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+}
+
+/* ==========================================================================
+   SMALL TABLET SaaS OVERRIDES (768px - 1023px)
+   ========================================================================== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-title {
+    font-size: 4rem !important;
+  }
+  .guide-hero-title, .platform-hero-title {
+    font-size: 3.5rem !important;
+  }
+  .space-y-32 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(5rem * calc(1 - var(--tw-space-y-reverse))) !important;
+    margin-bottom: calc(5rem * var(--tw-space-y-reverse)) !important;
+  }
+}

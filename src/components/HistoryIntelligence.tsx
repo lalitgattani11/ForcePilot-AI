@@ -996,7 +996,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
           </div>
 
           {uniqueTimelineRecords.length > 0 ? (
-            <div className="premium-glass rounded-[2rem] border border-white/5 overflow-hidden">
+            <div className="premium-glass timeline-container rounded-[2rem] border border-white/5 overflow-hidden">
               <div className="divide-y divide-white/5">
                 <AnimatePresence mode="popLayout">
                   {uniqueTimelineRecords.slice(0, visibleCount).map((record) => (
@@ -1022,7 +1022,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                         whileHover={{
                           backgroundColor: "rgba(255, 255, 255, 0.02)",
                         }}
-                        className="w-full text-left px-5 sm:px-8 py-5 sm:py-6 flex flex-col md:flex-row md:items-center gap-6 group transition-all relative"
+                        className="w-full text-left pl-5 pr-12 md:px-8 py-5 sm:py-6 flex flex-col md:flex-row md:items-center gap-6 group transition-all relative"
                       >
                         {/* 1. IDENTITY & METADATA */}
                         <div className="flex items-center gap-6 flex-1 min-w-0">
@@ -1054,10 +1054,10 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                         </div>
 
                         {/* 2. STATS & ACTIONS (Right Stack) */}
-                        <div className="flex items-center justify-between md:justify-end gap-6 md:gap-10 shrink-0">
+                        <div className="flex items-center justify-between md:justify-end gap-3 sm:gap-6 md:gap-10 shrink-0 w-full md:w-auto">
                           
                           {/* Score Column (Fixed Width for Alignment) */}
-                          <div className="text-center w-20 shrink-0">
+                          <div className="text-center w-16 sm:w-20 shrink-0">
                             <div className="text-xl font-black text-white group-hover:text-emerald-400 transition-colors">
                               {record.score}%
                             </div>
@@ -1067,7 +1067,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                           </div>
 
                           {/* Badge Column (Consistent Alignment) */}
-                          <div className="w-28 flex justify-center shrink-0">
+                          <div className="w-24 sm:w-28 flex justify-center shrink-0">
                             <div
                               className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border text-center w-full ${
                                 record.score >= 90

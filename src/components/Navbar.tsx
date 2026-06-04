@@ -369,7 +369,7 @@ const Navbar: React.FC = () => {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0.5 }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed top-0 right-0 bottom-0 h-[100dvh] w-[88vw] max-w-[400px] bg-slate-900/95 backdrop-blur-2xl border-l border-white/10 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] z-[9999] lg:hidden overflow-hidden"
+              className="fixed top-0 right-0 bottom-0 h-[100dvh] w-[88vw] max-w-[400px] bg-slate-950 border-l border-white/10 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] z-[9999] lg:hidden overflow-hidden"
             >
               <div className="flex flex-col h-full">
                 {/* Mobile Header: Logo & Close */}

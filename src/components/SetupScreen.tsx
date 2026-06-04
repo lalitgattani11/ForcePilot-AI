@@ -280,28 +280,54 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                   </h4>
 
                   {/* Chat bubble simulations */}
-                  <div className="space-y-4 my-auto">
-                    {/* AI speech bubble */}
-                    <div className="flex gap-2">
-                      <div className="w-5 h-5 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0">
-                        <span className="text-[8px] font-bold text-cyan-400">AI</span>
+                  <div className="space-y-4 my-auto w-full">
+                    {/* Mobile Viewports (< lg) */}
+                    <div className="space-y-4 lg:hidden">
+                      {/* AI speech bubble */}
+                      <div className="flex flex-col items-start gap-1">
+                        <span className="text-[9px] font-bold text-cyan-400 uppercase tracking-wider ml-1">AI</span>
+                        <div className="bg-white/[0.02] border border-white/[0.04] p-3 rounded-2xl rounded-tl-none max-w-[88%] w-fit">
+                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                            Excellent. Let's talk about execution state. Explain your strategy to guard against recursive trigger contexts.
+                          </p>
+                        </div>
                       </div>
-                      <div className="bg-white/[0.02] border border-white/[0.04] p-3 rounded-2xl rounded-tl-none max-w-[85%]">
-                        <p className="text-[11px] text-slate-300 leading-relaxed">
-                          Excellent. Let's talk about execution state. Explain your strategy to guard against recursive trigger contexts.
-                        </p>
+
+                      {/* Candidate transcript */}
+                      <div className="flex flex-col items-end gap-1">
+                        <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider mr-1">ME</span>
+                        <div className="bg-cyan-500/5 border border-cyan-500/10 p-3 rounded-2xl rounded-tr-none max-w-[88%] w-fit">
+                          <p className="text-[11px] text-white leading-relaxed">
+                            "I use a static helper class with a Set of record IDs. By verifying if an ID exists in the set before running logic, we ensure bulk updates run once..."
+                          </p>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Candidate transcript */}
-                    <div className="flex gap-2 justify-end">
-                      <div className="bg-cyan-500/5 border border-cyan-500/10 p-3 rounded-2xl rounded-tr-none max-w-[85%]">
-                        <p className="text-[11px] text-white leading-relaxed">
-                          "I use a static helper class with a Set of record IDs. By verifying if an ID exists in the set before running logic, we ensure bulk updates run once..."
-                        </p>
+                    {/* Desktop Viewports (>= lg) */}
+                    <div className="hidden lg:flex flex-col gap-4">
+                      {/* AI speech bubble */}
+                      <div className="flex gap-2">
+                        <div className="w-5 h-5 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0">
+                          <span className="text-[8px] font-bold text-cyan-400">AI</span>
+                        </div>
+                        <div className="bg-white/[0.02] border border-white/[0.04] p-3 rounded-2xl rounded-tl-none max-w-[85%]">
+                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                            Excellent. Let's talk about execution state. Explain your strategy to guard against recursive trigger contexts.
+                          </p>
+                        </div>
                       </div>
-                      <div className="w-5 h-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-                        <span className="text-[8px] font-bold text-emerald-400">ME</span>
+
+                      {/* Candidate transcript */}
+                      <div className="flex gap-2 justify-end">
+                        <div className="bg-cyan-500/5 border border-cyan-500/10 p-3 rounded-2xl rounded-tr-none max-w-[85%]">
+                          <p className="text-[11px] text-white leading-relaxed">
+                            "I use a static helper class with a Set of record IDs. By verifying if an ID exists in the set before running logic, we ensure bulk updates run once..."
+                          </p>
+                        </div>
+                        <div className="w-5 h-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                          <span className="text-[8px] font-bold text-emerald-400">ME</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -335,7 +361,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
 
                   {/* Circular Chart */}
                   <div className="relative w-28 h-28 mx-auto flex items-center justify-center">
-                    <svg className="w-full h-full transform -rotate-90">
+                    <svg viewBox="0 0 112 112" className="w-full h-full transform -rotate-90">
                       <circle cx="56" cy="56" r="46" stroke="rgba(255,255,255,0.03)" strokeWidth="6" fill="transparent" />
                       <circle
                         cx="56"
@@ -464,12 +490,12 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
       {/* 2.5 PLATFORM PREVIEW SECTION */}
       <section 
         id="platform-preview" 
-        className="relative pt-16 pb-20 sm:pt-24 sm:pb-32 border-t border-white/[0.05] space-y-24 sm:space-y-36 scroll-mt-20 sm:scroll-mt-28"
+        className="relative pt-16 pb-20 sm:pt-24 sm:pb-32 border-t border-white/[0.05] space-y-[60px] sm:space-y-36 scroll-mt-20 sm:scroll-mt-28"
         style={{ contentVisibility: 'auto', containIntrinsicSize: '0 1500px' }}
       >
         <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-cyan-500/[0.03] rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse-neural"></div>
         <div className="absolute bottom-1/3 right-1/4 w-[600px] h-[600px] bg-emerald-500/[0.03] rounded-full blur-[160px] pointer-events-none -z-10 animate-pulse-neural" style={{ animationDelay: '3s' }}></div>
-
+ 
         {/* Section Title */}
         <div className="text-center max-w-3xl mx-auto space-y-4 px-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] text-emerald-400 uppercase">
@@ -483,9 +509,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             A highly optimized, intelligence-backed suite created to prep you for senior, lead, and architectural Salesforce interviews.
           </p>
         </div>
-
+ 
         {/* Alternate Feature Grid */}
-        <div className="space-y-20 sm:space-y-32">
+        <div className="space-y-[60px] sm:space-y-32">
           {/* Feature 1: Setup - Text Left, UI Right */}
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20 max-w-6xl mx-auto px-4">
             <motion.div 
@@ -496,8 +522,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
               className="w-full lg:w-1/2 space-y-6 text-left"
             >
               <div className="text-cyan-400 font-bold uppercase tracking-wider text-xs">01 / TAILORED PREPARATION</div>
-              <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
-                Simulate exact organizational environments.
+              <h3 className="text-[22px] sm:text-3xl font-black text-white tracking-tight leading-tight">
+                <span className="lg:hidden">Simulate Exact <br className="block sm:hidden" /> Organizational Environments</span>
+                <span className="hidden lg:inline">Simulate exact organizational environments.</span>
               </h3>
               <p className="text-slate-400 text-sm leading-relaxed">
                 Define the rules of engagement. Select your specialization track, set appropriate difficulty thresholds, and calibrate the interviewer's personality profile. Build conversational confidence under simulated settings ranging from mentoring review boards to high-stress executive interviews.
@@ -572,8 +599,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
               className="w-full lg:w-1/2 space-y-6 text-left"
             >
               <div className="text-emerald-400 font-bold uppercase tracking-wider text-xs">02 / LIVE AI CONVERSATION</div>
-              <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
-                Engage in natural, technical dialogue.
+              <h3 className="text-[22px] sm:text-3xl font-black text-white tracking-tight leading-tight">
+                <span className="lg:hidden">Engage in Natural, <br className="block sm:hidden" /> Technical Dialogue</span>
+                <span className="hidden lg:inline">Engage in natural, technical dialogue.</span>
               </h3>
               <p className="text-slate-400 text-sm leading-relaxed">
                 Put down the keyboard. Experience vocal or text-based mock sessions where our AI responds dynamically to your verbal code explanations. Test your understanding of concurrency, transactional safety, trigger framework patterns, and Salesforce governor constraints in a fluid interview flow.
@@ -644,8 +672,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
               className="w-full lg:w-1/2 space-y-6 text-left"
             >
               <div className="text-violet-400 font-bold uppercase tracking-wider text-xs">03 / PERFORMANCE FORENSICS</div>
-              <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
-                Review multi-dimensional performance analysis.
+              <h3 className="text-[22px] sm:text-3xl font-black text-white tracking-tight leading-tight">
+                <span className="lg:hidden">Review Multi-Dimensional <br className="block sm:hidden" /> Performance Analysis</span>
+                <span className="hidden lg:inline">Review multi-dimensional performance analysis.</span>
               </h3>
               <p className="text-slate-400 text-sm leading-relaxed">
                 No more guessing. Receive instantaneous visual analytics broken down across multiple core dimensions: Technical Depth, Communication Delivery, and Structural Confidence. Trace your progression over time to prepare for high-level certification panels.
@@ -721,8 +750,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
               className="w-full lg:w-1/2 space-y-6 text-left"
             >
               <div className="text-cyan-400 font-bold uppercase tracking-wider text-xs">04 / RECRUITER REVIEWS</div>
-              <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
-                Receive expert recruiter evaluation.
+              <h3 className="text-[22px] sm:text-3xl font-black text-white tracking-tight leading-tight">
+                <span className="lg:hidden">Receive Expert <br className="block sm:hidden" /> Recruiter Evaluation</span>
+                <span className="hidden lg:inline">Receive expert recruiter evaluation.</span>
               </h3>
               <p className="text-slate-400 text-sm leading-relaxed">
                 Bridge the gap between raw code and hiring decisions. ForcePilot compiles detailed summaries highlighting key strengths and outlining critical areas of improvement. Get structured recommendations tailored exactly to what enterprise technical architects look for.
