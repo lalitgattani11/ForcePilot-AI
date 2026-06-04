@@ -235,7 +235,7 @@ const SalesforceMockInterview: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-32 text-slate-300 antialiased">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-32 text-slate-300 antialiased relative overflow-hidden">
       <Helmet>
         <title>Salesforce Mock Interview Platform (2026) | AI Interview Practice | ForcePilot AI</title>
         <meta
@@ -706,10 +706,10 @@ const SalesforceMockInterview: React.FC = () => {
           <div className="pt-8">
             <button
               onClick={() => navigate('/#setup')}
-              className="px-14 py-6 bg-emerald-600 hover:bg-emerald-500 text-white rounded-[2rem] font-black text-xl transition-all shadow-[0_0_50px_rgba(16,185,129,0.3)] flex items-center justify-center gap-4 mx-auto group active:scale-95"
+              className="px-6 py-4 text-sm sm:px-10 sm:py-5 sm:text-base lg:px-14 lg:py-6 lg:text-xl bg-emerald-600 hover:bg-emerald-500 text-white rounded-[2rem] font-black transition-all shadow-[0_0_50px_rgba(16,185,129,0.3)] flex items-center justify-center gap-4 mx-auto group active:scale-95"
             >
               Start Your Salesforce Mock Interview
-              <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="size-4 sm:size-5 lg:size-6 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>

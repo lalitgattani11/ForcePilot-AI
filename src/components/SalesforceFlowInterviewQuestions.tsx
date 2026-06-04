@@ -768,10 +768,10 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
             <Link
               to="/#setup"
               state={{ role: "Salesforce Admin" }}
-              className="px-14 py-6 bg-cyan-600 hover:bg-cyan-500 text-white rounded-[2rem] font-black text-xl transition-all shadow-[0_0_50px_rgba(34,211,238,0.3)] flex items-center justify-center gap-4 mx-auto group active:scale-95 text-center"
+              className="px-6 py-4 text-sm sm:px-10 sm:py-5 sm:text-base lg:px-14 lg:py-6 lg:text-xl bg-cyan-600 hover:bg-cyan-500 text-white rounded-[2rem] font-black transition-all shadow-[0_0_50px_rgba(34,211,238,0.3)] flex items-center justify-center gap-4 mx-auto group active:scale-95 text-center"
             >
               Start Flow Practice
-              <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="size-4 sm:size-5 lg:size-6 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>

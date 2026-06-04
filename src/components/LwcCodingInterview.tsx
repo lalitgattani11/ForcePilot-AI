@@ -521,7 +521,7 @@ const LwcCodingInterview: React.FC = () => {
           <p className="text-slate-400 text-lg leading-relaxed">
             Salesforce has moved LWC closer to native web standards. Interviewers are now looking for developers who understand the underlying platform mechanics like Custom Elements, Templates, and Shadow DOM. ForcePilot AI evaluates your ability to build future-proof frontends.
           </p>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
             <div className="p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm font-bold">
               Reactive Mastery
             </div>
@@ -563,10 +563,10 @@ const LwcCodingInterview: React.FC = () => {
             <Link
               to="/#setup"
               state={{ role: "Salesforce LWC Developer" }}
-              className="px-14 py-6 bg-cyan-600 hover:bg-cyan-500 text-white rounded-[2rem] font-black text-xl transition-all shadow-[0_0_50px_rgba(34,211,238,0.3)] flex items-center justify-center gap-4 mx-auto group active:scale-95 text-center"
+              className="px-6 py-4 text-sm sm:px-10 sm:py-5 sm:text-base lg:px-14 lg:py-6 lg:text-xl bg-cyan-600 hover:bg-cyan-500 text-white rounded-[2rem] font-black transition-all shadow-[0_0_50px_rgba(34,211,238,0.3)] flex items-center justify-center gap-4 mx-auto group active:scale-95 text-center"
             >
               Start LWC Practice
-              <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="size-4 sm:size-5 lg:size-6 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>

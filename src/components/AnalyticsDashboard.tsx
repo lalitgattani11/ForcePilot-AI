@@ -141,7 +141,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   const isBasic = stats.intelligenceTier === "basic";
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 relative overflow-hidden">
       {/* 1. Integrated Intelligence Surface: Executive Summary */}
       <div className="premium-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-12 lg:px-16 lg:py-12 border border-white/5 bg-slate-950/20 relative overflow-hidden group">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-500/[0.04] blur-[120px] pointer-events-none" />
@@ -222,7 +222,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       {/* 2. Intelligence Surface: Technical Evolution & Behavioral Analytics */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
         {/* Performance Trends Panel */}
-        <div className="xl:col-span-7 premium-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 border border-white/5 bg-slate-950/20 flex flex-col min-h-[400px] sm:min-h-[500px] relative">
+        <div className="xl:col-span-7 premium-glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 border border-white/5 bg-slate-950/20 flex flex-col min-h-[400px] sm:min-h-[500px] relative min-w-0 overflow-hidden">
           <div className="flex items-center justify-between mb-8 sm:mb-10">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-400">
@@ -238,7 +238,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             </div>
           </div>
 
-          <div className="flex-1 w-full relative">
+          <div className="flex-1 w-full relative min-w-0 overflow-hidden">
             {isCalibration ? (
               <div className="h-full flex flex-col justify-center gap-8">
                 {/* Calibration Block */}

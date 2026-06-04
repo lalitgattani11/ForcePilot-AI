@@ -117,7 +117,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   ];
 
   return (
-    <div className="flex flex-col w-full max-w-[1600px] mx-auto pt-0 pb-6 sm:py-8 px-4 sm:px-5 lg:px-8 gap-4 sm:gap-24 lg:gap-32">
+    <div className="flex flex-col w-full max-w-[1600px] mx-auto pt-0 pb-6 sm:py-8 px-4 sm:px-5 lg:px-8 gap-4 sm:gap-24 lg:gap-32 relative overflow-hidden">
       {/* 1. HERO SECTION */}
       <section className="relative flex flex-col items-center justify-center pt-8 pb-10 sm:pt-12 sm:pb-16 overflow-visible w-full">
         {/* Ambient background blur behind hero */}
