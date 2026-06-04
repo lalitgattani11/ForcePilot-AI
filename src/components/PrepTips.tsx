@@ -263,7 +263,7 @@ const PrepTips: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-24 text-slate-300 antialiased">
+    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
       <Helmet>
         <title>Salesforce Interview Preparation Tips Guide (2026) | ForcePilot AI</title>
         <meta
@@ -283,18 +283,15 @@ const PrepTips: React.FC = () => {
       </Helmet>
 
       {/* Hero Header */}
-      <section className="text-center space-y-6 max-w-4xl mx-auto px-4 sm:px-0">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-purple-500/20 bg-purple-500/5 text-purple-300 text-[10px] font-black uppercase tracking-[0.3em] backdrop-blur-sm mb-4">
+      <section className="guide-hero-section">
+        <div className="guide-hero-badge border-purple-500/20 bg-purple-500/5 text-purple-300">
           <Star size={14} className="text-purple-400" />
-          Elite Preparation Framework
+          <span>Elite Preparation Framework</span>
         </div>
-        <h1 className="text-5xl sm:text-7xl font-black text-white tracking-tighter leading-[1.1]">
-          Interview <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">
-            Preparation Tips
-          </span>
+        <h1 className="guide-hero-title">
+          Interview <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">Preparation Tips</span>
         </h1>
-        <p className="text-slate-400 text-sm sm:text-lg font-medium leading-relaxed max-w-2xl mx-auto">
+        <p className="guide-hero-subtitle">
           Maximize your performance with our salesforce interview preparation tips. Learn how to prepare for salesforce developer interview rounds using recruiter-ready structures.
         </p>
       </section>

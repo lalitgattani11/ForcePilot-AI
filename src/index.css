@@ -218,7 +218,7 @@ body {
     font-size: 1.85rem !important;
     line-height: 1.15 !important;
     letter-spacing: -0.02em !important;
-    margin-bottom: 0.75rem !important;
+    margin-bottom: 1rem !important;
     text-wrap: balance !important;
   }
   .sub-title, .guide-hero-subtitle, .platform-sub-title {
@@ -227,12 +227,12 @@ body {
     color: #94a3b8 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
-    margin-bottom: 1.25rem !important;
+    margin-bottom: 1.5rem !important;
     max-width: 100% !important;
   }
   .guide-hero-section {
-    padding-top: 2.5rem !important;
-    padding-bottom: 2.5rem !important;
+    padding-top: 3rem !important;
+    padding-bottom: 0 !important;
     padding-left: 1rem !important;
     padding-right: 1rem !important;
   }

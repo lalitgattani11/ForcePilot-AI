@@ -63,17 +63,17 @@ const AIInsights: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 py-8 sm:py-12 px-4 sm:px-0">
+    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 px-4 sm:px-0">
       {/* Hero Header */}
-      <section className="text-center space-y-6 max-w-4xl mx-auto px-4 sm:px-0">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-300 text-[10px] font-black uppercase tracking-[0.3em] backdrop-blur-sm">
+      <section className="guide-hero-section">
+        <div className="guide-hero-badge border-cyan-500/20 bg-cyan-500/5 text-cyan-300">
           <BrainCircuit size={14} className="text-cyan-400" />
-          Intelligence Engine
+          <span>Intelligence Engine</span>
         </div>
-        <h1 className="text-3xl sm:text-6xl font-black text-white tracking-tighter leading-[1.1]">
+        <h1 className="guide-hero-title">
           Interview <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 italic">AI Insights.</span>
         </h1>
-        <p className="text-slate-400 text-sm sm:text-lg font-medium leading-relaxed max-w-2xl mx-auto">
+        <p className="guide-hero-subtitle">
           Deep-dive into the technical intelligence that powers ForcePilot AI. Understand how we analyze and grade your performance.
         </p>
       </section>

@@ -233,7 +233,7 @@ const ScenarioBasedSalesforceInterview: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-32 text-slate-300 antialiased">
+    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
       <Helmet>
         <title>Salesforce Scenario-Based Interview Questions & Answers Guide (2026) | ForcePilot AI</title>
         <meta
@@ -265,15 +265,7 @@ const ScenarioBasedSalesforceInterview: React.FC = () => {
         </motion.div>
         
         <h1 className="guide-hero-title">
-          <span className="md:whitespace-nowrap inline-block">Salesforce</span>
-          <span className="md:hidden"> </span>
-          <br className="hidden md:block" />
-          <span className="md:whitespace-nowrap inline-block">Scenario-Based</span>
-          <span className="md:hidden"> </span>
-          <br className="hidden md:block" />
-          <span className="md:whitespace-nowrap inline-block text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-orange-400 to-amber-500">
-            Questions
-          </span>
+          Salesforce Scenario-Based <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-orange-400 to-amber-500 italic">Questions</span>
         </h1>
         
         <p className="guide-hero-subtitle">

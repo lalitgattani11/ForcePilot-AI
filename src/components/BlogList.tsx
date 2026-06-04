@@ -77,20 +77,17 @@ const BlogList: React.FC = () => {
         <meta property="twitter:description" content="Access deep-dive Salesforce technical articles on Apex architecture, governor limits, LWC performance, and interview strategies." />
       </Helmet>
 
-      <div className="space-y-12 sm:space-y-16">
+      <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 px-4 sm:px-0">
         {/* Hero Header */}
-        <section className="text-center space-y-6 max-w-4xl mx-auto px-4 sm:px-0">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-300 text-[10px] font-black uppercase tracking-[0.3em] backdrop-blur-sm mb-2">
+        <section className="guide-hero-section">
+          <div className="guide-hero-badge border-emerald-500/20 bg-emerald-500/5 text-emerald-300">
             <BookOpen size={14} className="text-emerald-400" />
-            Engineering Intelligence Hub
+            <span>Engineering Intelligence Hub</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tighter leading-[1.1]">
-            Technical <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 italic">
-              Salesforce Blog
-            </span>
+          <h1 className="guide-hero-title">
+            Technical <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 italic">Salesforce Blog</span>
           </h1>
-          <p className="text-slate-400 text-sm sm:text-lg font-medium leading-relaxed max-w-2xl mx-auto">
+          <p className="guide-hero-subtitle">
             Deep-dive architectural blueprints, recruiter-grade strategy playbooks, and LWC rendering optimizations curated for modern Salesforce engineers.
           </p>
         </section>

@@ -150,7 +150,7 @@ const SeoLandingTemplate: React.FC<SeoLandingTemplateProps> = ({ pageId }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-32 text-slate-300 antialiased">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-12 sm:py-12 space-y-32 text-slate-300 antialiased">
       <Helmet>
         <title>{page.title}</title>
         <meta name="description" content={page.description} />

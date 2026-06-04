@@ -130,7 +130,7 @@ const GovernorLimitsExplained: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-32 text-slate-300 antialiased">
+    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
       <Helmet>
         <title>Salesforce Governor Limits Explained Guide (2026) | ForcePilot AI</title>
         <meta name="description" content="Master Salesforce Governor Limits for your developer interview. Technical deep-dives into synchronous vs asynchronous limits, CPU time, heap size, and bulkification." />
@@ -166,10 +166,7 @@ const GovernorLimitsExplained: React.FC = () => {
             <span>Multi-Tenant Architecture</span>
           </motion.div>
           <h1 className="guide-hero-title">
-            Salesforce Governor{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-400">
-              Limits Explained
-            </span>
+            Salesforce Governor <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-400 italic">Limits Explained</span>
           </h1>
           <p className="guide-hero-subtitle">
             The non-negotiable rules of the Salesforce platform. Master apex governor limits and prepare for salesforce limits interview questions with our architect-grade guide.

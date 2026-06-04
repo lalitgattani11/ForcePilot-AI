@@ -235,7 +235,7 @@ const SalesforceMockInterview: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-32 text-slate-300 antialiased relative overflow-hidden">
+    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased relative overflow-hidden">
       <Helmet>
         <title>Salesforce Mock Interview Platform (2026) | AI Interview Practice | ForcePilot AI</title>
         <meta
@@ -273,10 +273,7 @@ const SalesforceMockInterview: React.FC = () => {
         </motion.div>
         
         <h1 className="guide-hero-title">
-          Salesforce AI <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 drop-shadow-[0_0_20px_rgba(52,211,153,0.3)]">
-            Mock Interview Platform
-          </span>
+          Salesforce AI <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 italic">Mock Interview Platform</span>
         </h1>
         
         <p className="guide-hero-subtitle">
