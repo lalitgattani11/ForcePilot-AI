@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Play,
   GraduationCap,
@@ -18,6 +18,11 @@ import {
   Workflow,
   Search,
   ChevronDown,
+  LineChart,
+  CheckCircle2,
+  Mic,
+  Gauge,
+  Sparkles,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useLocation } from "react-router-dom";
@@ -82,15 +87,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
     }
   }, [location.state, roles]);
 
-  const [hasScrolled, setHasScrolled] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setHasScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,9 +118,12 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
 
   return (
     <div className="flex flex-col w-full max-w-[1600px] mx-auto pt-0 pb-6 sm:py-8 px-4 sm:px-5 lg:px-8 gap-4 sm:gap-24 lg:gap-32">
-      {/* 1. PRIMARY FOCUS: HERO & ROLE SELECTION */}
-      <section className="relative flex flex-col justify-center min-h-0 pt-12 pb-16 lg:min-h-[78vh] lg:pt-0 lg:pb-0 overflow-visible">
-        <div className="text-center space-y-3 md:space-y-8 xl:space-y-10 max-w-4xl lg:max-w-6xl xl:max-w-[90rem] mx-auto overflow-visible">
+      {/* 1. HERO SECTION */}
+      <section className="relative flex flex-col items-center justify-center pt-8 pb-10 sm:pt-12 sm:pb-16 overflow-visible w-full">
+        {/* Ambient background blur behind hero */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-tr from-cyan-500/10 via-emerald-500/10 to-transparent blur-[140px] pointer-events-none -z-10 animate-pulse-neural"></div>
+
+        <div className="text-center space-y-6 md:space-y-8 max-w-4xl lg:max-w-6xl mx-auto overflow-visible px-4">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -136,68 +136,659 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             </div>
           </motion.div>
 
-         <h1 className="hero-title px-2 sm:px-0 overflow-visible will-change-[opacity,transform]">
+          <h1 className="hero-title px-2 sm:px-0 overflow-visible will-change-[opacity,transform]">
             The future of<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] italic overflow-visible pr-[0.1em] -mr-[0.1em] sm:pr-[0.05em] sm:-mr-[0.05em]">Salesforce</span> mastery.
-         </h1>
+          </h1>
 
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.4 }}
-            className="sub-title mx-auto px-8 sm:px-6 max-w-[320px] sm:max-w-2xl lg:max-w-3xl will-change-opacity"
+            className="sub-title mx-auto px-4 sm:px-6 max-w-xl sm:max-w-2xl lg:max-w-3xl will-change-opacity text-slate-300"
           >
-            Master Salesforce interviews with AI-powered mock sessions and
-            real-world technical practice.
+            Master Salesforce technical interviews with real-time AI mock sessions, 
+            interactive coding evaluations, and recruiter-grade feedback.
           </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 max-w-md mx-auto"
+          >
+            <button
+              onClick={() => document.getElementById('setup')?.scrollIntoView({ behavior: 'smooth' })}
+              className="cta-button group flex items-center gap-3 w-full sm:w-auto justify-center"
+            >
+              <span>Start Mock Interview</span>
+              <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+            </button>
+            <button
+              onClick={() => document.getElementById('platform-preview')?.scrollIntoView({ behavior: 'smooth' })}
+              className="w-full sm:w-auto px-8 py-4 rounded-xl md:rounded-2xl font-bold text-sm text-slate-300 hover:text-white border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300 backdrop-blur-md flex items-center gap-3 justify-center group"
+            >
+              <span>Explore Platform</span>
+              <ChevronDown size={16} className="transition-transform duration-300 group-hover:translate-y-0.5" />
+            </button>
+          </motion.div>
 
           {!user && (
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="pt-4"
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="pt-2"
             >
               <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white/[0.02] border border-white/5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                <Zap size={12} className="text-cyan-400" />
+                <Zap size={12} className="text-cyan-400 animate-pulse" />
                 Sign in to track your career evolution
               </div>
             </motion.div>
           )}
         </div>
-
-        {/* Ambient Depth Transition Glow */}
-        <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent blur-sm"></div>
-
-        {/* Scroll Continuation Indicator */}
-        <AnimatePresence>
-          {!hasScrolled && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.8, delay: 1.5 }}
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2 cursor-pointer group"
-              onClick={() => document.getElementById('setup')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 group-hover:text-cyan-400 transition-colors duration-500">Discover</span>
-              <motion.div
-                animate={{ y: [0, 5, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="p-1.5 rounded-full border border-white/5 bg-white/[0.02] text-slate-400 group-hover:text-cyan-400 group-hover:border-cyan-500/20 group-hover:bg-cyan-500/5 transition-all duration-500"
-              >
-                <ChevronDown size={14} />
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </section>
 
+      {/* 1.5. PREMIUM PRODUCT SHOWCASE */}
+      <section className="relative w-full overflow-visible py-4">
+        {/* Soft edge illumination & radial glow behind showcase */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5/6 h-[400px] bg-gradient-to-r from-cyan-500/5 via-violet-500/5 to-emerald-500/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.8 }}
+          className="w-full max-w-6xl mx-auto px-4"
+        >
+          <div className="premium-glass rounded-[2rem] border border-white/[0.08] shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden bg-slate-950/60 backdrop-blur-2xl relative group">
+            {/* Soft inner glow and top border accent */}
+            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-white/[0.01] to-transparent pointer-events-none"></div>
+
+            {/* Mock Console Window Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] bg-slate-950/40">
+              <div className="flex items-center gap-2">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-500/40"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/40"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500/40"></div>
+                </div>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-4 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                  AI Salesforce Interview Intelligence
+                </span>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="hidden sm:flex items-center gap-2 rounded-full border border-white/[0.05] bg-white/[0.02] px-3 py-1 text-[9px] font-bold text-slate-400">
+                  <span>Target: Salesforce Architect</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Dashboard Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 sm:p-8">
+              {/* LEFT COLUMN: SETUP & ACTIVE QUESTION (4 Cols) */}
+              <div className="lg:col-span-4 space-y-4">
+                {/* Setup Config Card */}
+                <div className="bg-white/[0.01] border border-white/[0.05] p-5 rounded-2xl relative overflow-hidden group/card">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/[0.02] blur-xl rounded-full"></div>
+                  <h4 className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-3 flex items-center gap-1.5">
+                    <Settings size={10} className="text-cyan-400" />
+                    Simulation Config
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-slate-400">Target Track:</span>
+                      <span className="font-bold text-white bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded text-[10px]">Apex Developer</span>
+                    </div>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-slate-400">Readiness:</span>
+                      <span className="font-bold text-white bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded text-[10px]">Advanced</span>
+                    </div>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-slate-400">Interviewer Tone:</span>
+                      <span className="font-bold text-white bg-violet-500/10 border border-violet-500/20 px-2 py-0.5 rounded text-[10px]">Strict Architect</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Active Question Card */}
+                <div className="bg-white/[0.01] border border-white/[0.05] p-5 rounded-2xl space-y-3">
+                  <h4 className="text-[9px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-1.5">
+                    <Terminal size={10} className="text-cyan-400" />
+                    Active Scenario
+                  </h4>
+                  <div className="p-3 bg-slate-950/80 rounded-xl border border-white/[0.03] space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider bg-emerald-500/5 border border-emerald-500/10 px-1.5 py-0.5 rounded">Apex Trigger</span>
+                      <span className="text-[9px] font-bold text-slate-500">Freq: 94%</span>
+                    </div>
+                    <p className="text-xs text-white font-medium leading-relaxed">
+                      "How would you prevent recursion in a Salesforce trigger while maintaining transaction-safe bulk execution?"
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* MIDDLE COLUMN: LIVE CONVERSATION & TRANSCRIPTION (5 Cols) */}
+              <div className="lg:col-span-5 space-y-4">
+                {/* Transcription & Audio Card */}
+                <div className="bg-white/[0.01] border border-white/[0.05] p-5 rounded-2xl h-full flex flex-col justify-between min-h-[260px] relative">
+                  <h4 className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-3 flex items-center gap-1.5">
+                    <BrainCircuit size={10} className="text-cyan-400" />
+                    Voice Intelligence
+                  </h4>
+
+                  {/* Chat bubble simulations */}
+                  <div className="space-y-4 my-auto">
+                    {/* AI speech bubble */}
+                    <div className="flex gap-2">
+                      <div className="w-5 h-5 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0">
+                        <span className="text-[8px] font-bold text-cyan-400">AI</span>
+                      </div>
+                      <div className="bg-white/[0.02] border border-white/[0.04] p-3 rounded-2xl rounded-tl-none max-w-[85%]">
+                        <p className="text-[11px] text-slate-300 leading-relaxed">
+                          Excellent. Let's talk about execution state. Explain your strategy to guard against recursive trigger contexts.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Candidate transcript */}
+                    <div className="flex gap-2 justify-end">
+                      <div className="bg-cyan-500/5 border border-cyan-500/10 p-3 rounded-2xl rounded-tr-none max-w-[85%]">
+                        <p className="text-[11px] text-white leading-relaxed">
+                          "I use a static helper class with a Set of record IDs. By verifying if an ID exists in the set before running logic, we ensure bulk updates run once..."
+                        </p>
+                      </div>
+                      <div className="w-5 h-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                        <span className="text-[8px] font-bold text-emerald-400">ME</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Voice Waveform Indicator */}
+                  <div className="flex items-center gap-3 pt-3 border-t border-white/[0.04] mt-2">
+                    <span className="text-[9px] font-bold text-cyan-400 uppercase tracking-widest shrink-0 animate-pulse">Streaming Audio</span>
+                    <div className="flex items-end gap-1 h-6 flex-1 justify-center">
+                      {[0.4, 0.9, 0.6, 0.3, 0.8, 0.5, 0.9, 0.7, 0.4, 0.8, 0.6, 0.3, 0.7, 0.5, 0.8, 0.4].map((h, i) => (
+                        <motion.div
+                          key={i}
+                          animate={{ height: [`${h * 100}%`, `${(1 - h) * 100 + 10}%`, `${h * 100}%`] }}
+                          transition={{ duration: 1.5 + (i % 3) * 0.3, repeat: Infinity, ease: "easeInOut" }}
+                          className="w-1 bg-gradient-to-t from-cyan-500 to-emerald-400 rounded-full"
+                          style={{ height: `${h * 100}%` }}
+                        ></motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT COLUMN: SCORING & FEEDBACK (3 Cols) */}
+              <div className="lg:col-span-3 space-y-4">
+                {/* Score Ring Card */}
+                <div className="bg-white/[0.01] border border-white/[0.05] p-5 rounded-2xl text-center space-y-4 relative overflow-hidden group/score">
+                  <h4 className="text-[9px] font-black uppercase text-slate-500 tracking-widest text-left flex items-center gap-1.5">
+                    <LineChart size={10} className="text-cyan-400" />
+                    Performance Forensics
+                  </h4>
+
+                  {/* Circular Chart */}
+                  <div className="relative w-28 h-28 mx-auto flex items-center justify-center">
+                    <svg className="w-full h-full transform -rotate-90">
+                      <circle cx="56" cy="56" r="46" stroke="rgba(255,255,255,0.03)" strokeWidth="6" fill="transparent" />
+                      <circle
+                        cx="56"
+                        cy="56"
+                        r="46"
+                        stroke="url(#gradient-showcase)"
+                        strokeWidth="7"
+                        fill="transparent"
+                        strokeDasharray="289"
+                        strokeDashoffset="35"
+                        strokeLinecap="round"
+                        className="drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]"
+                      />
+                      <defs>
+                        <linearGradient id="gradient-showcase" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#06b6d4" />
+                          <stop offset="100%" stopColor="#10b981" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <div className="absolute flex flex-col items-center">
+                      <span className="text-3xl font-black text-white tracking-tight">88</span>
+                      <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Score / 100</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-left pt-2">
+                    <div className="bg-slate-950/40 p-2 rounded-lg border border-white/[0.03]">
+                      <span className="text-[8px] font-bold text-slate-500 uppercase">Technical</span>
+                      <div className="text-xs font-bold text-cyan-300">92 / 100</div>
+                    </div>
+                    <div className="bg-slate-950/40 p-2 rounded-lg border border-white/[0.03]">
+                      <span className="text-[8px] font-bold text-slate-500 uppercase">Delivery</span>
+                      <div className="text-xs font-bold text-emerald-300">84 / 100</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recruiter Evaluation Card */}
+                <div className="bg-white/[0.01] border border-white/[0.05] p-5 rounded-2xl space-y-3">
+                  <h4 className="text-[9px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-1.5">
+                    <UserCheck size={10} className="text-cyan-400" />
+                    Recruiter Digest
+                  </h4>
+                  <div className="space-y-2 text-left">
+                    <div className="flex gap-1.5 items-start">
+                      <CheckCircle2 size={12} className="text-emerald-400 shrink-0 mt-0.5" />
+                      <p className="text-[10px] text-slate-300 leading-normal">
+                        Uses static sets for recursion control. Good bulk handling awareness.
+                      </p>
+                    </div>
+                    <div className="flex gap-1.5 items-start">
+                      <CheckCircle2 size={12} className="text-cyan-400 shrink-0 mt-0.5" />
+                      <p className="text-[10px] text-slate-300 leading-normal">
+                        Verbal response matches architectural guidelines.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* 2. TRUST / SOCIAL PROOF SECTION */}
+      <section className="w-full py-12 border-y border-white/[0.05] relative overflow-hidden bg-slate-950/20">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-emerald-500/5 to-transparent blur-3xl pointer-events-none"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="premium-glass p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/[0.08] hover:border-cyan-500/30 transition-all duration-500 relative group overflow-hidden"
+            >
+              <div className="absolute -right-8 -top-8 w-24 h-24 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-500/20 transition-all duration-500"></div>
+              <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2 flex items-baseline gap-1">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">500+</span>
+                <span className="text-cyan-400 text-sm font-bold">Questions</span>
+              </div>
+              <div className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-2">Salesforce Focused</div>
+              <p className="text-xs text-slate-400 leading-relaxed">Curated questions covering Apex triggers, components, frameworks, and architecture patterns.</p>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="premium-glass p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/[0.08] hover:border-emerald-500/30 transition-all duration-500 relative group overflow-hidden"
+            >
+              <div className="absolute -right-8 -top-8 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all duration-500"></div>
+              <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2 flex items-baseline gap-1">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">3</span>
+                <span className="text-emerald-400 text-sm font-bold">Specialized Tracks</span>
+              </div>
+              <div className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-2">Role-Focused Interview Preparation</div>
+              <p className="text-xs text-slate-400 leading-relaxed">Master Salesforce Admin, Apex Developer, and LWC Developer interviews with dedicated AI-powered mock interview simulations.</p>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="premium-glass p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/[0.08] hover:border-violet-500/30 transition-all duration-500 relative group overflow-hidden"
+            >
+              <div className="absolute -right-8 -top-8 w-24 h-24 bg-violet-500/10 rounded-full blur-2xl group-hover:bg-violet-500/20 transition-all duration-500"></div>
+              <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2 flex items-baseline gap-1">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">AI</span>
+                <span className="text-violet-400 text-sm font-bold">Evaluation</span>
+              </div>
+              <div className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-2">Recruiter-Grade</div>
+              <p className="text-xs text-slate-400 leading-relaxed">Granular breakdowns of technical accuracy, response structure, and delivery style in real-time.</p>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="premium-glass p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/[0.08] hover:border-cyan-500/30 transition-all duration-500 relative group overflow-hidden"
+            >
+              <div className="absolute -right-8 -top-8 w-24 h-24 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-500/20 transition-all duration-500"></div>
+              <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2 flex items-baseline gap-1">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">Expert</span>
+                <span className="text-cyan-400 text-sm font-bold">Feedback</span>
+              </div>
+              <div className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-2">Real Preparation</div>
+              <p className="text-xs text-slate-400 leading-relaxed">Personalized summaries highlighting architectural strengths and immediate opportunities for growth.</p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2.5 PLATFORM PREVIEW SECTION */}
+      <section 
+        id="platform-preview" 
+        className="relative pt-16 pb-20 sm:pt-24 sm:pb-32 border-t border-white/[0.05] space-y-24 sm:space-y-36 scroll-mt-20 sm:scroll-mt-28"
+        style={{ contentVisibility: 'auto', containIntrinsicSize: '0 1500px' }}
+      >
+        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-cyan-500/[0.03] rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse-neural"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-[600px] h-[600px] bg-emerald-500/[0.03] rounded-full blur-[160px] pointer-events-none -z-10 animate-pulse-neural" style={{ animationDelay: '3s' }}></div>
+
+        {/* Section Title */}
+        <div className="text-center max-w-3xl mx-auto space-y-4 px-4">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] text-emerald-400 uppercase">
+            <Sparkles size={10} />
+            Experience ForcePilot
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+            Designed for Salesforce <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">Engineering Leaders.</span>
+          </h2>
+          <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+            A highly optimized, intelligence-backed suite created to prep you for senior, lead, and architectural Salesforce interviews.
+          </p>
+        </div>
+
+        {/* Alternate Feature Grid */}
+        <div className="space-y-20 sm:space-y-32">
+          {/* Feature 1: Setup - Text Left, UI Right */}
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20 max-w-6xl mx-auto px-4">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="w-full lg:w-1/2 space-y-6 text-left"
+            >
+              <div className="text-cyan-400 font-bold uppercase tracking-wider text-xs">01 / TAILORED PREPARATION</div>
+              <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
+                Simulate exact organizational environments.
+              </h3>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                Define the rules of engagement. Select your specialization track, set appropriate difficulty thresholds, and calibrate the interviewer's personality profile. Build conversational confidence under simulated settings ranging from mentoring review boards to high-stress executive interviews.
+              </p>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <span className="bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full text-[10px] font-bold text-slate-400">Configurable Personas</span>
+                <span className="bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full text-[10px] font-bold text-slate-400">Custom Time Limits</span>
+                <span className="bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full text-[10px] font-bold text-slate-400">Role Specialization</span>
+              </div>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="w-full lg:w-1/2"
+            >
+              <div className="premium-glass p-1 rounded-3xl border border-white/[0.08] shadow-2xl relative overflow-hidden bg-slate-950/40">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent"></div>
+                <div className="p-6 space-y-4">
+                  {/* Mock Setup Console UI */}
+                  <div className="flex items-center justify-between border-b border-white/[0.05] pb-3 mb-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                      <Settings size={12} className="text-cyan-400" />
+                      Session Setup Preview
+                    </span>
+                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                  </div>
+                  
+                  <div className="space-y-3 text-left">
+                    <div>
+                      <span className="text-[9px] font-black uppercase text-slate-500 tracking-wider">Select Role Track</span>
+                      <div className="grid grid-cols-2 gap-2 mt-1">
+                        <div className="bg-white/5 border border-cyan-500/30 text-white p-3 rounded-xl text-[11px] font-bold flex items-center justify-between">
+                          <span>Apex Developer</span>
+                          <Zap size={10} className="text-cyan-400" />
+                        </div>
+                        <div className="bg-white/[0.01] border border-white/[0.05] text-slate-500 p-3 rounded-xl text-[11px] font-bold">
+                          <span>LWC Developer</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <span className="text-[9px] font-black uppercase text-slate-500 tracking-wider">Interviewer Personality</span>
+                      <div className="grid grid-cols-3 gap-2 mt-1">
+                        <div className="bg-white/[0.01] border border-white/[0.05] text-slate-500 p-2 rounded-lg text-[10px] text-center">Mentor</div>
+                        <div className="bg-white/5 border border-cyan-500/30 text-white p-2 rounded-lg text-[10px] text-center font-bold">Strict Architect</div>
+                        <div className="bg-white/[0.01] border border-white/[0.05] text-slate-500 p-2 rounded-lg text-[10px] text-center">Professional</div>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 flex justify-end">
+                      <div className="bg-cyan-500/10 border border-cyan-500/20 px-4 py-2 rounded-xl text-[10px] font-bold text-cyan-400 uppercase tracking-widest">
+                        Configure Simulation
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Feature 2: Voice/AI - UI Left, Text Right */}
+          <div className="flex flex-col lg:flex-row-reverse items-center gap-12 lg:gap-20 max-w-6xl mx-auto px-4">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="w-full lg:w-1/2 space-y-6 text-left"
+            >
+              <div className="text-emerald-400 font-bold uppercase tracking-wider text-xs">02 / LIVE AI CONVERSATION</div>
+              <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
+                Engage in natural, technical dialogue.
+              </h3>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                Put down the keyboard. Experience vocal or text-based mock sessions where our AI responds dynamically to your verbal code explanations. Test your understanding of concurrency, transactional safety, trigger framework patterns, and Salesforce governor constraints in a fluid interview flow.
+              </p>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <span className="bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full text-[10px] font-bold text-slate-400">Natural Language Parsing</span>
+                <span className="bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full text-[10px] font-bold text-slate-400">Real-Time Transcription</span>
+                <span className="bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full text-[10px] font-bold text-slate-400">Adaptive Dialogue Flow</span>
+              </div>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="w-full lg:w-1/2"
+            >
+              <div className="premium-glass p-1 rounded-3xl border border-white/[0.08] shadow-2xl relative overflow-hidden bg-slate-950/40">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent"></div>
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center justify-between border-b border-white/[0.05] pb-3 mb-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                      <Mic size={12} className="text-emerald-400" />
+                      Live Audio Stream
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                      <span className="text-[9px] font-bold text-emerald-400 tracking-wider">LISTENING</span>
+                    </span>
+                  </div>
+
+                  <div className="space-y-4 text-left">
+                    <div className="bg-white/[0.01] border border-white/[0.04] p-3 rounded-xl max-w-[90%]">
+                      <p className="text-[10px] text-slate-400">
+                        Explain when you would choose an asynchronous queueable process over a future method.
+                      </p>
+                    </div>
+                    <div className="bg-emerald-500/5 border border-emerald-500/10 p-3 rounded-xl max-w-[90%] ml-auto">
+                      <p className="text-[10px] text-white">
+                        "Queueables support complex object types, can be chained together sequentially, and return a job ID for status tracking..."
+                      </p>
+                    </div>
+                    
+                    {/* Simulated Waveform */}
+                    <div className="flex items-end gap-1 h-8 justify-center pt-2">
+                      {[0.3, 0.7, 0.4, 0.8, 0.5, 0.9, 0.6, 0.3, 0.8, 0.4, 0.7, 0.5, 0.9, 0.3].map((h, i) => (
+                        <div 
+                          key={i} 
+                          className="w-1 bg-emerald-500/60 rounded-full" 
+                          style={{ height: `${h * 100}%` }}
+                        ></div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Feature 3: Analysis - Text Left, UI Right */}
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20 max-w-6xl mx-auto px-4">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="w-full lg:w-1/2 space-y-6 text-left"
+            >
+              <div className="text-violet-400 font-bold uppercase tracking-wider text-xs">03 / PERFORMANCE FORENSICS</div>
+              <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
+                Review multi-dimensional performance analysis.
+              </h3>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                No more guessing. Receive instantaneous visual analytics broken down across multiple core dimensions: Technical Depth, Communication Delivery, and Structural Confidence. Trace your progression over time to prepare for high-level certification panels.
+              </p>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <span className="bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full text-[10px] font-bold text-slate-400">Dimensional Scoring</span>
+                <span className="bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full text-[10px] font-bold text-slate-400">Confidence Diagnostics</span>
+                <span className="bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full text-[10px] font-bold text-slate-400">Historical Benchmarks</span>
+              </div>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="w-full lg:w-1/2"
+            >
+              <div className="premium-glass p-1 rounded-3xl border border-white/[0.08] shadow-2xl relative overflow-hidden bg-slate-950/40">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent"></div>
+                <div className="p-6 space-y-5">
+                  <div className="flex items-center justify-between border-b border-white/[0.05] pb-3 mb-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                      <Gauge size={12} className="text-violet-400" />
+                      Session Diagnostics
+                    </span>
+                    <span className="text-xs font-bold text-violet-400">92 / 100</span>
+                  </div>
+
+                  <div className="space-y-3 text-left">
+                    <div>
+                      <div className="flex justify-between text-[9px] font-bold text-slate-400 uppercase mb-1">
+                        <span>Technical Accuracy</span>
+                        <span className="text-white">94%</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                        <div className="h-full bg-violet-500 rounded-full" style={{ width: '94%' }}></div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="flex justify-between text-[9px] font-bold text-slate-400 uppercase mb-1">
+                        <span>Communication Flow</span>
+                        <span className="text-white">88%</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                        <div className="h-full bg-violet-400 rounded-full" style={{ width: '88%' }}></div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-[9px] font-bold text-slate-400 uppercase mb-1">
+                        <span>Architectural Confidence</span>
+                        <span className="text-white">90%</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                        <div className="h-full bg-cyan-400 rounded-full" style={{ width: '90%' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Feature 4: Feedback - UI Left, Text Right */}
+          <div className="flex flex-col lg:flex-row-reverse items-center gap-12 lg:gap-20 max-w-6xl mx-auto px-4">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="w-full lg:w-1/2 space-y-6 text-left"
+            >
+              <div className="text-cyan-400 font-bold uppercase tracking-wider text-xs">04 / RECRUITER REVIEWS</div>
+              <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
+                Receive expert recruiter evaluation.
+              </h3>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                Bridge the gap between raw code and hiring decisions. ForcePilot compiles detailed summaries highlighting key strengths and outlining critical areas of improvement. Get structured recommendations tailored exactly to what enterprise technical architects look for.
+              </p>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <span className="bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full text-[10px] font-bold text-slate-400">Actionable Bullet Points</span>
+                <span className="bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full text-[10px] font-bold text-slate-400">Refactoring Suggestions</span>
+                <span className="bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full text-[10px] font-bold text-slate-400">Architect-Level Rubrics</span>
+              </div>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="w-full lg:w-1/2"
+            >
+              <div className="premium-glass p-1 rounded-3xl border border-white/[0.08] shadow-2xl relative overflow-hidden bg-slate-950/40">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent"></div>
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center justify-between border-b border-white/[0.05] pb-3 mb-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                      <UserCheck size={12} className="text-cyan-400" />
+                      Hiring Verdict
+                    </span>
+                    <span className="text-[9px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded uppercase tracking-widest">
+                      RECOMMEND HIRE
+                    </span>
+                  </div>
+
+                  <div className="space-y-3 text-left">
+                    <div className="space-y-1">
+                      <span className="text-[9px] font-black uppercase text-slate-500 tracking-wider">Strengths Identified</span>
+                      <div className="bg-emerald-500/5 border border-emerald-500/10 p-2.5 rounded-lg">
+                        <p className="text-[10px] text-slate-300">
+                          • Demonstrated clear understanding of platform limits and bulk trigger handler architectures.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-1">
+                      <span className="text-[9px] font-black uppercase text-slate-500 tracking-wider">Opportunity Area</span>
+                      <div className="bg-yellow-500/5 border border-yellow-500/10 p-2.5 rounded-lg">
+                        <p className="text-[10px] text-slate-300">
+                          • Enhance verbal structure when discussing transactional governor limits.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. SETUP SECTION */}
       {/* 2. INTERVIEW CONFIGURATION LAYER */}
       <section 
         id="setup" 
-        className="scroll-mt-20 sm:scroll-mt-28 min-h-[calc(100vh-5rem)] sm:min-h-[calc(100vh-7rem)] flex items-center justify-center w-full py-12 sm:py-16"
+        className="scroll-mt-20 sm:scroll-mt-28 min-h-[calc(100vh-5rem)] sm:min-h-[calc(100vh-7rem)] flex items-center justify-center w-full py-12 sm:py-16 relative overflow-hidden"
       >
+        {/* Ambient background blur behind setup */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/[0.03] rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse-neural"></div>
+
         <motion.div 
           className="premium-glass rounded-[2rem] sm:rounded-[3rem] p-1 shadow-2xl w-full mx-auto relative z-10"
           initial={location.hash === "#setup" ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
