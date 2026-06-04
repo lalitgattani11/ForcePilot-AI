@@ -335,19 +335,18 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
         
       </Helmet>
 
-      {/* Breadcrumbs & Hero Container to avoid space-y-32 gap */}
-      <div className="space-y-8">
-        <Breadcrumbs 
-          items={[
-            { name: "Home", path: "/" },
-            { name: "Interview Guides", path: "/blog" },
-            { name: "Flow Questions", path: "/salesforce-flow-interview-questions" }
-          ]} 
-          themeColor="cyan"
-        />
+      <Breadcrumbs 
+        hideVisual
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Interview Guides", path: "/blog" },
+          { name: "Flow Questions", path: "/salesforce-flow-interview-questions" }
+        ]} 
+        themeColor="cyan"
+      />
 
-        {/* Hero Section */}
-        <section className="guide-hero-section">
+      {/* Hero Section */}
+      <section className="guide-hero-section">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -373,14 +372,16 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
             <Link
               to="/#setup"
               state={{ role: "Salesforce Admin" }}
-              className="w-full sm:w-auto px-12 py-5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(34,211,238,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+              className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(34,211,238,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
             >
               Master Salesforce Flow Interviews
-              <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
+              />
             </Link>
           </div>
         </section>
-      </div>
 
       {/* Quick Nav */}
       <nav className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 sm:px-0">

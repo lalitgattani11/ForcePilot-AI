@@ -193,7 +193,7 @@ const ApexInterviewQuestions: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-24 text-slate-300">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-32 text-slate-300 antialiased">
       <Helmet>
         <title>Salesforce Apex Interview Questions & Answers Guide (2026) | ForcePilot AI</title>
         <meta
@@ -236,19 +236,18 @@ const ApexInterviewQuestions: React.FC = () => {
         />
       </Helmet>
 
-      {/* Breadcrumbs & Hero Container to avoid space-y-32 gap */}
-      <div className="space-y-8">
-        <Breadcrumbs 
-          items={[
-            { name: "Home", path: "/" },
-            { name: "Interview Guides", path: "/blog" },
-            { name: "Apex Questions", path: "/apex-interview-questions" }
-          ]} 
-          themeColor="emerald"
-        />
+      <Breadcrumbs 
+        hideVisual
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Interview Guides", path: "/blog" },
+          { name: "Apex Questions", path: "/apex-interview-questions" }
+        ]} 
+        themeColor="emerald"
+      />
 
-        {/* Hero Section */}
-        <section className="guide-hero-section">
+      {/* Hero Section */}
+      <section className="guide-hero-section">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -259,7 +258,7 @@ const ApexInterviewQuestions: React.FC = () => {
             <span>Technical Interview Intelligence</span>
           </motion.div>
           <h1 className="guide-hero-title">
-            Salesforce Apex <br />
+            Salesforce Apex{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
               Interview Questions
             </span>
@@ -283,7 +282,6 @@ const ApexInterviewQuestions: React.FC = () => {
             </Link>
           </div>
         </section>
-      </div>
 
       {/* Internal Linking / Resources Bar */}
       <nav className="grid sm:grid-cols-2 gap-4 px-2 sm:px-0">

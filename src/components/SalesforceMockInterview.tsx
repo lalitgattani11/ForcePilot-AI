@@ -261,40 +261,40 @@ const SalesforceMockInterview: React.FC = () => {
       </Helmet>
 
       {/* SECTION 1 — HERO */}
-      <section className="relative text-center space-y-10 py-20">
+      <section className="guide-hero-section">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
-          className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-6 py-2 text-xs font-bold tracking-[0.2em] text-emerald-400 uppercase backdrop-blur-md mb-4"
+          className="guide-hero-badge border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
         >
           <Zap size={14} className="animate-pulse" />
           <span>Next-Gen Interview Intelligence</span>
         </motion.div>
         
-        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight text-white leading-[1.1]">
+        <h1 className="guide-hero-title">
           Salesforce AI <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 drop-shadow-[0_0_20px_rgba(52,211,153,0.3)]">
             Mock Interview Platform
           </span>
         </h1>
         
-        <p className="text-sm sm:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-normal sm:font-medium">
+        <p className="guide-hero-subtitle">
           The elite technical simulator for SFDC professionals. Practice salesforce developer mock interviews and ai salesforce interview preparation. Get evaluated on your code optimization, sharing models, and system architecture.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
           <button
             onClick={() => navigate('/#setup')}
-            className="w-full sm:w-auto px-12 py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
           >
             Start Salesforce Mock Interview
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform sm:size-[22px]" />
           </button>
           
           <Link
             to="/apex-interview-questions"
-            className="w-full sm:w-auto px-12 py-5 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-3 group"
+            className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-2xl font-bold text-base sm:text-lg transition-all flex items-center justify-center gap-3 group text-center"
           >
             Practice Apex Interviews
           </Link>

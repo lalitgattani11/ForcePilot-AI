@@ -265,24 +265,32 @@ const ScenarioBasedSalesforceInterview: React.FC = () => {
         </motion.div>
         
         <h1 className="guide-hero-title">
-          Salesforce Scenario <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-orange-400 to-amber-500">
-            Based Interview Questions
+          <span className="md:whitespace-nowrap inline-block">Salesforce</span>
+          <span className="md:hidden"> </span>
+          <br className="hidden md:block" />
+          <span className="md:whitespace-nowrap inline-block">Scenario-Based</span>
+          <span className="md:hidden"> </span>
+          <br className="hidden md:block" />
+          <span className="md:whitespace-nowrap inline-block text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-orange-400 to-amber-500">
+            Questions
           </span>
         </h1>
         
         <p className="guide-hero-subtitle">
-          The elite technical simulator for SFDC architects. Solve salesforce developer scenario questions and advanced salesforce interview questions. Get evaluated on your database scaling, query optimizations, and security designs.
+          Master real-world Salesforce architecture scenarios, debugging strategies, and system design thinking. Practice recruiter-grade problem solving built for high-level SFDC technical interviews.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
           <Link
             to="/#setup"
             state={{ role: "Professional Readiness" }}
-            className="w-full sm:w-auto px-12 py-5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(244,63,94,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(244,63,94,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
           >
             Start Scenario-Based Interview Practice
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+            <ArrowRight
+              size={20}
+              className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
+            />
           </Link>
         </div>
       </section>

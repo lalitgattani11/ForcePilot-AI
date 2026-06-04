@@ -130,7 +130,7 @@ const GovernorLimitsExplained: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-24 text-slate-300">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-32 text-slate-300 antialiased">
       <Helmet>
         <title>Salesforce Governor Limits Explained Guide (2026) | ForcePilot AI</title>
         <meta name="description" content="Master Salesforce Governor Limits for your developer interview. Technical deep-dives into synchronous vs asynchronous limits, CPU time, heap size, and bulkification." />
@@ -144,19 +144,18 @@ const GovernorLimitsExplained: React.FC = () => {
         
       </Helmet>
 
-      {/* Breadcrumbs & Hero Container to avoid space-y-32 gap */}
-      <div className="space-y-8">
-        <Breadcrumbs 
-          items={[
-            { name: "Home", path: "/" },
-            { name: "Interview Guides", path: "/blog" },
-            { name: "Governor Limits", path: "/governor-limits-explained" }
-          ]} 
-          themeColor="rose"
-        />
+      <Breadcrumbs 
+        hideVisual
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Interview Guides", path: "/blog" },
+          { name: "Governor Limits", path: "/governor-limits-explained" }
+        ]} 
+        themeColor="rose"
+      />
 
-        {/* Hero Section */}
-        <section className="guide-hero-section">
+      {/* Hero Section */}
+      <section className="guide-hero-section">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -167,7 +166,7 @@ const GovernorLimitsExplained: React.FC = () => {
             <span>Multi-Tenant Architecture</span>
           </motion.div>
           <h1 className="guide-hero-title">
-            Salesforce Governor <br />
+            Salesforce Governor{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-400">
               Limits Explained
             </span>
@@ -175,18 +174,20 @@ const GovernorLimitsExplained: React.FC = () => {
           <p className="guide-hero-subtitle">
             The non-negotiable rules of the Salesforce platform. Master apex governor limits and prepare for salesforce limits interview questions with our architect-grade guide.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Link 
               to="/#setup"
               state={{ role: "Salesforce Apex Developer" }}
-              className="w-full sm:w-auto px-12 py-5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(244,63,94,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+              className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(244,63,94,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
             >
               Practice Limit Management
-              <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
+              />
             </Link>
           </div>
         </section>
-      </div>
 
       {/* Internal Navigation */}
       <nav className="grid sm:grid-cols-2 gap-4">

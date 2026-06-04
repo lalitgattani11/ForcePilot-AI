@@ -317,7 +317,8 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
         <h1 className="guide-hero-title">
           Salesforce Apex <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-500">
-            Trigger Interview Questions
+            Trigger Interview <br />
+            <span className="inline-block mt-2 sm:mt-3">Questions</span>
           </span>
         </h1>
         
@@ -329,10 +330,13 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
           <Link
             to="/#setup"
             state={{ role: "Salesforce Apex Developer" }}
-            className="w-full sm:w-auto px-12 py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_40px_rgba(59,130,246,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(59,130,246,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
           >
             Practice Apex Trigger Interviews
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+            <ArrowRight
+              size={20}
+              className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
+            />
           </Link>
         </div>
       </section>

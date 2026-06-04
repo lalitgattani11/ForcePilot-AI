@@ -194,14 +194,17 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
       </section>
 
       {/* 2. INTERVIEW CONFIGURATION LAYER */}
-      <motion.div 
-        id="setup"
-        className="scroll-mt-20 sm:scroll-mt-32 premium-glass rounded-[2rem] sm:rounded-[3rem] p-1 shadow-2xl w-full mx-auto relative z-10"
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-40px" }}
-        transition={{ duration: 1, ease: "easeOut" }}
+      <section 
+        id="setup" 
+        className="scroll-mt-20 sm:scroll-mt-28 min-h-[calc(100vh-5rem)] sm:min-h-[calc(100vh-7rem)] flex items-center justify-center w-full py-12 sm:py-16"
       >
+        <motion.div 
+          className="premium-glass rounded-[2rem] sm:rounded-[3rem] p-1 shadow-2xl w-full mx-auto relative z-10"
+          initial={location.hash === "#setup" ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={location.hash === "#setup" ? { duration: 0 } : { duration: 1, ease: "easeOut" }}
+        >
         <div className="bg-slate-950/40 rounded-[1.9rem] sm:rounded-[2.9rem] p-6 sm:p-10 md:p-16 space-y-4 sm:space-y-12 border border-white/[0.02]">
           {/* Top: Identity & Track Intelligence Unit */}
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
@@ -390,7 +393,8 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             </button>
           </div>
         </div>
-      </motion.div>
+        </motion.div>
+      </section>
 
       {/* 3. PERFORMANCE HISTORY SECTION */}
       {user && (

@@ -11,9 +11,10 @@ export interface BreadcrumbItem {
 interface BreadcrumbsProps {
   items: BreadcrumbItem[];
   themeColor?: "emerald" | "cyan" | "blue" | "purple" | "rose" | "teal" | "pink" | "orange" | "amber";
+  hideVisual?: boolean;
 }
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, themeColor = "emerald" }) => {
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, themeColor = "emerald", hideVisual = false }) => {
   const schema = React.useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -26,6 +27,10 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, themeColor = "emerald"
   }), [items]);
 
   useJsonLd(schema, "schema-breadcrumbs");
+
+  if (hideVisual) {
+    return null;
+  }
 
   const hoverColors = {
     emerald: "hover:text-emerald-400",

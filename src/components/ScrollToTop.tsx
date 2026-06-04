@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { useLocation } from "react-router-dom";
+
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     // Disable browser scroll restoration
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";

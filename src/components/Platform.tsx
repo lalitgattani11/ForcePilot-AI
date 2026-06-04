@@ -111,38 +111,42 @@ const Platform: React.FC = () => {
   return (
     <div className="relative min-h-screen">
       {/* 1. Hero Section */}
-      <section className="relative pt-12 sm:pt-20 pb-20 sm:pb-32 overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-6">
-          <motion.div 
-            initial="initial"
-            animate="animate"
-            variants={stagger}
-            className="flex flex-col items-center text-center"
-          >
-            <motion.div variants={badgeAnimation} className="platform-pill-badge">
-              <div className="dot" />
-              <span className="label-text">The Intelligence Layer</span>
-            </motion.div>
-            <motion.h1 variants={fadeIn} className="platform-hero-title mb-4 sm:mb-8 lg:mb-8 max-w-[1500px] px-6 sm:px-2">
-              <span className="block pb-1 sm:pb-3 overflow-visible">Recruiter-grade</span>
-              <span className="block mt-2 sm:mt-8 md:mt-10 pb-[0.25em] overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500">
-                Interview intelligence.
-              </span>
-            </motion.h1>
-            <motion.p variants={fadeIn} className="platform-sub-title mb-10 lg:mb-20 max-w-2xl px-4 sm:px-0">
-              ForcePilot AI is the technical interview platform for the Salesforce ecosystem. 
-              Built for precision, realism, and recruiter-level analysis.
-            </motion.p>
-            <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4">
-              <Link to="/#setup" className="cta-button flex items-center gap-2">
-                Start Interviewing <ArrowRight size={18} />
-              </Link>
-              <Link to="/career-roadmap" className="px-8 py-4 rounded-xl font-bold text-sm bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-center">
-                View Roadmap
-              </Link>
-            </motion.div>
+      <section className="guide-hero-section">
+        <motion.div 
+          initial="initial"
+          animate="animate"
+          variants={stagger}
+          className="flex flex-col items-center text-center"
+        >
+          <motion.div variants={badgeAnimation} className="platform-pill-badge">
+            <div className="dot" />
+            <span className="label-text">The Intelligence Layer</span>
           </motion.div>
-        </div>
+          <motion.h1 variants={fadeIn} className="guide-hero-title">
+            <span className="block pb-1 sm:pb-2 overflow-visible">Recruiter-grade</span>
+            <span className="block mt-1 sm:mt-2 md:mt-2.5 pb-[0.25em] overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500">
+              Interview intelligence.
+            </span>
+          </motion.h1>
+          <motion.p variants={fadeIn} className="guide-hero-subtitle">
+            ForcePilot AI is the technical interview platform for the Salesforce ecosystem. 
+            Built for precision, realism, and recruiter-level analysis.
+          </motion.p>
+          <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Link
+              to="/#setup"
+              className="cta-button w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg flex items-center justify-center gap-3 group text-center"
+            >
+              Start Interviewing <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform sm:size-[22px]" />
+            </Link>
+            <Link
+              to="/career-roadmap"
+              className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-2xl font-bold text-base sm:text-lg transition-all flex items-center justify-center gap-3 group text-center"
+            >
+              View Roadmap
+            </Link>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* 2. Platform Purpose */}
