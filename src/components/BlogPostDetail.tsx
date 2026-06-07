@@ -319,29 +319,75 @@ const BlogPostDetail: React.FC = () => {
 
               case 'table':
                 return (
-                  <div key={idx} className="overflow-x-auto my-8 border border-white/5 rounded-2xl bg-slate-950/20 shadow-2xl">
-                    <table className="w-full text-left border-collapse text-xs sm:text-sm">
-                      <thead>
-                        <tr className="bg-white/[0.02] border-b border-white/5">
-                          {section.tableHeaders?.map((header, hIdx) => (
-                            <th key={hIdx} className="p-4 font-black uppercase text-[10px] tracking-wider text-slate-400">
-                              {header}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {section.tableRows?.map((row, rIdx) => (
-                          <tr key={rIdx} className="hover:bg-white/[0.01] transition-colors border-b border-white/[0.03]">
-                            {row.map((cell, cIdx) => (
-                              <td key={cIdx} className="p-4 font-medium leading-relaxed text-slate-300">
-                                {cell}
-                              </td>
+                  <div key={idx} className="my-8">
+                    {/* Desktop Table View - Unchanged */}
+                    <div className="hidden md:block overflow-x-auto border border-white/5 rounded-2xl bg-slate-950/20 shadow-2xl">
+                      <table className="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead>
+                          <tr className="bg-white/[0.02] border-b border-white/5">
+                            {section.tableHeaders?.map((header, hIdx) => (
+                              <th key={hIdx} className="p-4 font-black uppercase text-[10px] tracking-wider text-slate-400">
+                                {header}
+                              </th>
                             ))}
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {section.tableRows?.map((row, rIdx) => (
+                            <tr key={rIdx} className="hover:bg-white/[0.01] transition-colors border-b border-white/[0.03]">
+                              {row.map((cell, cIdx) => (
+                                <td key={cIdx} className="p-4 font-medium leading-relaxed text-slate-300">
+                                  {cell}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Mobile Comparison Cards View - Premium SaaS UX */}
+                    <div className="md:hidden space-y-6">
+                      {section.tableRows?.map((row, rIdx) => (
+                        <div key={rIdx} className="rounded-2xl border border-white/10 bg-slate-900/20 overflow-hidden shadow-xl">
+                          {/* Interviewer Prompt / Question */}
+                          <div className="p-5 bg-white/[0.02] border-b border-white/5">
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 block mb-2">{section.tableHeaders?.[0] || 'Interviewer Prompt'}</span>
+                            <h4 className="text-sm font-bold text-white leading-snug italic">
+                              {row[0]}
+                            </h4>
+                          </div>
+                          
+                          {/* Answer Comparison Grid */}
+                          <div className="p-5 space-y-6">
+                            {/* Weak Answer */}
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <div className="h-1.5 w-1.5 rounded-full bg-rose-500/50" />
+                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-rose-400/80">{section.tableHeaders?.[1] || 'Weak Answer'}</span>
+                              </div>
+                              <p className="text-xs text-slate-400 leading-relaxed font-medium pl-3.5">
+                                {row[1]}
+                              </p>
+                            </div>
+
+                            {/* Divider Line */}
+                            <div className="h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+
+                            {/* Strong Answer */}
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
+                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-emerald-400">{section.tableHeaders?.[2] || 'Strong Architect Answer'}</span>
+                              </div>
+                              <p className="text-[13px] text-slate-200 leading-relaxed font-bold tracking-tight pl-3.5 border-l border-emerald-500/20">
+                                {row[2]}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 );
 
@@ -367,15 +413,15 @@ const BlogPostDetail: React.FC = () => {
         <section className="mt-12 sm:mt-16 pt-10 border-t border-white/5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Related pages */}
-            <div className="space-y-4">
+            <div className="space-y-4 flex flex-col items-center md:items-start text-center md:text-left">
               <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-1.5">
                 <Target size={12} className="text-emerald-400" />
                 Technical Interview Hub
               </h4>
-              <p className="text-xs text-slate-400 font-medium leading-relaxed">
+              <p className="text-xs text-slate-400 font-medium leading-relaxed max-w-sm">
                 Prepare comprehensively for Salesforce hiring loops by exploring our specialized interactive study modules.
               </p>
-              <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="grid grid-cols-2 gap-x-8 gap-y-3 pt-2 text-left">
                 <Link to="/apex-interview-questions" className="text-xs font-bold text-slate-300 hover:text-emerald-400 flex items-center gap-1 transition-colors">
                   <ChevronRight size={12} />
                   Apex Questions
@@ -396,9 +442,9 @@ const BlogPostDetail: React.FC = () => {
             </div>
 
             {/* Platform CTA */}
-            <div className="p-6 rounded-2xl bg-white/[0.01] border border-white/5 space-y-4 hover:border-emerald-500/20 transition-all duration-300 flex flex-col justify-between">
+            <div className="p-6 rounded-2xl bg-white/[0.01] border border-white/5 space-y-4 hover:border-emerald-500/20 transition-all duration-300 flex flex-col items-center md:items-start text-center md:text-left justify-between">
               <div className="space-y-2">
-                <h4 className="text-sm font-black text-white flex items-center gap-2">
+                <h4 className="text-sm font-black text-white flex items-center justify-center md:justify-start gap-2">
                   <Sparkles size={16} className="text-emerald-400" />
                   Evaluate Your Readiness
                 </h4>

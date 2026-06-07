@@ -44,6 +44,8 @@ const BlogList = lazy(() => import("./components/BlogList"));
 const BlogPostDetail = lazy(() => import("./components/BlogPostDetail"));
 const NotFound = lazy(() => import("./components/NotFound"));
 const SeoLandingTemplate = lazy(() => import("./components/SeoLandingTemplate"));
+const PrivacyPolicy = lazy(() => import("./components/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("./components/TermsOfService"));
 
 function App() {
   const navigate = useNavigate();
@@ -451,6 +453,36 @@ function App() {
                     }
                   >
                     <SeoLandingTemplate pageId="governor-limits-interview-questions" />
+                  </Suspense>
+                }
+              />
+
+              <Route
+                path="/privacy"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
+                    <PrivacyPolicy />
+                  </Suspense>
+                }
+              />
+
+              <Route
+                path="/terms"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent"></div>
+                      </div>
+                    }
+                  >
+                    <TermsOfService />
                   </Suspense>
                 }
               />

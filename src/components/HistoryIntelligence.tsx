@@ -88,9 +88,7 @@ interface HistoryIntelligenceProps {
 }
 
 const getSessionSlug = (role: string, id: string) => {
-  const cleanRole = role
-  .toLowerCase()
-  .replace(/[^a-z0-9]+/g, "-")
+  const cleanRole = role.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   return `${cleanRole}--${id}`;
 };
 
@@ -103,6 +101,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
   const [records, setRecords] = useState<InterviewRecord[]>([]);
 
   const [loading, setLoading] = useState(true);
+  const [loadingDetails, setLoadingDetails] = useState<string | null>(null);
 
   // Delete State
   const [sessionToDelete, setSessionToDelete] =
@@ -118,11 +117,8 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
   useEffect(() => {
     const fetchHistory = async () => {
-      console.log("[DEBUG_HISTORY] fetchHistory triggered");
-
-      const {
-        data: { user: authUser },
-      } = await supabase.auth.getUser();
+      // Use user from context if available, otherwise fallback to explicit check
+      const authUser = user;
 
       if (!authUser) {
         setLoading(false);
@@ -130,93 +126,168 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       }
 
       try {
-        console.log("[DEBUG_HISTORY] Fetching records:", authUser.id);
+        // OPTIMIZATION: Fetch only metadata and scores to avoid timeout on large JSON columns
+        const INITIAL_COLUMNS = [
+          "id",
+          "created_at",
+          "user_id",
+          "role",
+          "difficulty",
+          "score",
+          "technical_score",
+          "communication_score",
+          "confidence_score",
+          "feedback",
+          "coach_advice",
+          "ai_verdict",
+          "duration",
+          "behavior_analytics",
+          "skill_matrix",
+          "weak_concepts",
+        ].join(",");
 
         const { data, error } = await supabase
           .from("interview_history")
-          .select("*")
+          .select(INITIAL_COLUMNS)
           .eq("user_id", authUser.id)
-          .order("created_at", {
-            ascending: false,
-          });
+          .order("created_at", { ascending: false });
 
-        if (error) throw error;
+        if (error) {
+          console.error("[SUPABASE_FETCH_ERROR]", error);
+          throw error;
+        }
 
         // PRODUCTION-GRADE FILTERING: Include completed sessions & valid legacy data
-        const rawData = Array.isArray(data) ? data : [];
+        const rawData: any[] = Array.isArray(data) ? data : [];
         const filteredData = rawData.filter((record: any) => {
-          const isExplicitlyCompleted = record.interview_completed === true;
-          const hasTenQuestions = Number(record.completed_questions || record.duration || 0) >= 10;
-          const hasValidLegacyResults = Number(record.score || 0) > 0 && Array.isArray(record.full_results) && record.full_results.length > 0;
-          
-          return isExplicitlyCompleted || hasTenQuestions || hasValidLegacyResults;
+          const hasTenQuestions = Number(record.duration || 0) >= 10;
+
+          const hasValidLegacyResults =
+            Number(record.score || 0) > 0 &&
+            Array.isArray(record.full_results) &&
+            record.full_results.length > 0;
+
+          return hasTenQuestions || hasValidLegacyResults;
         });
 
-        const fetchedRecords = filteredData.map(
-          (record: Record<string, unknown>) => {
-            const rawScore = Number(record?.score || 0);
-            const behavior = (record?.behavior_analytics as BehaviorAnalytics) || {};
-            const createdAt = String(record?.created_at || "");
-            
-            // Apply simple rounding for consistency
-            const normalizedScore = Math.round(rawScore);
+        const fetchedRecords = (filteredData as any[]).map((record) => {
+          const rawScore = Number(record?.score || 0);
+          const behavior =
+            (record?.behavior_analytics as BehaviorAnalytics) || {};
+          const createdAt = String(record?.created_at || "");
 
-            // PRODUCTION-LEVEL SESSION NORMALIZATION
-            const getNormalizedLabel = () => {
-              const diff = String(record?.difficulty || "").toLowerCase();
-              const score = normalizedScore;
-              if (score >= 90) return "Final Evaluation";
-              if (diff.includes("advanced") || diff.includes("intermediate")) return "Technical Screening";
-              return "Mock Interview";
-            };
+          // Apply simple rounding for consistency
+          const normalizedScore = Math.round(rawScore);
 
-            return {
-              ...record,
-              id: String(record?.id || ""),
-              created_at: createdAt,
-              user_id: String(record?.user_id || ""),
-              role: (!record?.role || String(record.role).toLowerCase() === "unknown") ? "Professional Readiness" as Role : String(record.role) as Role,
-              difficulty: getNormalizedLabel(),
-              score: normalizedScore,
-              communication_score: Math.round(Number(record?.communication_score || rawScore)),
-              technical_score: Math.round(Number(record?.technical_score || rawScore)),
-              confidence_score: Math.round(Number(record?.confidence_score || rawScore)),
-              feedback: String(record?.feedback || ""),
-              transcript: String(record?.transcript || ""),
-              coach_advice: String(record?.coach_advice || ""),
-              ai_verdict: String(record?.ai_verdict || ""),
-              duration: Number(record?.duration || 0),
-              weak_concepts: Array.isArray(record?.weak_concepts) ? (record.weak_concepts as WeakConceptItem[]) : [],
-              skill_matrix: Array.isArray(record?.skill_matrix) ? (record.skill_matrix as SkillMatrixItem[]) : [],
-              full_results: Array.isArray(record?.full_results) ? (record.full_results as Answer[]) : [],
-              behavior_analytics: behavior,
-              focus: (() => {
-                const results = Array.isArray(record?.full_results) ? (record.full_results as any[]) : [];
-                if (results.length > 0) {
-                  const topic = results[0].displayTopic || results[0].topic || results[0].questionText || "General Assessment";
-                  return topic;
-                }
-                return "General Review";
-              })(),
-            };
-          },
-        );
+          // PRODUCTION-LEVEL SESSION NORMALIZATION
+          const getNormalizedLabel = () => {
+            const diff = String(record?.difficulty || "").toLowerCase();
+            const score = normalizedScore;
+            if (score >= 90) return "Final Evaluation";
+            if (diff.includes("advanced") || diff.includes("intermediate"))
+              return "Technical Screening";
+            return "Mock Interview";
+          };
 
-        // PREVENT INCONSISTENT DUPLICATES: Deduplicate based on Role, Topic, Score, and Date (rounded to minute)
+          return {
+            ...record,
+            id: String(record?.id || ""),
+            created_at: createdAt,
+            user_id: String(record?.user_id || ""),
+            role:
+              !record?.role || String(record.role).toLowerCase() === "unknown"
+                ? ("Professional Readiness" as Role)
+                : (String(record.role) as Role),
+            difficulty: getNormalizedLabel(),
+            score: normalizedScore,
+            communication_score: Math.round(
+              Number(record?.communication_score || rawScore),
+            ),
+            technical_score: Math.round(
+              Number(record?.technical_score || rawScore),
+            ),
+            confidence_score: Math.round(
+              Number(record?.confidence_score || rawScore),
+            ),
+            feedback: String(record?.feedback || ""),
+            transcript: String(record?.transcript || ""),
+            coach_advice: String(record?.coach_advice || ""),
+            ai_verdict: String(record?.ai_verdict || ""),
+            duration: Number(record?.duration || 0),
+            weak_concepts: Array.isArray(record?.weak_concepts)
+              ? (record.weak_concepts as WeakConceptItem[])
+              : [],
+            skill_matrix: Array.isArray(record?.skill_matrix)
+              ? (record.skill_matrix as SkillMatrixItem[])
+              : [],
+            full_results: Array.isArray(record?.full_results)
+              ? (record.full_results as Answer[])
+              : [],
+            behavior_analytics: behavior,
+            focus: (() => {
+              const results = Array.isArray(record?.full_results)
+                ? (record.full_results as any[])
+                : [];
+              if (results.length > 0) {
+                const topic =
+                  results[0].displayTopic ||
+                  results[0].topic ||
+                  results[0].questionText ||
+                  "General Assessment";
+                return topic;
+              }
+              // Fallback for optimized fetch
+              return record.role || "General Review";
+            })(),
+          };
+        });
+
+        // PREVENT INCONSISTENT DUPLICATES
         const uniqueMap = new Map();
-        fetchedRecords.forEach(r => {
+        fetchedRecords.forEach((r) => {
           const date = new Date(r.created_at);
           const minuteKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}`;
           const key = `${r.role}-${r.focus}-${r.score}-${minuteKey}`;
-          
+
           if (!uniqueMap.has(key)) {
             uniqueMap.set(key, r);
           }
         });
 
-        setRecords(Array.from(uniqueMap.values()));
+        const deduplicatedRecords = Array.from(uniqueMap.values());
+
+        // SECONDARY FETCH: Fetch full_results for only the last 10 records to populate the dashboard topics
+        // This keeps the initial load fast while still providing deep insights for the dashboard
+        if (deduplicatedRecords.length > 0) {
+          const topIds = deduplicatedRecords.slice(0, 10).map((r) => r.id);
+          const { data: topicData } = await supabase
+            .from("interview_history")
+            .select("id, full_results")
+            .in("id", topIds);
+
+          if (topicData) {
+            const topicMap = new Map(
+              topicData.map((d: any) => [d.id, d.full_results]),
+            );
+            deduplicatedRecords.forEach((r) => {
+              if (topicMap.has(r.id)) {
+                r.full_results = topicMap.get(r.id);
+                // Update focus with real topic data
+                if (r.full_results && r.full_results.length > 0) {
+                  const firstResult = r.full_results[0] as any;
+                  r.focus =
+                    firstResult.displayTopic ||
+                    firstResult.topic ||
+                    firstResult.questionText ||
+                    r.role;
+                }
+              }
+            });
+          }
+        }
+        setRecords(deduplicatedRecords);
       } catch (err) {
-        console.error("[DEBUG_HISTORY_ERROR]", err);
+        console.error("[HISTORY_CRITICAL_FAILURE]", err);
       } finally {
         setLoading(false);
       }
@@ -224,6 +295,47 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
     fetchHistory();
   }, [user]);
+
+  const handleViewDetail = async (record: InterviewRecord) => {
+    // If we already have the full results, just navigate
+    if (record.full_results && record.full_results.length > 0) {
+      if (onViewDetail) onViewDetail(record);
+      else navigate(`/session/${getSessionSlug(record.role, record.id)}`);
+      return;
+    }
+
+    setLoadingDetails(record.id);
+
+    try {
+      // Fetch full results and transcript on-demand
+      const { data, error } = await supabase
+        .from("interview_history")
+        .select("full_results, transcript")
+        .eq("id", record.id)
+        .single();
+
+      if (error) throw error;
+
+      const fullRecord = {
+        ...record,
+        full_results: data.full_results || [],
+        transcript: data.transcript || "",
+      };
+
+      // Update local state so we don't have to fetch again
+      setRecords((prev) =>
+        prev.map((r) => (r.id === record.id ? fullRecord : r)),
+      );
+
+      if (onViewDetail) onViewDetail(fullRecord);
+      else navigate(`/session/${getSessionSlug(record.role, record.id)}`);
+    } catch (err) {
+      console.error("[DETAIL_FETCH_FAILURE]", err);
+      alert("Intelligence details could not be retrieved. Please try again.");
+    } finally {
+      setLoadingDetails(null);
+    }
+  };
 
   const handleDelete = async () => {
     if (!sessionToDelete || !user) return;
@@ -253,10 +365,6 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
       // 2. Validate row removal (catches silent RLS policy blocks)
       if (!data || data.length === 0) {
-        console.warn(
-          "[DELETE_FAILURE] 0 rows affected. This usually indicates an RLS policy restriction or ID mismatch.",
-          { targetId, idToUse, userId: user.id },
-        );
         throw new Error(
           "Cloud archive update failed. You may not have deletion permissions for this record.",
         );
@@ -265,8 +373,6 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       // 3. Update local state only after DB confirmation
       setRecords((prev) => prev.filter((r) => r.id !== targetId));
       setSessionToDelete(null);
-
-      console.log("[DELETE_SUCCESS] Session permanently purged from archive.");
     } catch (err: unknown) {
       console.error("[DELETE_EXCEPTION]", err);
       // Ensure local state remains accurate
@@ -483,7 +589,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       { total: number; count: number; weightTotal: number }
     > = {};
     const weakMap: Record<string, { count: number; weightTotal: number }> = {};
-    
+
     // Behavioral Stats
     let totalWords = 0;
     let totalAnswers = 0;
@@ -499,42 +605,79 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       ) {
         record.full_results.forEach((res) => {
           const resObj = res as unknown as Record<string, unknown>;
-          
+
           // Enhanced Salesforce Topic Extraction
           let topic = String(resObj.displayTopic || resObj.topic || "");
-          if (!topic || topic === "General" || topic === "Technical Assessment") {
-            const q = String(resObj.questionText || resObj.question || "").toLowerCase();
-            
+          if (
+            !topic ||
+            topic === "General" ||
+            topic === "Technical Assessment"
+          ) {
+            const q = String(
+              resObj.questionText || resObj.question || "",
+            ).toLowerCase();
+
             // Security & Governance
-            if (q.includes("profile") || q.includes("permission set") || q.includes("permission-set")) topic = "Profiles & Permissions";
-            else if (q.includes("owd") || q.includes("sharing rule") || q.includes("record-level")) topic = "Record Security";
-            else if (q.includes("security") || q.includes("mfa") || q.includes("shield")) topic = "Security Model";
-            
+            if (
+              q.includes("profile") ||
+              q.includes("permission set") ||
+              q.includes("permission-set")
+            )
+              topic = "Profiles & Permissions";
+            else if (
+              q.includes("owd") ||
+              q.includes("sharing rule") ||
+              q.includes("record-level")
+            )
+              topic = "Record Security";
+            else if (
+              q.includes("security") ||
+              q.includes("mfa") ||
+              q.includes("shield")
+            )
+              topic = "Security Model";
             // Automation & Logic
             else if (q.includes("flow")) topic = "Flow Automation";
             else if (q.includes("validation rule")) topic = "Validation Rules";
-            else if (q.includes("approval process")) topic = "Process Automation";
-            
+            else if (q.includes("approval process"))
+              topic = "Process Automation";
             // Apex & Backend
             else if (q.includes("trigger")) topic = "Trigger Logic";
-            else if (q.includes("soql") || q.includes("sosl")) topic = "SOQL & SOSL";
-            else if (q.includes("governor limit") || q.includes("bulkification")) topic = "Governor Limits";
+            else if (q.includes("soql") || q.includes("sosl"))
+              topic = "SOQL & SOSL";
+            else if (
+              q.includes("governor limit") ||
+              q.includes("bulkification")
+            )
+              topic = "Governor Limits";
             else if (q.includes("apex")) topic = "Apex Logic";
-            
             // Frontend & UI
-            else if (q.includes("lwc") || q.includes("component") || q.includes("shadow dom")) topic = "LWC Architecture";
-            
+            else if (
+              q.includes("lwc") ||
+              q.includes("component") ||
+              q.includes("shadow dom")
+            )
+              topic = "LWC Architecture";
             // Core Data
-            else if (q.includes("lookup") || q.includes("master-detail") || q.includes("junction")) topic = "Data Modeling";
-            else if (q.includes("object") || q.includes("field") || q.includes("layout")) topic = "Platform Fundamentals";
-            
+            else if (
+              q.includes("lookup") ||
+              q.includes("master-detail") ||
+              q.includes("junction")
+            )
+              topic = "Data Modeling";
+            else if (
+              q.includes("object") ||
+              q.includes("field") ||
+              q.includes("layout")
+            )
+              topic = "Platform Fundamentals";
             else topic = "General Administration";
           }
 
           const score = Number(resObj.displayScore || resObj.score || 0);
           const reasoning = Number(resObj.practicalReasoningScore || score);
           const answer = String(resObj.userAnswer || "");
-          
+
           if (answer.trim()) {
             const words = answer.split(/\s+/).length;
             totalWords += words;
@@ -559,7 +702,8 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
         // Fallback to legacy skill_matrix
         (record.skill_matrix || []).forEach((skill) => {
           if (!skill.name) return;
-          const mappedName = skill.name === "General" ? "Platform Fundamentals" : skill.name;
+          const mappedName =
+            skill.name === "General" ? "Platform Fundamentals" : skill.name;
           if (!skillMap[mappedName])
             skillMap[mappedName] = { total: 0, count: 0, weightTotal: 0 };
           skillMap[mappedName].total +=
@@ -570,7 +714,8 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
         (record.weak_concepts || []).forEach((weak) => {
           if (!weak.name) return;
-          const mappedName = weak.name === "General" ? "Platform Fundamentals" : weak.name;
+          const mappedName =
+            weak.name === "General" ? "Platform Fundamentals" : weak.name;
           if (!weakMap[mappedName])
             weakMap[mappedName] = { count: 0, weightTotal: 0 };
           weakMap[mappedName].count += 1;
@@ -595,6 +740,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
           status: getTopicStatus(avg),
           confidence:
             data.count >= 3 ? "High" : data.count >= 2 ? "Moderate" : "Initial",
+          count: data.count,
         };
       })
       .sort((a, b) => b.avg - a.avg)
@@ -614,28 +760,58 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
     const avgReasoning = totalAnswers > 0 ? totalReasoning / totalAnswers : 0;
 
     if (lowDepthCount > totalAnswers * 0.4 || avgWords < 35) {
-      if (!weakestTopics.find(t => t.name === "Response Depth")) {
-        weakestTopics.unshift({ name: "Response Depth", count: 1, confidence: "Instructional" });
+      if (!weakestTopics.find((t) => t.name === "Response Depth")) {
+        weakestTopics.unshift({
+          name: "Response Depth",
+          count: 1,
+          confidence: "Instructional",
+        });
       }
     }
 
     if (avgReasoning < 6.5 && totalAnswers > 0) {
-      if (!weakestTopics.find(t => t.name === "Scenario Explanation")) {
-        weakestTopics.push({ name: "Scenario Explanation", count: 1, confidence: "Guidance" });
+      if (!weakestTopics.find((t) => t.name === "Scenario Explanation")) {
+        weakestTopics.push({
+          name: "Scenario Explanation",
+          count: 1,
+          confidence: "Guidance",
+        });
       }
     }
 
     // Ensure we always have something to show
     if (strongestTopics.length === 0) {
       strongestTopics = [
-        { name: "Platform Fundamentals", avg: Math.round(avgTech), status: getTopicStatus(avgTech), confidence: "Initial" },
-        { name: "Communication", avg: Math.round(avgComm), status: getTopicStatus(avgComm), confidence: "Initial" }
+        {
+          name: "Platform Fundamentals",
+          avg: Math.round(avgTech),
+          status: getTopicStatus(avgTech),
+          confidence: "Initial",
+          count: 0,
+        },
+        {
+          name: "Communication",
+          avg: Math.round(avgComm),
+          status: getTopicStatus(avgComm),
+          confidence: "Initial",
+          count: 0,
+        },
       ];
     }
 
     if (weakestTopics.length === 0) {
-      if (avgTech < 75) weakestTopics.push({ name: "Technical Accuracy", count: 1, confidence: "Guidance" });
-      if (avgComm < 75) weakestTopics.push({ name: "Professional Tone", count: 1, confidence: "Guidance" });
+      if (avgTech < 75)
+        weakestTopics.push({
+          name: "Technical Accuracy",
+          count: 1,
+          confidence: "Guidance",
+        });
+      if (avgComm < 75)
+        weakestTopics.push({
+          name: "Professional Tone",
+          count: 1,
+          confidence: "Guidance",
+        });
     }
 
     // 4. Trend Intelligence (Grounded & Chronological)
@@ -665,7 +841,7 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
           score: consistentScore,
           technical: Math.round(record.technical_score || 0),
           communication: Math.round(record.communication_score || 0),
-          id: record.id // Explicitly map by ID for integrity
+          id: record.id, // Explicitly map by ID for integrity
         };
       });
 
@@ -677,11 +853,11 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
         : 0;
     const baselineAvg =
       records.reduce((acc, r) => acc + r.score, 0) / records.length;
-    
+
     // Only calculate growth if we have more than one session
     const growth =
-      records.length > 1 && baselineAvg > 0 
-        ? ((recentAvg - baselineAvg) / baselineAvg) * 100 
+      records.length > 1 && baselineAvg > 0
+        ? ((recentAvg - baselineAvg) / baselineAvg) * 100
         : null;
 
     // Streak Calculation (Realistic)
@@ -718,7 +894,11 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
     // Data Confidence & Tier Logic (Recruiter-friendly)
     const count = records.length;
     const intelligenceTier: "calibration" | "basic" | "advanced" =
-      count >= 10 && baselineAvg >= 85 ? "advanced" : count >= 1 ? "basic" : "calibration";
+      count >= 10 && baselineAvg >= 85
+        ? "advanced"
+        : count >= 1
+          ? "basic"
+          : "calibration";
 
     const dataConfidence =
       count >= 10 && baselineAvg >= 85
@@ -735,6 +915,55 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       return "Growth Required";
     };
 
+    // Grounded topic extraction for latest topic
+    let latestTopic = "";
+    if (records.length > 0) {
+      const latestRecord = records[0];
+      if (Array.isArray(latestRecord.full_results) && latestRecord.full_results.length > 0) {
+        for (const res of latestRecord.full_results) {
+          const resObj = res as unknown as Record<string, unknown>;
+          let topic = String(resObj.displayTopic || resObj.topic || "");
+          if (!topic || topic === "General" || topic === "Technical Assessment") {
+            const q = String(resObj.questionText || resObj.question || "").toLowerCase();
+            if (q.includes("profile") || q.includes("permission set") || q.includes("permission-set")) topic = "Profiles & Permissions";
+            else if (q.includes("owd") || q.includes("sharing rule") || q.includes("record-level")) topic = "Record Security";
+            else if (q.includes("security") || q.includes("mfa") || q.includes("shield")) topic = "Security Model";
+            else if (q.includes("flow")) topic = "Flow Automation";
+            else if (q.includes("validation rule")) topic = "Validation Rules";
+            else if (q.includes("approval process")) topic = "Process Automation";
+            else if (q.includes("trigger")) topic = "Trigger Logic";
+            else if (q.includes("soql") || q.includes("sosl")) topic = "SOQL & SOSL";
+            else if (q.includes("governor limit") || q.includes("bulkification")) topic = "Governor Limits";
+            else if (q.includes("apex")) topic = "Apex Logic";
+            else if (q.includes("lwc") || q.includes("component") || q.includes("shadow dom")) topic = "LWC Architecture";
+            else if (q.includes("lookup") || q.includes("master-detail") || q.includes("junction")) topic = "Data Modeling";
+            else if (q.includes("object") || q.includes("field") || q.includes("layout")) topic = "Platform Fundamentals";
+            else topic = "Platform Fundamentals";
+          }
+          if (topic) {
+            latestTopic = topic;
+            break;
+          }
+        }
+      } else if (Array.isArray(latestRecord.skill_matrix) && latestRecord.skill_matrix.length > 0) {
+        latestTopic = latestRecord.skill_matrix[0]?.name || "";
+        if (latestTopic === "General") latestTopic = "Platform Fundamentals";
+      }
+    }
+
+    let totalQuestions = 0;
+    records.forEach((record) => {
+      if (Array.isArray(record.full_results) && record.full_results.length > 0) {
+        totalQuestions += record.full_results.length;
+      } else {
+        totalQuestions += 10;
+      }
+    });
+
+    const latestScore = records.length > 0 ? Math.round(Number(records[0].score || 0)) : 0;
+    const bestScore = records.length > 0 ? Math.round(Math.max(...records.map(r => Number(r.score || 0)))) : 0;
+    const latestInterviewDate = records.length > 0 ? records[0].created_at : "";
+
     return {
       avgScore: Math.round(baselineAvg),
       recentGrowth: Math.round(growth ?? 0),
@@ -747,6 +976,11 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
       streak,
       dataConfidence,
       intelligenceTier,
+      latestScore,
+      bestScore,
+      latestInterviewDate,
+      latestTopic,
+      totalQuestions,
       // Grounded qualitative metrics
       techPerformance: getTechLabel(avgTech),
       commClarity: getCommLabel(avgComm),
@@ -757,29 +991,33 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
+      <div className="flex flex-col items-center justify-center py-20 min-h-[400px]">
         <div className="h-10 w-10 rounded-full border-2 border-cyan-400/30 border-t-cyan-400 animate-spin mb-4" />
 
-        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-          Loading Performance History
+        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest animate-pulse">
+          Syncing Intelligence Archives...
         </p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-12 relative overflow-hidden">
-      <AnalyticsDashboard stats={stats} />
+    <div className="space-y-8 relative overflow-hidden">
+      {records.length > 0 && stats && <AnalyticsDashboard stats={stats} />}
 
       {/* Session Archives Section */}
-      <div className="space-y-12 pt-8 border-t border-white/5">
+      <div className="border-t border-white/5 pt-8 space-y-8">
         <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 border-b border-white/5 pb-8">
           <div className="space-y-2 text-center md:text-left overflow-visible">
             <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight pb-1 md:pb-0 overflow-visible">
-              Intelligence <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]">Archives.</span>
+              Intelligence{" "}
+              <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                Archives
+              </span>
             </h2>
             <p className="text-slate-400 text-sm sm:text-base max-w-lg mx-auto md:mx-0">
-              Review and analyze your previous technical simulation sessions and recruiter-grade evaluation reports.
+              Review and analyze your previous technical simulation sessions and
+              recruiter-grade evaluation reports.
             </p>
           </div>
 
@@ -791,7 +1029,9 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                 size={14}
               />
 
-              <label htmlFor="searchArchives" className="sr-only">Search archives</label>
+              <label htmlFor="searchArchives" className="sr-only">
+                Search archives
+              </label>
               <input
                 id="searchArchives"
                 type="text"
@@ -803,58 +1043,100 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
             </div>
 
             <div className="relative group w-full md:w-40">
-              <label htmlFor="roleFilter" className="sr-only">Filter by role</label>
+              <label htmlFor="roleFilter" className="sr-only">
+                Filter by role
+              </label>
               <select
                 id="roleFilter"
                 value={filterRole}
                 onChange={(e) => setFilterRole(e.target.value)}
                 className="appearance-none bg-white/5 border border-white/10 rounded-xl py-2.5 pl-4 pr-10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
               >
-                <option value="all" className="bg-[#0f172a] text-white">All Roles</option>
+                <option value="all" className="bg-[#0f172a] text-white">
+                  All Roles
+                </option>
                 {uniqueRoles.map((role) => (
-                  <option key={role} value={role} className="bg-[#0f172a] text-white">{role}</option>
+                  <option
+                    key={role}
+                    value={role}
+                    className="bg-[#0f172a] text-white"
+                  >
+                    {role}
+                  </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-hover:text-cyan-400 transition-colors" size={12} />
+              <ChevronDown
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-hover:text-cyan-400 transition-colors"
+                size={12}
+              />
             </div>
 
             <div className="relative group w-full md:w-40">
-              <label htmlFor="difficultyFilter" className="sr-only">Filter by difficulty</label>
+              <label htmlFor="difficultyFilter" className="sr-only">
+                Filter by difficulty
+              </label>
               <select
                 id="difficultyFilter"
                 value={filterDifficulty}
                 onChange={(e) => setFilterDifficulty(e.target.value)}
                 className="appearance-none bg-white/5 border border-white/10 rounded-xl py-2.5 pl-4 pr-10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
               >
-                <option value="all" className="bg-[#0f172a] text-white">All Diffs</option>
+                <option value="all" className="bg-[#0f172a] text-white">
+                  All Diffs
+                </option>
                 {uniqueDifficulties.map((diff) => (
-                  <option key={diff} value={diff} className="bg-[#0f172a] text-white">{diff}</option>
+                  <option
+                    key={diff}
+                    value={diff}
+                    className="bg-[#0f172a] text-white"
+                  >
+                    {diff}
+                  </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-hover:text-cyan-400 transition-colors" size={12} />
+              <ChevronDown
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-hover:text-cyan-400 transition-colors"
+                size={12}
+              />
             </div>
 
             <div className="relative group w-full md:w-40">
-              <label htmlFor="scoreFilter" className="sr-only">Filter by score</label>
+              <label htmlFor="scoreFilter" className="sr-only">
+                Filter by score
+              </label>
               <select
                 id="scoreFilter"
                 value={filterScore}
                 onChange={(e) => setFilterScore(e.target.value)}
                 className="appearance-none bg-white/5 border border-white/10 rounded-xl py-2.5 pl-4 pr-10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500/50 transition-all cursor-pointer w-full"
               >
-                <option value="all" className="bg-[#0f172a] text-white">All Scores</option>
-                <option value="exceptional" className="bg-[#0f172a] text-white">90+</option>
-                <option value="strong" className="bg-[#0f172a] text-white">80-89</option>
-                <option value="developing" className="bg-[#0f172a] text-white">70-79</option>
-                <option value="needs-work" className="bg-[#0f172a] text-white">&lt;70</option>
+                <option value="all" className="bg-[#0f172a] text-white">
+                  All Scores
+                </option>
+                <option value="exceptional" className="bg-[#0f172a] text-white">
+                  90+
+                </option>
+                <option value="strong" className="bg-[#0f172a] text-white">
+                  80-89
+                </option>
+                <option value="developing" className="bg-[#0f172a] text-white">
+                  70-79
+                </option>
+                <option value="needs-work" className="bg-[#0f172a] text-white">
+                  &lt;70
+                </option>
               </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-hover:text-cyan-400 transition-colors" size={12} />
+              <ChevronDown
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-hover:text-cyan-400 transition-colors"
+                size={12}
+              />
             </div>
           </div>
         </div>
 
         {/* Featured Sessions */}
-        {records.length > 0 && featuredSessions.length > 0 &&
+        {records.length > 0 &&
+          featuredSessions.length > 0 &&
           searchQuery === "" &&
           filterRole === "all" &&
           filterScore === "all" && (
@@ -879,17 +1161,20 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                       }}
                       className="relative h-full"
                     >
-                      <motion.button
+                      <motion.div
+                        role="button"
+                        tabIndex={0}
                         whileHover={{ y: -8, scale: 1.02 }}
-                        onClick={() => {
-                          if (onViewDetail) onViewDetail(record);
-                          else
-                            navigate(
-                              `/session/${getSessionSlug(record.role, record.id)}`,
-                            );
-                        }}
+                        onClick={() => handleViewDetail(record)}
                         className="w-full h-full text-left relative group overflow-hidden premium-glass rounded-[2rem] p-6 sm:p-8 border border-white/10 hover:border-cyan-500/30 transition-all flex flex-col"
                       >
+                        {/* Loading Overlay */}
+                        {loadingDetails === record.id && (
+                          <div className="absolute inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center">
+                            <div className="h-8 w-8 rounded-full border-2 border-cyan-400/30 border-t-cyan-400 animate-spin" />
+                          </div>
+                        )}
+
                         {/* Type Badge */}
                         <div
                           className={`absolute top-0 right-0 px-6 py-2 rounded-bl-2xl text-[10px] font-black uppercase tracking-widest ${
@@ -968,19 +1253,31 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
                             )}
                           </div>
 
-                          {record.coach_advice && record.coach_advice.trim() && record.coach_advice !== "\"\"" && (
-                            <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed italic">
-                              "{stripHtml(record.coach_advice)}"
-                            </p>
-                          )}
+                          {record.coach_advice &&
+                            record.coach_advice.trim() &&
+                            record.coach_advice !== '""' && (
+                              <div className="space-y-2 group/feedback">
+                                <div className="flex items-center gap-2">
+                                  <Sparkles
+                                    size={10}
+                                    className="text-cyan-400"
+                                  />
+                                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                                    AI Feedback
+                                  </span>
+                                </div>
+                                <p className="text-sm text-slate-300 leading-relaxed font-medium line-clamp-2">
+                                  {stripHtml(record.coach_advice)}
+                                </p>
+                              </div>
+                            )}
 
                           <div className="mt-auto pt-6 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-cyan-400 transition-colors">
                             <span>Analyze Session</span>
-
                             <ArrowUpRight size={16} />
                           </div>
                         </div>
-                      </motion.button>
+                      </motion.div>
                     </motion.div>
                   ))}
                 </AnimatePresence>
@@ -999,122 +1296,133 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
             <div className="premium-glass timeline-container rounded-[2rem] border border-white/5 overflow-hidden">
               <div className="divide-y divide-white/5">
                 <AnimatePresence mode="popLayout">
-                  {uniqueTimelineRecords.slice(0, visibleCount).map((record) => (
-                    <motion.div
-                      layout
-                      key={record.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{
-                        opacity: 0,
-                        x: -20,
-                        transition: { duration: 0.2 },
-                      }}
-                    >
-                      <motion.button
-                        onClick={() => {
-                          if (onViewDetail) onViewDetail(record);
-                          else
-                            navigate(
-                              `/session/${getSessionSlug(record.role, record.id)}`,
-                            );
+                  {uniqueTimelineRecords
+                    .slice(0, visibleCount)
+                    .map((record) => (
+                      <motion.div
+                        layout
+                        key={record.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{
+                          opacity: 0,
+                          x: -20,
+                          transition: { duration: 0.2 },
                         }}
-                        whileHover={{
-                          backgroundColor: "rgba(255, 255, 255, 0.02)",
-                        }}
-                        className="w-full text-left pl-4 pr-10 sm:px-6 md:px-8 py-5 sm:py-6 flex flex-col md:flex-row md:items-center gap-4 sm:gap-6 group transition-all relative"
                       >
-                        {/* 1. IDENTITY & METADATA */}
-                        <div className="flex items-center gap-6 flex-1 min-w-0">
-                          <div className="w-11 h-11 shrink-0 rounded-xl bg-white/5 flex items-center justify-center text-slate-400 group-hover:text-cyan-400 group-hover:bg-cyan-500/5 transition-all">
-                            <Target size={22} />
-                          </div>
-
-                          <div className="min-w-0">
-                            <h4 className="font-bold text-white group-hover:text-cyan-400 transition-colors truncate">
-                              {record.role}
-                            </h4>
-
-                            <div className="text-[11px] text-slate-400 flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 font-medium">
-                              <div className="flex items-center gap-2">
-                                <Calendar size={13} className="text-slate-400" />
-                                {new Date(
-                                  record.created_at,
-                                ).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-                              </div>
-
-                              {record.focus && (
-                                <div className="flex items-center gap-1.5 text-cyan-500/60 font-black uppercase tracking-[0.15em] text-[9px]">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-500/40" />
-                                  {record.focus}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* 2. STATS & ACTIONS (Right Stack) */}
-                        <div className="flex flex-wrap sm:flex-nowrap items-center justify-between md:justify-end gap-2 sm:gap-6 md:gap-10 shrink-0 w-full md:w-auto">
-                          
-                          {/* Score Column (Fixed Width for Alignment) */}
-                          <div className="text-center w-12 sm:w-20 shrink-0">
-                            <div className="text-xl font-black text-white group-hover:text-emerald-400 transition-colors">
-                              {record.score}%
-                            </div>
-                            <div className="text-[9px] font-black uppercase tracking-widest text-slate-400">
-                              Accuracy
-                            </div>
-                          </div>
-
-                          {/* Badge Column (Consistent Alignment) */}
-                          <div className="w-20 sm:w-28 flex justify-center shrink-0">
-                            <div
-                              className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border text-center w-full ${
-                                record.score >= 90
-                                  ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
-                                  : record.score >= 80
-                                    ? "border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
-                                    : "border-slate-500/20 bg-slate-500/5 text-slate-400"
-                              }`}
-                            >
-                              {record.difficulty}
-                            </div>
-                          </div>
-
-                          {/* Actions Column */}
-                          <div className="flex items-center gap-4 shrink-0">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSessionToDelete(record);
-                              }}
-                              aria-label="Delete session"
-                              className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-[#ff7b9c] hover:bg-[#16090d] hover:border-[#4b1d2b] transition-all opacity-0 lg:group-hover:opacity-100 hidden md:flex items-center justify-center"
-                              title="Delete Session"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-
-                            <div className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-slate-400 group-hover:border-cyan-500/50 group-hover:text-cyan-400 group-hover:bg-cyan-500/5 transition-all">
-                              <ChevronRight size={18} />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Mobile Only: Top-Right Floating Delete */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSessionToDelete(record);
+                        <motion.div
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => handleViewDetail(record)}
+                          whileHover={{
+                            backgroundColor: "rgba(255, 255, 255, 0.02)",
                           }}
-                          aria-label="Delete session"
-                          className="absolute top-4 right-4 md:hidden p-2 text-slate-400 active:text-[#ff7b9c] bg-white/5 rounded-lg border border-white/5"
+                          className="w-full text-left pl-4 pr-10 sm:px-6 md:px-8 py-5 sm:py-6 flex flex-col md:flex-row md:items-center gap-4 sm:gap-6 group transition-all relative"
                         >
-                          <Trash2 size={14} />
-                        </button>
-                      </motion.button>
-                    </motion.div>
-                  ))}
+                          {/* Loading Indicator */}
+                          {loadingDetails === record.id && (
+                            <div className="absolute inset-0 z-50 bg-slate-950/40 backdrop-blur-[2px] flex items-center justify-center">
+                              <div className="h-5 w-5 rounded-full border-2 border-cyan-400/30 border-t-cyan-400 animate-spin" />
+                            </div>
+                          )}
+
+                          {/* 1. IDENTITY & METADATA */}
+                          <div className="flex items-center gap-6 flex-1 min-w-0">
+                            <div className="w-11 h-11 shrink-0 rounded-xl bg-white/5 flex items-center justify-center text-slate-400 group-hover:text-cyan-400 group-hover:bg-cyan-500/5 transition-all">
+                              <Target size={22} />
+                            </div>
+
+                            <div className="min-w-0">
+                              <h4 className="font-bold text-white group-hover:text-cyan-400 transition-colors truncate">
+                                {record.role}
+                              </h4>
+
+                              <div className="text-[11px] text-slate-400 flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 font-medium">
+                                <div className="flex items-center gap-2">
+                                  <Calendar
+                                    size={13}
+                                    className="text-slate-400"
+                                  />
+                                  {new Date(
+                                    record.created_at,
+                                  ).toLocaleDateString(undefined, {
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
+                                  })}
+                                </div>
+
+                                {record.focus && (
+                                  <div className="flex items-center gap-1.5 text-cyan-500/60 font-black uppercase tracking-[0.15em] text-[9px]">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-500/40" />
+                                    {record.focus}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 2. STATS & ACTIONS (Right Stack) */}
+                          <div className="flex flex-wrap sm:flex-nowrap items-center justify-between md:justify-end gap-2 sm:gap-6 md:gap-10 shrink-0 w-full md:w-auto">
+                            {/* Score Column (Fixed Width for Alignment) */}
+                            <div className="text-center w-12 sm:w-20 shrink-0">
+                              <div className="text-xl font-black text-white group-hover:text-emerald-400 transition-colors">
+                                {record.score}%
+                              </div>
+                              <div className="text-[9px] font-black uppercase tracking-widest text-slate-400">
+                                Accuracy
+                              </div>
+                            </div>
+
+                            {/* Badge Column (Consistent Alignment) */}
+                            <div className="w-20 sm:w-28 flex justify-center shrink-0">
+                              <div
+                                className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border text-center w-full ${
+                                  record.score >= 90
+                                    ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
+                                    : record.score >= 80
+                                      ? "border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
+                                      : "border-slate-500/20 bg-slate-500/5 text-slate-400"
+                                }`}
+                              >
+                                {record.difficulty}
+                              </div>
+                            </div>
+
+                            {/* Actions Column */}
+                            <div className="flex items-center gap-4 shrink-0">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSessionToDelete(record);
+                                }}
+                                aria-label="Delete session"
+                                className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-[#ff7b9c] hover:bg-[#16090d] hover:border-[#4b1d2b] transition-all opacity-0 lg:group-hover:opacity-100 hidden md:flex items-center justify-center"
+                                title="Delete Session"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+
+                              <div className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-slate-400 group-hover:border-cyan-500/50 group-hover:text-cyan-400 group-hover:bg-cyan-500/5 transition-all">
+                                <ChevronRight size={18} />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Mobile Only: Top-Right Floating Delete */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSessionToDelete(record);
+                            }}
+                            aria-label="Delete session"
+                            className="absolute top-4 right-4 md:hidden p-2 text-slate-400 active:text-[#ff7b9c] bg-white/5 rounded-lg border border-white/5"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </motion.div>
+                      </motion.div>
+                    ))}
                 </AnimatePresence>
               </div>
 
@@ -1130,34 +1438,44 @@ const HistoryIntelligence: React.FC<HistoryIntelligenceProps> = ({
               )}
             </div>
           ) : records.length === 0 ? (
-            <div className="p-12 text-center premium-glass rounded-[2rem] border border-white/5 italic text-slate-400 text-sm">
-              No timeline data available. Complete an interview to start your journey.
+            <div className="p-8 sm:p-12 text-center space-y-6 premium-glass rounded-[3rem] border border-white/5 relative overflow-hidden">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/5 blur-[100px] pointer-events-none" />
+              <div className="relative z-10 space-y-6">
+                <div className="mx-auto w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-500">
+                  <History size={32} />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold text-white italic">
+                    Intelligence Archives Empty
+                  </h3>
+                  <p className="text-sm text-slate-400 max-w-sm mx-auto leading-relaxed font-medium">
+                    You haven't completed any full 10-question interview
+                    simulations yet. Finish a session to activate performance
+                    analytics and track your technical trajectory.
+                  </p>
+                </div>
+                <button
+                  onClick={() =>
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }
+                  className="px-8 py-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-cyan-500/20 transition-all"
+                >
+                  Start First Simulation
+                </button>
+              </div>
             </div>
-          ) : null}
+          ) : (
+            <div className="p-20 text-center space-y-3">
+              <div className="text-white font-bold italic">
+                No interview sessions matched your search.
+              </div>
+              <p className="text-xs text-slate-400 max-w-xs mx-auto">
+                Try searching for a specific role, technical concept, or
+                interview track.
+              </p>
+            </div>
+          )}
         </div>
-
-        {records.length === 0 && (
-          <div className="p-12 sm:p-20 text-center space-y-4 premium-glass rounded-[2rem] border border-white/5">
-            <div className="text-white font-bold italic text-lg sm:text-xl">
-              No Completed Interviews Yet
-            </div>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-sm mx-auto leading-relaxed">
-              Finish your first full 10-question interview simulation to activate performance analytics and unlock your technical intelligence archives.
-            </p>
-          </div>
-        )}
-
-        {records.length > 0 && filteredRecords.length === 0 && (
-          <div className="p-20 text-center space-y-3">
-            <div className="text-white font-bold italic">
-              No interview sessions matched your search.
-            </div>
-            <p className="text-xs text-slate-400 max-w-xs mx-auto">
-              Try searching for a specific role, technical concept, or interview
-              track.
-            </p>
-          </div>
-        )}
       </div>
 
       {/* Premium Confirmation Modal Overlay */}

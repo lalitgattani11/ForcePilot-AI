@@ -192,7 +192,7 @@ const CareerRoadmap: React.FC = () => {
           <span>Strategic Growth Framework</span>
         </div>
         <h1 className="guide-hero-title">
-          Salesforce <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">Career Roadmap</span>
+          Salesforce <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">Career Roadmap.</span>
         </h1>
         <p className="guide-hero-subtitle">
           Navigate your professional evolution with our structured salesforce career roadmap. Learn how to become a salesforce developer using our dedicated salesforce roadmap for freshers.

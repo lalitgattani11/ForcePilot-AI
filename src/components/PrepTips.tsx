@@ -289,7 +289,7 @@ const PrepTips: React.FC = () => {
           <span>Elite Preparation Framework</span>
         </div>
         <h1 className="guide-hero-title">
-          Interview <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">Preparation Tips</span>
+          Interview <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">Preparation Tips.</span>
         </h1>
         <p className="guide-hero-subtitle">
           Maximize your performance with our salesforce interview preparation tips. Learn how to prepare for salesforce developer interview rounds using recruiter-ready structures.

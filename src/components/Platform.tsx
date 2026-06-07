@@ -132,7 +132,7 @@ const Platform: React.FC = () => {
             ForcePilot AI is the technical interview platform for the Salesforce ecosystem. 
             Built for precision, realism, and recruiter-level analysis.
           </motion.p>
-          <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 sm:mb-0">
             <Link
               to="/#setup"
               className="cta-button w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg flex items-center justify-center gap-3 group text-center"

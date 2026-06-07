@@ -85,7 +85,7 @@ const BlogList: React.FC = () => {
             <span>Engineering Intelligence Hub</span>
           </div>
           <h1 className="guide-hero-title">
-            Technical <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 italic">Salesforce Blog</span>
+            Technical <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 italic">Salesforce Blog&nbsp;</span>
           </h1>
           <p className="guide-hero-subtitle">
             Deep-dive architectural blueprints, recruiter-grade strategy playbooks, and LWC rendering optimizations curated for modern Salesforce engineers.
@@ -96,12 +96,12 @@ const BlogList: React.FC = () => {
         <section className="max-w-6xl mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-6 items-center justify-between pb-8 border-b border-white/5">
             {/* Category Tabs */}
-            <div className="flex flex-wrap gap-2 w-full md:w-auto">
+            <div className="flex flex-nowrap overflow-x-auto scrollbar-hide gap-2 w-full md:w-auto -mx-4 px-4 md:mx-0 md:px-0">
               {categories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 ${
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
                     selectedCategory === category
                       ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
                       : "text-slate-400 bg-white/[0.01] hover:bg-white/5 border border-white/5"
@@ -143,8 +143,8 @@ const BlogList: React.FC = () => {
                     variants={itemVariants}
                     className="group relative flex flex-col h-full rounded-[2rem] bg-slate-950/20 border border-white/5 overflow-hidden hover:border-emerald-500/30 transition-all duration-500"
                   >
-                    {/* Visual Card Cover */}
-                    <div className={`h-48 w-full bg-gradient-to-br ${post.gradient} relative flex items-center justify-center border-b border-white/5 overflow-hidden`}>
+                    {/* Visual Card Cover - Desktop Only */}
+                    <div className={`hidden md:flex h-48 w-full bg-gradient-to-br ${post.gradient} relative items-center justify-center border-b border-white/5 overflow-hidden`}>
                       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(2,4,10,0.8),transparent)]" />
                       <div className="relative p-4 rounded-2xl bg-slate-900/80 border border-white/10 text-emerald-400 group-hover:scale-110 group-hover:border-emerald-500/20 transition-all duration-500 shadow-2xl">
                         <IconComponent size={28} />
@@ -156,10 +156,27 @@ const BlogList: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Mobile Card Header - Mobile Only */}
+                    <div className="md:hidden p-5 pb-0 flex flex-col items-start gap-3">
+                      <span className="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 leading-none flex items-center">
+                        {post.category}
+                      </span>
+                      <div className="flex items-center gap-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                        <span className="flex items-center gap-1.5 leading-none">
+                          <Calendar size={10} className="text-slate-600" />
+                          {post.publishDate}
+                        </span>
+                        <span className="flex items-center gap-1.5 leading-none">
+                          <Clock size={10} className="text-slate-600" />
+                          {post.readingTime}
+                        </span>
+                      </div>
+                    </div>
+
                     {/* Card Body */}
-                    <div className="p-6 flex-grow flex flex-col space-y-4">
-                      {/* Meta Date & Time */}
-                      <div className="flex items-center gap-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                    <div className="p-5 md:p-6 flex-grow flex flex-col space-y-3 md:space-y-4">
+                      {/* Meta Date & Time - Desktop Only */}
+                      <div className="hidden md:flex items-center gap-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                         <span className="flex items-center gap-1.5">
                           <Calendar size={12} />
                           {post.publishDate}
@@ -171,7 +188,7 @@ const BlogList: React.FC = () => {
                       </div>
 
                       {/* Title */}
-                      <h3 className="text-xl font-bold text-white tracking-tight leading-snug group-hover:text-emerald-400 transition-colors duration-300">
+                      <h3 className="text-lg md:text-xl font-bold text-white tracking-tight leading-snug group-hover:text-emerald-400 transition-colors duration-300 line-clamp-2">
                         <Link to={`/blog/${post.slug}`} className="hover:underline">
                           {post.title}
                         </Link>
@@ -197,7 +214,7 @@ const BlogList: React.FC = () => {
                     </div>
 
                     {/* Card Footer */}
-                    <div className="p-6 pt-0 border-t border-white/[0.03] mt-auto">
+                    <div className="p-5 md:p-6 pt-0 border-t border-white/[0.03] mt-auto">
                       <div className="flex items-center justify-between pt-4">
                         {/* Author */}
                         <div className="flex items-center gap-2">
@@ -213,7 +230,7 @@ const BlogList: React.FC = () => {
                         {/* Action Link */}
                         <Link 
                           to={`/blog/${post.slug}`}
-                          className="flex items-center gap-1 text-xs font-black text-emerald-400 group-hover:text-emerald-300 transition-colors"
+                          className="flex items-center gap-1.5 text-[10px] md:text-xs font-black text-emerald-400 group-hover:text-emerald-300 transition-colors bg-emerald-500/5 md:bg-transparent px-3 py-2 md:p-0 rounded-lg md:rounded-none border border-emerald-500/10 md:border-none"
                         >
                           READ ARTICLE
                           <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />

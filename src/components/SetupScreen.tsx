@@ -117,9 +117,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   ];
 
   return (
-    <div className="flex flex-col w-full max-w-[1600px] mx-auto pt-0 pb-6 sm:py-8 px-4 sm:px-5 lg:px-8 gap-4 sm:gap-24 lg:gap-32 relative overflow-hidden">
+    <div className="flex flex-col w-full max-w-[1600px] mx-auto px-2 sm:px-5 lg:px-8 gap-12 sm:gap-16 lg:gap-20 relative overflow-hidden">
       {/* 1. HERO SECTION */}
-      <section className="relative flex flex-col items-center justify-center pt-8 pb-10 sm:pt-12 sm:pb-16 overflow-visible w-full">
+      <section className="relative flex flex-col items-center justify-center pt-12 pb-4 sm:pt-20 sm:pb-6 overflow-visible w-full">
         {/* Ambient background blur behind hero */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-tr from-cyan-500/10 via-emerald-500/10 to-transparent blur-[140px] pointer-events-none -z-10 animate-pulse-neural"></div>
 
@@ -226,11 +226,11 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             </div>
 
             {/* Dashboard Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 sm:p-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 p-5 sm:p-8">
               {/* LEFT COLUMN: SETUP & ACTIVE QUESTION (4 Cols) */}
-              <div className="lg:col-span-4 space-y-4">
+              <div className="lg:col-span-4 space-y-5 lg:space-y-4">
                 {/* Setup Config Card */}
-                <div className="bg-white/[0.01] border border-white/[0.05] p-5 rounded-2xl relative overflow-hidden group/card">
+                <div className="lg:bg-white/[0.01] lg:border lg:border-white/[0.05] lg:p-5 lg:rounded-2xl relative overflow-hidden group/card">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/[0.02] blur-xl rounded-full"></div>
                   <h4 className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-3 flex items-center gap-1.5">
                     <Settings size={10} className="text-cyan-400" />
@@ -252,52 +252,62 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                   </div>
                 </div>
 
+                <div className="h-px w-full bg-white/[0.05] lg:hidden" />
+
                 {/* Active Question Card */}
-                <div className="bg-white/[0.01] border border-white/[0.05] p-5 rounded-2xl space-y-3">
+                <div className="lg:bg-white/[0.01] lg:border lg:border-white/[0.05] lg:p-5 lg:rounded-2xl space-y-3">
                   <h4 className="text-[9px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-1.5">
                     <Terminal size={10} className="text-cyan-400" />
                     Active Scenario
                   </h4>
-                  <div className="p-3 bg-slate-950/80 rounded-xl border border-white/[0.03] space-y-2">
+                  <div className="p-4 lg:p-3 bg-slate-950/80 rounded-xl border border-white/[0.03] space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider bg-emerald-500/5 border border-emerald-500/10 px-1.5 py-0.5 rounded">Apex Trigger</span>
                       <span className="text-[9px] font-bold text-slate-500">Freq: 94%</span>
                     </div>
-                    <p className="text-xs text-white font-medium leading-relaxed">
+                    <p className="text-xs sm:text-[13px] text-white font-medium leading-relaxed">
                       "How would you prevent recursion in a Salesforce trigger while maintaining transaction-safe bulk execution?"
                     </p>
                   </div>
                 </div>
               </div>
 
+              <div className="h-px w-full bg-white/[0.05] lg:hidden" />
+
               {/* MIDDLE COLUMN: LIVE CONVERSATION & TRANSCRIPTION (5 Cols) */}
               <div className="lg:col-span-5 space-y-4">
                 {/* Transcription & Audio Card */}
-                <div className="bg-white/[0.01] border border-white/[0.05] p-5 rounded-2xl h-full flex flex-col justify-between min-h-[260px] relative">
-                  <h4 className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-3 flex items-center gap-1.5">
+                <div className="lg:bg-white/[0.01] lg:border lg:border-white/[0.05] p-0 lg:p-5 lg:rounded-2xl h-full flex flex-col justify-between min-h-[260px] relative">
+                  <h4 className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-4 lg:mb-3 flex items-center gap-1.5">
                     <BrainCircuit size={10} className="text-cyan-400" />
                     Voice Intelligence
                   </h4>
 
                   {/* Chat bubble simulations */}
-                  <div className="space-y-4 my-auto w-full">
+                  <div className="space-y-5 lg:space-y-4 my-auto w-full">
                     {/* Mobile Viewports (< lg) */}
-                    <div className="space-y-4 lg:hidden">
+                    <div className="space-y-6 lg:hidden">
                       {/* AI speech bubble */}
-                      <div className="flex flex-col items-start gap-1">
-                        <span className="text-[9px] font-bold text-cyan-400 uppercase tracking-wider ml-1">AI</span>
-                        <div className="bg-white/[0.02] border border-white/[0.04] p-3 rounded-2xl rounded-tl-none max-w-[88%] w-fit">
-                          <p className="text-[11px] text-slate-300 leading-relaxed">
+                      <div className="flex flex-col items-start gap-1.5">
+                        <div className="flex items-center gap-1.5 ml-1">
+                          <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                          <span className="text-[10px] font-black text-white uppercase tracking-[0.15em]">AI Intelligence</span>
+                        </div>
+                        <div className="bg-white/[0.03] border border-white/[0.06] p-4 rounded-2xl rounded-tl-none max-w-[90%] w-fit shadow-xl">
+                          <p className="text-[12px] text-slate-300 leading-relaxed">
                             Excellent. Let's talk about execution state. Explain your strategy to guard against recursive trigger contexts.
                           </p>
                         </div>
                       </div>
 
                       {/* Candidate transcript */}
-                      <div className="flex flex-col items-end gap-1">
-                        <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider mr-1">ME</span>
-                        <div className="bg-cyan-500/5 border border-cyan-500/10 p-3 rounded-2xl rounded-tr-none max-w-[88%] w-fit">
-                          <p className="text-[11px] text-white leading-relaxed">
+                      <div className="flex flex-col items-end gap-1.5">
+                        <div className="flex items-center gap-1.5 mr-1">
+                          <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.15em]">Candidate Response</span>
+                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
+                        </div>
+                        <div className="bg-cyan-500/10 border border-cyan-500/20 p-4 rounded-2xl rounded-tr-none max-w-[90%] w-fit shadow-xl">
+                          <p className="text-[12px] text-white leading-relaxed font-medium">
                             "I use a static helper class with a Set of record IDs. By verifying if an ID exists in the set before running logic, we ensure bulk updates run once..."
                           </p>
                         </div>
@@ -351,16 +361,18 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
               </div>
 
               {/* RIGHT COLUMN: SCORING & FEEDBACK (3 Cols) */}
-              <div className="lg:col-span-3 space-y-4">
+              <div className="lg:col-span-3 space-y-6 lg:space-y-4">
+                <div className="h-px w-full bg-white/[0.05] lg:hidden" />
+                
                 {/* Score Ring Card */}
-                <div className="bg-white/[0.01] border border-white/[0.05] p-5 rounded-2xl text-center space-y-4 relative overflow-hidden group/score">
+                <div className="lg:bg-white/[0.01] lg:border lg:border-white/[0.05] p-0 lg:p-5 lg:rounded-2xl text-center space-y-5 lg:space-y-4 relative overflow-hidden group/score">
                   <h4 className="text-[9px] font-black uppercase text-slate-500 tracking-widest text-left flex items-center gap-1.5">
                     <LineChart size={10} className="text-cyan-400" />
                     Performance Forensics
                   </h4>
 
                   {/* Circular Chart */}
-                  <div className="relative w-28 h-28 mx-auto flex items-center justify-center">
+                  <div className="relative w-32 h-32 lg:w-28 lg:h-28 mx-auto flex items-center justify-center">
                     <svg viewBox="0 0 112 112" className="w-full h-full transform -rotate-90">
                       <circle cx="56" cy="56" r="46" stroke="rgba(255,255,255,0.03)" strokeWidth="6" fill="transparent" />
                       <circle
@@ -383,39 +395,41 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                       </defs>
                     </svg>
                     <div className="absolute flex flex-col items-center">
-                      <span className="text-3xl font-black text-white tracking-tight">88</span>
-                      <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Score / 100</span>
+                      <span className="text-4xl lg:text-3xl font-black text-white tracking-tight">88</span>
+                      <span className="text-[9px] lg:text-[8px] font-bold text-slate-500 uppercase tracking-widest">Score / 100</span>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-left pt-2">
-                    <div className="bg-slate-950/40 p-2 rounded-lg border border-white/[0.03]">
-                      <span className="text-[8px] font-bold text-slate-500 uppercase">Technical</span>
-                      <div className="text-xs font-bold text-cyan-300">92 / 100</div>
+                  <div className="grid grid-cols-2 gap-3 lg:gap-2 text-left pt-2">
+                    <div className="bg-slate-950/40 p-3 lg:p-2 rounded-xl lg:rounded-lg border border-white/[0.03]">
+                      <span className="text-[9px] lg:text-[8px] font-bold text-slate-500 uppercase">Technical</span>
+                      <div className="text-sm lg:text-xs font-bold text-cyan-300">92 / 100</div>
                     </div>
-                    <div className="bg-slate-950/40 p-2 rounded-lg border border-white/[0.03]">
-                      <span className="text-[8px] font-bold text-slate-500 uppercase">Delivery</span>
-                      <div className="text-xs font-bold text-emerald-300">84 / 100</div>
+                    <div className="bg-slate-950/40 p-3 lg:p-2 rounded-xl lg:rounded-lg border border-white/[0.03]">
+                      <span className="text-[9px] lg:text-[8px] font-bold text-slate-500 uppercase">Delivery</span>
+                      <div className="text-sm lg:text-xs font-bold text-emerald-300">84 / 100</div>
                     </div>
                   </div>
                 </div>
 
+                <div className="h-px w-full bg-white/[0.05] lg:hidden" />
+
                 {/* Recruiter Evaluation Card */}
-                <div className="bg-white/[0.01] border border-white/[0.05] p-5 rounded-2xl space-y-3">
+                <div className="lg:bg-white/[0.01] lg:border lg:border-white/[0.05] p-0 lg:p-5 lg:rounded-2xl space-y-4 lg:space-y-3">
                   <h4 className="text-[9px] font-black uppercase text-slate-500 tracking-widest flex items-center gap-1.5">
                     <UserCheck size={10} className="text-cyan-400" />
                     Recruiter Digest
                   </h4>
-                  <div className="space-y-2 text-left">
-                    <div className="flex gap-1.5 items-start">
-                      <CheckCircle2 size={12} className="text-emerald-400 shrink-0 mt-0.5" />
-                      <p className="text-[10px] text-slate-300 leading-normal">
+                  <div className="space-y-3 lg:space-y-2 text-left">
+                    <div className="flex gap-2 items-start">
+                      <CheckCircle2 size={14} className="text-emerald-400 shrink-0 mt-0.5" />
+                      <p className="text-[11px] lg:text-[10px] text-slate-300 leading-normal">
                         Uses static sets for recursion control. Good bulk handling awareness.
                       </p>
                     </div>
-                    <div className="flex gap-1.5 items-start">
-                      <CheckCircle2 size={12} className="text-cyan-400 shrink-0 mt-0.5" />
-                      <p className="text-[10px] text-slate-300 leading-normal">
+                    <div className="flex gap-2 items-start">
+                      <CheckCircle2 size={14} className="text-cyan-400 shrink-0 mt-0.5" />
+                      <p className="text-[11px] lg:text-[10px] text-slate-300 leading-normal">
                         Verbal response matches architectural guidelines.
                       </p>
                     </div>
@@ -490,8 +504,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
       {/* 2.5 PLATFORM PREVIEW SECTION */}
       <section 
         id="platform-preview" 
-        className="relative pt-16 pb-20 sm:pt-24 sm:pb-32 border-t border-white/[0.05] space-y-[60px] sm:space-y-36 scroll-mt-20 sm:scroll-mt-28"
-        style={{ contentVisibility: 'auto', containIntrinsicSize: '0 1500px' }}
+        className="relative border-t border-white/[0.05] space-y-16 sm:space-y-24 scroll-mt-20 sm:scroll-mt-28"
       >
         <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-cyan-500/[0.03] rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse-neural"></div>
         <div className="absolute bottom-1/3 right-1/4 w-[600px] h-[600px] bg-emerald-500/[0.03] rounded-full blur-[160px] pointer-events-none -z-10 animate-pulse-neural" style={{ animationDelay: '3s' }}></div>
@@ -511,7 +524,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
         </div>
  
         {/* Alternate Feature Grid */}
-        <div className="space-y-[60px] sm:space-y-32">
+        <div className="space-y-16 sm:space-y-24">
           {/* Feature 1: Setup - Text Left, UI Right */}
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20 max-w-6xl mx-auto px-4">
             <motion.div 
@@ -814,19 +827,19 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
       {/* 2. INTERVIEW CONFIGURATION LAYER */}
       <section 
         id="setup" 
-        className="scroll-mt-20 sm:scroll-mt-28 min-h-[calc(100vh-5rem)] sm:min-h-[calc(100vh-7rem)] flex items-center justify-center w-full py-12 sm:py-16 relative overflow-hidden"
+        className="scroll-mt-20 sm:scroll-mt-28 w-full relative overflow-hidden"
       >
         {/* Ambient background blur behind setup */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/[0.03] rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse-neural"></div>
 
         <motion.div 
-          className="premium-glass rounded-[2rem] sm:rounded-[3rem] p-1 shadow-2xl w-full mx-auto relative z-10"
+          className="premium-glass bg-slate-950/40 sm:bg-transparent border border-white/[0.02] sm:border-none rounded-[2rem] sm:rounded-[3rem] p-0 sm:p-1 shadow-2xl w-full mx-auto relative z-10"
           initial={location.hash === "#setup" ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={location.hash === "#setup" ? { duration: 0 } : { duration: 1, ease: "easeOut" }}
         >
-        <div className="bg-slate-950/40 rounded-[1.9rem] sm:rounded-[2.9rem] p-6 sm:p-10 md:p-16 space-y-4 sm:space-y-12 border border-white/[0.02]">
+        <div className="bg-transparent sm:bg-slate-950/40 rounded-none sm:rounded-[2.9rem] px-3 py-7 sm:p-10 md:p-16 space-y-6 sm:space-y-12 border-none sm:border sm:border-white/[0.02]">
           {/* Top: Identity & Track Intelligence Unit */}
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
             {/* Left Column: Identity Control */}
@@ -858,7 +871,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                   onChange={(e) =>
                     setConfig({ ...config, role: e.target.value as Role })
                   }
-                  className="w-full h-14 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-white focus:outline-none focus:border-emerald-500/50"
+                  className="w-full h-14 rounded-xl border border-white/10 bg-white/5 px-4 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/50"
                 >
                   {roles.map((role) => (
                     <option key={role} value={role} className="bg-slate-900">
@@ -894,9 +907,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
           </div>
 
           {/* Middle: Neural Configuration Center */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:pt-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 sm:pt-4">
             {/* Complexity */}
-            <div className="premium-card rounded-2xl p-6 border border-white/5 space-y-5">
+            <div className="md:premium-card md:rounded-2xl p-0 md:p-6 md:border md:border-white/5 space-y-5">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">
                   <BrainCircuit size={16} />
@@ -911,7 +924,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                     key={val}
                     type="button"
                     onClick={() => setConfig({ ...config, difficulty: val })}
-                    className={`py-2.5 px-1 rounded-lg text-[8.5px] font-black uppercase tracking-tight transition-all ${config.difficulty === val ? "bg-white text-slate-950 shadow-lg" : "bg-white/5 text-slate-400 hover:text-white"}`}
+                    className={`py-3 px-1 rounded-xl text-[9px] font-black uppercase tracking-tight transition-all ${config.difficulty === val ? "bg-white text-slate-950 shadow-lg" : "bg-white/5 text-slate-400 hover:text-white"}`}
                   >
                     {label}
                   </button>
@@ -919,8 +932,10 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
               </div>
             </div>
 
+            <div className="h-px w-full bg-white/[0.05] md:hidden" />
+
             {/* Neural Tone */}
-            <div className="premium-card rounded-2xl p-6 border border-white/5 space-y-5">
+            <div className="md:premium-card md:rounded-2xl p-0 md:p-6 md:border md:border-white/5 space-y-5">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-xl bg-violet-500/10 text-violet-400">
                   <ShieldCheck size={16} />
@@ -935,7 +950,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                     key={val}
                     type="button"
                     onClick={() => setConfig({ ...config, personality: val })}
-                    className={`py-2.5 px-1 rounded-lg text-[8.5px] font-black uppercase tracking-tight transition-all ${config.personality === val ? "bg-white text-slate-950 shadow-lg" : "bg-white/5 text-slate-400 hover:text-white"}`}
+                    className={`py-3 px-1 rounded-xl text-[9px] font-black uppercase tracking-tight transition-all ${config.personality === val ? "bg-white text-slate-950 shadow-lg" : "bg-white/5 text-slate-400 hover:text-white"}`}
                   >
                     {label}
                   </button>
@@ -943,8 +958,10 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
               </div>
             </div>
 
+            <div className="h-px w-full bg-white/[0.05] md:hidden" />
+
             {/* System Intelligence */}
-            <div className="premium-card rounded-2xl p-6 border border-white/5 space-y-5">
+            <div className="md:premium-card md:rounded-2xl p-0 md:p-6 md:border md:border-white/5 space-y-5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
@@ -970,8 +987,8 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                   />
                 </button>
               </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-[9px] font-bold text-slate-400 tracking-widest uppercase">
+              <div className="space-y-3">
+                <div className="flex justify-between text-[10px] font-bold text-slate-400 tracking-widest uppercase">
                   <span>Transmission</span>
                   <span className="text-emerald-500">
                     {config.speechSpeed}x
@@ -991,7 +1008,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                       speechSpeed: parseFloat(e.target.value),
                     })
                   }
-                  className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-emerald-500"
+                  className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-emerald-500"
                 />
               </div>
             </div>
@@ -1022,7 +1039,6 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
         <section
           id="analytics"
           className="relative border-t border-white/[0.05] w-full"
-          style={{ contentVisibility: 'auto', containIntrinsicSize: '0 500px' }}
         >
           <React.Suspense fallback={<div className="h-40 w-full animate-pulse bg-white/5 rounded-3xl" />}>
             <HistoryIntelligence onViewDetail={onViewHistoryDetail} />
@@ -1032,15 +1048,14 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
 
       {/* 4. TECHNICAL RESOURCES / SEO SECTION */}
       <section 
-        className="relative mt-4 sm:mt-6 pt-6 border-t border-white/10 space-y-8 pb-12"
-        style={{ contentVisibility: 'auto', containIntrinsicSize: '0 800px' }}
+        className="relative border-t border-white/5 pt-8 space-y-8 pb-16"
       >
-        <div className="flex flex-col md:flex-row items-center sm:items-end justify-between gap-6 border-b border-white/5 pb-6">
-          <div className="space-y-2 text-center sm:text-left overflow-visible">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight pb-1 sm:pb-0 overflow-visible">
-              Technical <span className="text-emerald-400">Intelligence.</span>
+        <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 border-b border-white/5 pb-8">
+          <div className="space-y-2 text-center md:text-left overflow-visible">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight pb-1 md:pb-0 overflow-visible">
+              Technical <span className="text-emerald-400">Intelligence</span>
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base max-w-lg mx-auto sm:mx-0">
+            <p className="text-slate-400 text-sm sm:text-base max-w-lg mx-auto md:mx-0">
               Master the technical nuances of the Salesforce platform with our
               deep-dive interview guides.
             </p>
