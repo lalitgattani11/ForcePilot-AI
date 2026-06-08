@@ -233,7 +233,7 @@ const ScenarioBasedSalesforceInterview: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
+    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
       <Helmet>
         <title>Salesforce Scenario-Based Interview Questions & Answers Guide (2026) | ForcePilot AI</title>
         <meta
@@ -254,36 +254,38 @@ const ScenarioBasedSalesforceInterview: React.FC = () => {
 
       {/* Hero Section */}
       <section className="guide-hero-section">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="guide-hero-badge border-rose-500/20 bg-rose-500/5 text-rose-400"
-        >
-          <BrainCircuit size={14} className="animate-pulse" />
-          <span>Architectural Thinking Track</span>
-        </motion.div>
-        
-        <h1 className="guide-hero-title">
-          Salesforce Scenario-Based <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-orange-400 to-amber-500 italic">Questions</span>
-        </h1>
-        
-        <p className="guide-hero-subtitle">
-          Master real-world Salesforce architecture scenarios, debugging strategies, and system design thinking. Practice recruiter-grade problem solving built for high-level SFDC technical interviews.
-        </p>
-
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <Link
-            to="/#setup"
-            state={{ role: "Professional Readiness" }}
-            className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(244,63,94,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+        <div className="guide-hero-container">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="guide-hero-badge border-rose-500/20 bg-rose-500/5 text-rose-400"
           >
-            Start Scenario-Based Interview Practice
-            <ArrowRight
-              size={20}
-              className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
-            />
-          </Link>
+            <BrainCircuit size={14} className="animate-pulse" />
+            <span>Architectural Thinking Track</span>
+          </motion.div>
+          
+          <h1 className="guide-hero-title">
+            Salesforce Scenario-Based <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-orange-400 to-amber-500 italic">Questions</span>
+          </h1>
+          
+          <p className="guide-hero-subtitle">
+            Master real-world Salesforce architecture scenarios, debugging strategies, and system design thinking. Practice recruiter-grade problem solving built for high-level SFDC technical interviews.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Link
+              to="/#setup"
+              state={{ role: "Professional Readiness" }}
+              className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(244,63,94,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            >
+              Start Scenario-Based Interview Practice
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
+              />
+            </Link>
+          </div>
         </div>
       </section>
 

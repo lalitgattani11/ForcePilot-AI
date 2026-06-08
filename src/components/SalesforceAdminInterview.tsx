@@ -283,7 +283,7 @@ const SalesforceAdminInterview: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
+    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
       <Helmet>
         <title>Salesforce Admin Interview Questions & Answers Guide (2026) | ForcePilot AI</title>
         <meta
@@ -309,33 +309,35 @@ const SalesforceAdminInterview: React.FC = () => {
 
       {/* Hero Section */}
       <section className="guide-hero-section">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="guide-hero-badge border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
-        >
-          <Settings size={14} className="animate-pulse" />
-          <span>Admin Excellence Track</span>
-        </motion.div>
-        
-        <h1 className="guide-hero-title">
-          Salesforce Admin <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 italic">Interview Questions</span>
-        </h1>
-        
-        <p className="guide-hero-subtitle">
-          Master salesforce administrator interview questions and salesforce admin scenario questions. Practice your response structure with our admin mock interview guides covering profiles, roles, permission sets, and flows.
-        </p>
-
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <Link
-            to="/#setup"
-            state={{ role: "Salesforce Admin" }}
-            className="w-full sm:w-auto px-10 sm:px-12 py-4 sm:py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+        <div className="guide-hero-container">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="guide-hero-badge border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
           >
-            Practice Admin Interviews
-            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform sm:size-[22px]" />
-          </Link>
+            <Settings size={14} className="animate-pulse" />
+            <span>Admin Excellence Track</span>
+          </motion.div>
+          
+          <h1 className="guide-hero-title">
+            Salesforce Admin <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 italic">Interview Questions</span>
+          </h1>
+          
+          <p className="guide-hero-subtitle">
+            Master salesforce administrator interview questions and salesforce admin scenario questions. Practice your response structure with our admin mock interview guides covering profiles, roles, permission sets, and flows.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Link
+              to="/#setup"
+              state={{ role: "Salesforce Admin" }}
+              className="w-full sm:w-auto px-10 sm:px-12 py-4 sm:py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            >
+              Practice Admin Interviews
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform sm:size-[22px]" />
+            </Link>
+          </div>
         </div>
       </section>
 

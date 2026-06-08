@@ -166,7 +166,7 @@ const CareerRoadmap: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
+    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
       <Helmet>
         <title>Salesforce Developer & Career Roadmap (2026) | ForcePilot AI</title>
         <meta
@@ -187,16 +187,18 @@ const CareerRoadmap: React.FC = () => {
 
       {/* Hero Header */}
       <section className="guide-hero-section">
-        <div className="guide-hero-badge border-emerald-500/20 bg-emerald-500/5 text-emerald-300">
-          <Map size={14} className="text-emerald-400" />
-          <span>Strategic Growth Framework</span>
+        <div className="guide-hero-container">
+          <div className="guide-hero-badge border-emerald-500/20 bg-emerald-500/5 text-emerald-300">
+            <Map size={14} className="text-emerald-400" />
+            <span>Strategic Growth Framework</span>
+          </div>
+          <h1 className="guide-hero-title">
+            Salesforce <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">Career Roadmap.</span>
+          </h1>
+          <p className="guide-hero-subtitle">
+            Navigate your professional evolution with our structured salesforce career roadmap. Learn how to become a salesforce developer using our dedicated salesforce roadmap for freshers.
+          </p>
         </div>
-        <h1 className="guide-hero-title">
-          Salesforce <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">Career Roadmap.</span>
-        </h1>
-        <p className="guide-hero-subtitle">
-          Navigate your professional evolution with our structured salesforce career roadmap. Learn how to become a salesforce developer using our dedicated salesforce roadmap for freshers.
-        </p>
       </section>
 
       {/* AI Overview & Quick Definitions Block */}

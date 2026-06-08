@@ -263,7 +263,7 @@ const PrepTips: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
+    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
       <Helmet>
         <title>Salesforce Interview Preparation Tips Guide (2026) | ForcePilot AI</title>
         <meta
@@ -284,16 +284,18 @@ const PrepTips: React.FC = () => {
 
       {/* Hero Header */}
       <section className="guide-hero-section">
-        <div className="guide-hero-badge border-purple-500/20 bg-purple-500/5 text-purple-300">
-          <Star size={14} className="text-purple-400" />
-          <span>Elite Preparation Framework</span>
+        <div className="guide-hero-container">
+          <div className="guide-hero-badge border-purple-500/20 bg-purple-500/5 text-purple-300">
+            <Star size={14} className="text-purple-400" />
+            <span>Elite Preparation Framework</span>
+          </div>
+          <h1 className="guide-hero-title">
+            Interview <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">Preparation Tips.</span>
+          </h1>
+          <p className="guide-hero-subtitle">
+            Maximize your performance with our salesforce interview preparation tips. Learn how to prepare for salesforce developer interview rounds using recruiter-ready structures.
+          </p>
         </div>
-        <h1 className="guide-hero-title">
-          Interview <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">Preparation Tips.</span>
-        </h1>
-        <p className="guide-hero-subtitle">
-          Maximize your performance with our salesforce interview preparation tips. Learn how to prepare for salesforce developer interview rounds using recruiter-ready structures.
-        </p>
       </section>
 
       {/* Strategy Grid */}

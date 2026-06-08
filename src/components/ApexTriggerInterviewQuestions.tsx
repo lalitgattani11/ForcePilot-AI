@@ -283,7 +283,7 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
+    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
       <Helmet>
         <title>Salesforce Apex Trigger Interview Questions & Answers Guide (2026) | ForcePilot AI</title>
         <meta
@@ -304,36 +304,38 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
 
       {/* Hero Section */}
       <section className="guide-hero-section">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="guide-hero-badge border-blue-500/20 bg-blue-500/5 text-blue-400"
-        >
-          <Terminal size={14} className="animate-pulse" />
-          <span>Apex Engineering Track</span>
-        </motion.div>
-        
-        <h1 className="guide-hero-title">
-          Salesforce Apex <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-500 italic">Trigger Interview Questions</span>
-        </h1>
-        
-        <p className="guide-hero-subtitle">
-          The definitive guide to production-grade Apex triggers. Master before vs after trigger details, trigger handler framework setups, and trigger bulkification patterns.
-        </p>
-
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <Link
-            to="/#setup"
-            state={{ role: "Salesforce Apex Developer" }}
-            className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(59,130,246,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+        <div className="guide-hero-container">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="guide-hero-badge border-blue-500/20 bg-blue-500/5 text-blue-400"
           >
-            Practice Apex Trigger Interviews
-            <ArrowRight
-              size={20}
-              className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
-            />
-          </Link>
+            <Terminal size={14} className="animate-pulse" />
+            <span>Apex Engineering Track</span>
+          </motion.div>
+          
+          <h1 className="guide-hero-title">
+            Salesforce Apex <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-500 italic">Trigger Interview Questions</span>
+          </h1>
+          
+          <p className="guide-hero-subtitle">
+            The definitive guide to production-grade Apex triggers. Master before vs after trigger details, trigger handler framework setups, and trigger bulkification patterns.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Link
+              to="/#setup"
+              state={{ role: "Salesforce Apex Developer" }}
+              className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(59,130,246,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            >
+              Practice Apex Trigger Interviews
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
+              />
+            </Link>
+          </div>
         </div>
       </section>
 

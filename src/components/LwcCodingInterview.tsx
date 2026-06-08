@@ -283,7 +283,7 @@ const LwcCodingInterview: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
+    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
       <Helmet>
         <title>Salesforce LWC Interview Questions & Answers Guide (2026) | Lightning Web Components Practice | ForcePilot AI</title>
         <meta
@@ -304,36 +304,38 @@ const LwcCodingInterview: React.FC = () => {
 
       {/* Hero Section */}
       <section className="guide-hero-section">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="guide-hero-badge border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
-        >
-          <Layers size={14} className="animate-pulse" />
-          <span>Frontend Excellence Track</span>
-        </motion.div>
-        
-        <h1 className="guide-hero-title">
-          Salesforce LWC <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-blue-500 italic">Coding Interview Questions</span>
-        </h1>
-        
-        <p className="guide-hero-subtitle">
-          The elite technical roadmap for modern Salesforce frontends. Master LWC interview questions for experienced developers. From Shadow DOM to specialized wire adapters.
-        </p>
-
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <Link
-            to="/#setup"
-            state={{ role: "Salesforce LWC Developer" }}
-            className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(34,211,238,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+        <div className="guide-hero-container">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="guide-hero-badge border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
           >
-            Practice LWC Coding Interviews
-            <ArrowRight
-              size={20}
-              className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
-            />
-          </Link>
+            <Layers size={14} className="animate-pulse" />
+            <span>Frontend Excellence Track</span>
+          </motion.div>
+          
+          <h1 className="guide-hero-title">
+            Salesforce LWC <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-blue-500 italic">Coding Interview Questions</span>
+          </h1>
+          
+          <p className="guide-hero-subtitle">
+            The elite technical roadmap for modern Salesforce frontends. Master LWC interview questions for experienced developers. From Shadow DOM to specialized wire adapters.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Link
+              to="/#setup"
+              state={{ role: "Salesforce LWC Developer" }}
+              className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(34,211,238,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            >
+              Practice LWC Coding Interviews
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
+              />
+            </Link>
+          </div>
         </div>
       </section>
 

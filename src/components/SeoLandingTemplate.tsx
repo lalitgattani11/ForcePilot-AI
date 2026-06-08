@@ -150,7 +150,7 @@ const SeoLandingTemplate: React.FC<SeoLandingTemplateProps> = ({ pageId }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-12 sm:py-12 space-y-32 text-slate-300 antialiased">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-12 sm:pb-12 space-y-32 text-slate-300 antialiased">
       <Helmet>
         <title>{page.title}</title>
         <meta name="description" content={page.description} />
@@ -178,38 +178,40 @@ const SeoLandingTemplate: React.FC<SeoLandingTemplateProps> = ({ pageId }) => {
 
         {/* Hero Section */}
         <section className="guide-hero-section">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className={`guide-hero-badge border ${borderColors[page.themeColor] || "border-white/10 bg-white/5"}`}
-        >
-          {React.createElement(resolveIcon(page.heroIcon), { size: 14, className: "animate-pulse" })}
-          <span>{page.heroBadge}</span>
-        </motion.div>
-        
-        <h1 className="guide-hero-title">
-          {page.heroTitle.split(" ").slice(0, -1).join(" ")} <br />
-          <span className={`text-transparent bg-clip-text bg-gradient-to-r ${page.heroTitleGradient}`}>
-            {page.heroTitle.split(" ").slice(-1)[0]}
-          </span>
-        </h1>
-        
-        <p className="guide-hero-subtitle">
-          {page.heroSubtitle}
-        </p>
+          <div className="guide-hero-container">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className={`guide-hero-badge border ${borderColors[page.themeColor] || "border-white/10 bg-white/5"}`}
+            >
+              {React.createElement(resolveIcon(page.heroIcon), { size: 14, className: "animate-pulse" })}
+              <span>{page.heroBadge}</span>
+            </motion.div>
+            
+            <h1 className="guide-hero-title">
+              {page.heroTitle.split(" ").slice(0, -1).join(" ")} <br />
+              <span className={`text-transparent bg-clip-text bg-gradient-to-r ${page.heroTitleGradient}`}>
+                {page.heroTitle.split(" ").slice(-1)[0]}
+              </span>
+            </h1>
+            
+            <p className="guide-hero-subtitle">
+              {page.heroSubtitle}
+            </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <Link
-            to="/#setup"
-            state={{ role: page.ctaRoleState }}
-            className={`w-full sm:w-auto px-12 py-5 text-white rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-3 group active:scale-95 text-center ${bgGlows[page.themeColor] || "bg-slate-800 hover:bg-slate-700"}`}
-          >
-            {page.ctaText}
-            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
-      </section>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Link
+                to="/#setup"
+                state={{ role: page.ctaRoleState }}
+                className={`w-full sm:w-auto px-12 py-5 text-white rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-3 group active:scale-95 text-center ${bgGlows[page.themeColor] || "bg-slate-800 hover:bg-slate-700"}`}
+              >
+                {page.ctaText}
+                <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          </div>
+        </section>
       </div>
 
       {/* AI Overview & Quick Definitions Block */}

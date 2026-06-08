@@ -162,7 +162,7 @@ const TermsOfService: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-12 sm:py-12 space-y-12 text-slate-300 antialiased">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-12 sm:pb-12 space-y-12 text-slate-300 antialiased">
       <Helmet>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
@@ -187,31 +187,33 @@ const TermsOfService: React.FC = () => {
 
       {/* Hero Section */}
       <section className="guide-hero-section">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="guide-hero-badge border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
-        >
-          <Scale size={14} className="animate-pulse" />
-          <span>Legal Agreement</span>
-        </motion.div>
+        <div className="guide-hero-container">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="guide-hero-badge border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
+          >
+            <Scale size={14} className="animate-pulse" />
+            <span>Legal Agreement</span>
+          </motion.div>
 
-        <h1 className="guide-hero-title">
-          Terms of <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-            Service
-          </span>
-        </h1>
+          <h1 className="guide-hero-title">
+            Terms of <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+              Service
+            </span>
+          </h1>
 
-        <p className="guide-hero-subtitle">
-          Please review the terms and conditions governing your use of ForcePilot AI and its Salesforce mock interview preparation services before starting your sessions.
-        </p>
+          <p className="guide-hero-subtitle">
+            Please review the terms and conditions governing your use of ForcePilot AI and its Salesforce mock interview preparation services before starting your sessions.
+          </p>
 
-        {/* Last Updated Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.02] border border-white/5 text-xs text-slate-400 font-medium mt-2">
-          <Calendar size={14} className="text-cyan-400" />
-          <span>Last Updated: June 2026</span>
+          {/* Last Updated Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.02] border border-white/5 text-xs text-slate-400 font-medium mt-2">
+            <Calendar size={14} className="text-cyan-400" />
+            <span>Last Updated: June 2026</span>
+          </div>
         </div>
       </section>
 

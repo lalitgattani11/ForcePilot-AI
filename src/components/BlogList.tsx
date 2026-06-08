@@ -77,7 +77,7 @@ const BlogList: React.FC = () => {
         <meta property="twitter:description" content="Access deep-dive Salesforce technical articles on Apex architecture, governor limits, LWC performance, and interview strategies." />
       </Helmet>
 
-      <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 px-4 sm:px-0">
+      <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 px-4 sm:px-0">
         {/* Hero Header */}
         <section className="guide-hero-section">
           <div className="guide-hero-badge border-emerald-500/20 bg-emerald-500/5 text-emerald-300">

@@ -235,7 +235,7 @@ const SalesforceMockInterview: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased relative overflow-hidden">
+    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased relative overflow-hidden">
       <Helmet>
         <title>Salesforce Mock Interview Platform (2026) | AI Interview Practice | ForcePilot AI</title>
         <meta

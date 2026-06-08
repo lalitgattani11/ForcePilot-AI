@@ -103,7 +103,7 @@ function App() {
         <Navbar />
 
         {/* Main Content */}
-        <main className={`relative flex-grow pt-20 sm:pt-28 ${isInterviewPage ? 'pb-0' : 'pb-8 sm:pb-10'} overflow-visible`}>
+        <main className={`relative flex-grow pt-20 sm:pt-24 ${isInterviewPage ? 'pb-0' : 'pb-8 sm:pb-10'} overflow-visible`}>
           <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-5 lg:px-8">
             <Routes>
               <Route

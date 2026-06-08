@@ -63,19 +63,21 @@ const AIInsights: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:py-12 px-4 sm:px-0">
+    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 px-4 sm:px-0">
       {/* Hero Header */}
       <section className="guide-hero-section">
-        <div className="guide-hero-badge border-cyan-500/20 bg-cyan-500/5 text-cyan-300">
-          <BrainCircuit size={14} className="text-cyan-400" />
-          <span>Intelligence Engine</span>
+        <div className="guide-hero-container">
+          <div className="guide-hero-badge border-cyan-500/20 bg-cyan-500/5 text-cyan-300">
+            <BrainCircuit size={14} className="text-cyan-400" />
+            <span>Intelligence Engine</span>
+          </div>
+          <h1 className="guide-hero-title">
+            Interview <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 italic">AI Insights.</span>
+          </h1>
+          <p className="guide-hero-subtitle">
+            Deep-dive into the technical intelligence that powers ForcePilot AI. Understand how we analyze and grade your performance.
+          </p>
         </div>
-        <h1 className="guide-hero-title">
-          Interview <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 italic">AI Insights.</span>
-        </h1>
-        <p className="guide-hero-subtitle">
-          Deep-dive into the technical intelligence that powers ForcePilot AI. Understand how we analyze and grade your performance.
-        </p>
       </section>
 
       {/* Analysis Grid */}

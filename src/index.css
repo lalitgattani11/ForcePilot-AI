@@ -120,7 +120,12 @@ body {
 
 /* Guide-Specific Unified Hero System */
 .guide-hero-section {
-  @apply relative text-center pt-12 pb-16 sm:pt-14 sm:pb-20 lg:pt-16 lg:pb-24 px-4 sm:px-6 overflow-hidden;
+  @apply relative text-center pt-4 pb-16 sm:pt-6 sm:pb-20 lg:pt-8 lg:pb-24 px-4 sm:px-6 overflow-visible;
+}
+
+.guide-hero-container {
+  @apply w-full mx-auto text-center overflow-visible relative z-10;
+  max-width: 80rem;
 }
 
 .guide-hero-badge {
@@ -132,7 +137,8 @@ body {
 }
 
 .guide-hero-title {
-  @apply text-[clamp(2.2rem,10vw,3.2rem)] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] font-black tracking-tight text-white leading-[1.05] sm:leading-[0.95] lg:leading-[0.9] mb-3 sm:mb-4 lg:mb-5 max-w-5xl mx-auto;
+  @apply text-[clamp(2.2rem,10vw,3.2rem)] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] font-black tracking-tight text-white leading-[1.05] sm:leading-[0.95] lg:leading-[0.9] mb-3 sm:mb-4 lg:mb-5 mx-auto;
+  max-width: 80rem;
   text-wrap: balance;
 }
 
@@ -231,10 +237,11 @@ body {
     max-width: 100% !important;
   }
   .guide-hero-section {
-    padding-top: 3rem !important;
+    padding-top: 1rem !important;
     padding-bottom: 0 !important;
     padding-left: 1rem !important;
     padding-right: 1rem !important;
+    overflow: visible !important;
   }
 
   /* 3. Section Titles & Spacing */
