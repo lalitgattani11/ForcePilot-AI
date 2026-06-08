@@ -1,11 +1,18 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, ChevronRight, Sparkles, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronRight, ChevronDown } from "lucide-react";
 
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Breadcrumbs from "./Breadcrumbs";
 import { useJsonLd } from "../hooks/useJsonLd";
+import { 
+  fadeIn,
+  badgeAnimation,
+  staggerContainer,
+  revealStaggerContainer,
+  revealFadeUp, 
+} from "../utils/animations";
 
 interface QuestionItem {
   q: string;
@@ -193,7 +200,7 @@ const ApexInterviewQuestions: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
+    <div className="text-slate-300 antialiased relative overflow-hidden">
       <Helmet>
         <title>Salesforce Apex Interview Questions & Answers Guide (2026) | ForcePilot AI</title>
         <meta
@@ -236,6 +243,44 @@ const ApexInterviewQuestions: React.FC = () => {
         />
       </Helmet>
 
+      {/* Hero Section */}
+      <section className="guide-hero-section border-b border-white/5">
+        <motion.div 
+          initial="initial"
+          animate="animate"
+          variants={staggerContainer}
+          className="flex flex-col items-center text-center"
+        >
+          <motion.div variants={badgeAnimation} className="platform-pill-badge">
+            <div className="dot" />
+            <span className="label-text">Apex Developer Track</span>
+          </motion.div>
+          
+          <motion.h1 variants={fadeIn} className="guide-hero-title">
+            <span className="block pb-1 sm:pb-2 overflow-visible">Salesforce Apex</span>
+            <span className="block mt-1 sm:mt-2 md:mt-2.5 pb-[0.25em] overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+              Interview Questions
+            </span>
+          </motion.h1>
+          
+          <motion.p variants={fadeIn} className="guide-hero-subtitle">
+            The definitive guide to Salesforce Developer interviews. Technical deep-dives, recruiter expectations, and production-grade answer strategies.
+          </motion.p>
+
+          <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 sm:mb-0">
+            <Link
+              to="/#setup"
+              state={{ role: "Salesforce Apex Developer" }}
+              className="w-full sm:w-auto px-10 sm:px-12 py-4 sm:py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            >
+              Practice Real Apex Interviews
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform sm:size-[22px]" />
+            </Link>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-32 space-y-16 sm:space-y-24 pb-8 sm:pb-12">
       <Breadcrumbs 
         hideVisual
         items={[
@@ -246,80 +291,60 @@ const ApexInterviewQuestions: React.FC = () => {
         themeColor="emerald"
       />
 
-      {/* Hero Section */}
-      <section className="guide-hero-section">
-        <div className="guide-hero-container">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="guide-hero-badge border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
-          >
-            <Sparkles size={14} className="animate-pulse" />
-            <span>Technical Interview Intelligence</span>
-          </motion.div>
-          <h1 className="guide-hero-title">
-            Salesforce Apex <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">Interview Questions</span>
-          </h1>
-          <p className="guide-hero-subtitle">
-            The definitive guide to Salesforce Developer interviews. Technical
-            deep-dives, recruiter expectations, and production-grade answer
-            strategies.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Link
-              to="/#setup"
-              state={{ role: "Salesforce Apex Developer" }}
-              className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
-            >
-              Practice Real Apex Interviews
-              <ArrowRight
-                size={20}
-                className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
-              />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Internal Linking / Resources Bar */}
-      <nav className="grid sm:grid-cols-2 gap-4 px-2 sm:px-0">
-        <Link
-          to="/lwc-interview-guide"
-          className="p-4 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800 transition-colors flex items-center justify-between group"
-        >
-          <div>
-            <div className="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-1">
-              Next Guide
+      <motion.nav 
+        variants={revealStaggerContainer}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="grid sm:grid-cols-2 gap-4 px-2 sm:px-0"
+      >
+        <motion.div variants={revealFadeUp}>
+          <Link
+            to="/lwc-interview-guide"
+            className="p-4 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800 transition-colors flex items-center justify-between group h-full"
+          >
+            <div>
+              <div className="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-1">
+                Next Guide
+              </div>
+              <div className="text-white font-semibold">LWC Interview Guide</div>
             </div>
-            <div className="text-white font-semibold">LWC Interview Guide</div>
-          </div>
-          <ChevronRight
-            size={20}
-            className="text-slate-500 group-hover:translate-x-1 transition-transform"
-          />
-        </Link>
-        <Link
-          to="/governor-limits-explained"
-          className="p-4 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800 transition-colors flex items-center justify-between group"
-        >
-          <div>
-            <div className="text-xs font-bold text-cyan-500 uppercase tracking-widest mb-1">
-              Deep Dive
+            <ChevronRight
+              size={20}
+              className="text-slate-500 group-hover:translate-x-1 transition-transform"
+            />
+          </Link>
+        </motion.div>
+        <motion.div variants={revealFadeUp}>
+          <Link
+            to="/governor-limits-explained"
+            className="p-4 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800 transition-colors flex items-center justify-between group h-full"
+          >
+            <div>
+              <div className="text-xs font-bold text-cyan-500 uppercase tracking-widest mb-1">
+                Deep Dive
+              </div>
+              <div className="text-white font-semibold">
+                Governor Limits Explained
+              </div>
             </div>
-            <div className="text-white font-semibold">
-              Governor Limits Explained
-            </div>
-          </div>
-          <ChevronRight
-            size={20}
-            className="text-slate-500 group-hover:translate-x-1 transition-transform"
-          />
-        </Link>
-      </nav>
+            <ChevronRight
+              size={20}
+              className="text-slate-500 group-hover:translate-x-1 transition-transform"
+            />
+          </Link>
+        </motion.div>
+      </motion.nav>
 
       {/* AI Overview & Quick Definitions Block */}
-      <section className="bg-slate-950/40 border border-white/5 rounded-3xl p-6 sm:p-8 space-y-8 relative overflow-hidden">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="bg-slate-950/40 border border-white/5 rounded-3xl p-6 sm:p-8 space-y-8 relative overflow-hidden"
+      >
         <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
         <div className="space-y-2">
           <h2 className="text-xs font-black text-emerald-400 uppercase tracking-[0.2em]">
@@ -369,20 +394,28 @@ const ApexInterviewQuestions: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Questions Section */}
       <div className="space-y-24">
         {sections.map((section, idx) => (
-          <section key={idx} className="space-y-8">
+          <motion.section 
+            key={idx} 
+            variants={revealFadeUp}
+            initial="initial"
+            whileInView="whileInView"
+            viewport={{ once: true }}
+            className="space-y-8"
+          >
             <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-emerald-500 pl-4">
               {section.title}
             </h2>
 
             <div className="grid gap-6 sm:gap-8">
               {section.questions.map((item, qIdx) => (
-                <div
+                <motion.div
                   key={qIdx}
+                  variants={revealFadeUp}
                   className="bg-slate-900/30 border border-slate-800/80 rounded-2xl p-5 sm:p-8 space-y-6"
                 >
                   <h3 className="text-xl sm:text-2xl font-semibold text-white leading-tight">
@@ -404,15 +437,21 @@ const ApexInterviewQuestions: React.FC = () => {
                       <div className="text-slate-300 text-sm leading-relaxed">{item.strong}</div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </section>
+          </motion.section>
         ))}
       </div>
 
       {/* FAQ Section */}
-      <section className="space-y-8">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="space-y-8"
+      >
         <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-cyan-500 pl-4">
           Frequently Asked Questions (FAQ)
         </h2>
@@ -487,10 +526,16 @@ const ApexInterviewQuestions: React.FC = () => {
             </div>
           </details>
         </div>
-      </section>
+      </motion.section>
 
       {/* Bottom CTA */}
-      <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-emerald-600 to-teal-700 px-6 py-16 text-center shadow-2xl">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-emerald-600 to-teal-700 px-6 py-16 text-center shadow-2xl"
+      >
         <div className="relative z-10 space-y-8 max-w-3xl mx-auto">
           <h2 className="text-3xl sm:text-5xl font-bold text-white leading-tight">
             Recruiter-Grade <br /> Apex Mastery.
@@ -514,7 +559,7 @@ const ApexInterviewQuestions: React.FC = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       <footer className="text-center text-slate-600 text-sm py-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p>© 2026 ForcePilot AI. Salesforce-Focused Intelligence.</p>
@@ -536,6 +581,7 @@ const ApexInterviewQuestions: React.FC = () => {
           </Link>
         </div>
       </footer>
+      </div>
     </div>
   );
 };

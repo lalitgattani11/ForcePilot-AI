@@ -23,6 +23,13 @@ import { useNavigate, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { useJsonLd } from "../hooks/useJsonLd";
+import { 
+  fadeIn, 
+  revealFadeUp, 
+  badgeAnimation, 
+  staggerContainer, 
+  revealStaggerContainer 
+} from "../utils/animations";
 
 interface QuestionItem {
   title: string;
@@ -87,13 +94,6 @@ const SalesforceMockInterview: React.FC = () => {
   useJsonLd(faqSchema, "schema-faq");
 
   const navigate = useNavigate();
-
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true },
-    transition: { duration: 0.6 }
-  };
 
   const categories = [
     {
@@ -235,7 +235,7 @@ const SalesforceMockInterview: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased relative overflow-hidden">
+    <div className="text-slate-300 antialiased relative overflow-hidden">
       <Helmet>
         <title>Salesforce Mock Interview Platform (2026) | AI Interview Practice | ForcePilot AI</title>
         <meta
@@ -261,48 +261,57 @@ const SalesforceMockInterview: React.FC = () => {
       </Helmet>
 
       {/* SECTION 1 — HERO */}
-      <section className="guide-hero-section">
+      <section className="guide-hero-section border-b border-white/5">
         <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="guide-hero-badge border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
+          initial="initial"
+          animate="animate"
+          variants={staggerContainer}
+          className="flex flex-col items-center text-center"
         >
-          <Zap size={14} className="animate-pulse" />
-          <span>Next-Gen Interview Intelligence</span>
-        </motion.div>
-        
-        <h1 className="guide-hero-title">
-          Salesforce AI <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 italic">Mock Interview Platform</span>
-        </h1>
-        
-        <p className="guide-hero-subtitle">
-          The elite technical simulator for SFDC professionals. Practice salesforce developer mock interviews and ai salesforce interview preparation. Get evaluated on your code optimization, sharing models, and system architecture.
-        </p>
-
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <button
-            onClick={() => navigate('/#setup')}
-            className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
-          >
-            Start Salesforce Mock Interview
-            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform sm:size-[22px]" />
-          </button>
+          <motion.div variants={badgeAnimation} className="platform-pill-badge">
+            <div className="dot" />
+            <span className="label-text">Next-Gen Interview Intelligence</span>
+          </motion.div>
           
-          <Link
-            to="/apex-interview-questions"
-            className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-2xl font-bold text-base sm:text-lg transition-all flex items-center justify-center gap-3 group text-center"
-          >
-            Practice Apex Interviews
-          </Link>
-        </div>
+          <motion.h1 variants={fadeIn} className="guide-hero-title">
+            <span className="block pb-1 sm:pb-2 overflow-visible">Salesforce AI</span>
+            <span className="block mt-1 sm:mt-2 md:mt-2.5 pb-[0.25em] overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500">
+              Mock Interview Platform
+            </span>
+          </motion.h1>
+          
+          <motion.p variants={fadeIn} className="guide-hero-subtitle">
+            The elite technical simulator for SFDC professionals. Practice Salesforce developer mock interviews and get evaluated on code optimization, sharing models, and system architecture.
+          </motion.p>
 
-        {/* Decorative Background Elements */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-emerald-500/5 blur-[120px] -z-10 rounded-full"></div>
+          <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 sm:mb-0">
+            <button
+              onClick={() => navigate('/#setup')}
+              className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            >
+              Start Salesforce Mock Interview
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform sm:size-[22px]" />
+            </button>
+            
+            <Link
+              to="/apex-interview-questions"
+              className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-2xl font-bold text-base sm:text-lg transition-all flex items-center justify-center gap-3 group text-center"
+            >
+              Practice Apex Interviews
+            </Link>
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* Differentiating Banner */}
-      <section className="bg-gradient-to-r from-emerald-500/5 to-cyan-500/5 border border-emerald-500/10 rounded-3xl p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-32 space-y-16 sm:space-y-24 pb-8 sm:pb-12">
+        {/* Differentiating Banner */}
+        <motion.section 
+          variants={revealFadeUp}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="bg-gradient-to-r from-emerald-500/5 to-cyan-500/5 border border-emerald-500/10 rounded-3xl p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6"
+        >
         <div className="space-y-2">
           <h2 className="text-xl sm:text-2xl font-bold text-white">How ForcePilot AI differs from generic interview tools:</h2>
           <p className="text-slate-400 text-sm max-w-2xl">
@@ -312,16 +321,28 @@ const SalesforceMockInterview: React.FC = () => {
         <div className="shrink-0 p-4 bg-emerald-500/10 rounded-2xl text-emerald-400 font-bold text-sm">
           Salesforce-Specific Engine
         </div>
-      </section>
+      </motion.section>
 
       {/* SECTION 2 — WHY FORCEPILOT AI */}
       <section className="space-y-16">
-        <div className="text-center space-y-4">
+        <motion.div 
+          variants={revealFadeUp}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="text-center space-y-4"
+        >
           <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Why <span className="text-emerald-400">ForcePilot AI?</span></h2>
           <p className="text-slate-400 max-w-2xl mx-auto">Engineered to simulate the intensity of Tier-1 Salesforce technical rounds.</p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div 
+          variants={revealStaggerContainer}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
           {[
             {
               title: "Adaptive AI Interviews",
@@ -362,7 +383,7 @@ const SalesforceMockInterview: React.FC = () => {
           ].map((item, i) => (
             <motion.div 
               key={i}
-              {...fadeIn}
+              variants={revealFadeUp}
               className="bg-white/[0.02] border border-white/5 p-8 rounded-[2rem] hover:bg-white/[0.04] transition-all group"
             >
               <div className={`mb-6 inline-flex p-4 rounded-2xl bg-${item.color}-500/10 text-${item.color}-400 group-hover:scale-110 transition-transform`}>
@@ -374,23 +395,35 @@ const SalesforceMockInterview: React.FC = () => {
               </p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* SECTION 3 — MOCK INTERVIEW CATEGORIES */}
       <section className="space-y-16">
-        <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 text-center md:text-left">
+        <motion.div 
+          variants={revealFadeUp}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 text-center md:text-left"
+        >
           <div className="space-y-4 w-full">
             <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Tracks.</span></h2>
             <p className="text-slate-400 max-w-xl mx-auto md:mx-0">Choose your specialization and start a targeted simulation.</p>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div 
+          variants={revealStaggerContainer}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           {categories.map((cat, i) => (
             <motion.div 
               key={i}
-              {...fadeIn}
+              variants={revealFadeUp}
               className="group relative bg-[#0a0c10] border border-white/5 rounded-3xl overflow-hidden hover:border-cyan-500/30 transition-all cursor-pointer shadow-2xl"
               onClick={() => navigate('/#setup', { state: { role: cat.slug } })}
             >
@@ -409,22 +442,35 @@ const SalesforceMockInterview: React.FC = () => {
               <div className={`absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-${cat.color}-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity`}></div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* SECTION 3B — DETAILED SIMULATORS */}
       <section className="space-y-16">
         {simulatorSections.map((section, idx) => (
           <div key={idx} className="space-y-12">
-            <div className="text-center space-y-4">
+            <motion.div 
+              variants={revealFadeUp}
+              initial="initial"
+              whileInView="whileInView"
+              viewport={{ once: true }}
+              className="text-center space-y-4"
+            >
               <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Simulator <span className="text-emerald-400">Breakdown.</span></h2>
               <p className="text-slate-400 max-w-2xl mx-auto">Explore the detailed specialized modules available in our practice platform.</p>
-            </div>
+            </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <motion.div 
+              variants={revealStaggerContainer}
+              initial="initial"
+              whileInView="whileInView"
+              viewport={{ once: true }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
               {section.items.map((item, qIdx) => (
-                <div
+                <motion.div
                   key={qIdx}
+                  variants={revealFadeUp}
                   className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-4 hover:bg-white/[0.03] transition-all"
                 >
                   <div className="flex items-center gap-4">
@@ -438,15 +484,21 @@ const SalesforceMockInterview: React.FC = () => {
                   <div className="text-slate-400 text-sm leading-relaxed">
                     {item.desc}
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         ))}
       </section>
 
       {/* SECTION 4 — INTERVIEW PROCESS */}
-      <section className="bg-white/[0.01] border border-white/5 rounded-[3rem] p-8 sm:p-20 space-y-20">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="bg-white/[0.01] border border-white/5 rounded-[3rem] p-8 sm:p-20 space-y-20"
+      >
         <div className="text-center space-y-4">
           <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">The <span className="text-emerald-400">Experience.</span></h2>
           <p className="text-slate-400">How ForcePilot AI elevates your preparation.</p>
@@ -474,11 +526,17 @@ const SalesforceMockInterview: React.FC = () => {
             </div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* SECTION 5 — RECRUITER INTELLIGENCE */}
       <section className="grid lg:grid-cols-2 gap-20 items-center">
-        <div className="space-y-8">
+        <motion.div 
+          variants={revealFadeUp}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="space-y-8"
+        >
           <h2 className="text-4xl sm:text-6xl font-bold text-white leading-tight">
             Recruiter-Grade <br />
             <span className="text-emerald-400">Analytics.</span>
@@ -511,9 +569,15 @@ const SalesforceMockInterview: React.FC = () => {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        <div className="relative">
+        <motion.div 
+          variants={revealFadeUp}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="relative"
+        >
           <div className="bg-gradient-to-br from-slate-900 to-[#0a0c10] border border-white/10 rounded-[2.5rem] p-8 shadow-2xl">
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
               <div className="flex items-center gap-4">
@@ -551,21 +615,33 @@ const SalesforceMockInterview: React.FC = () => {
           </div>
           {/* Decorative Glow */}
           <div className="absolute -inset-4 bg-emerald-500/10 blur-3xl -z-10 opacity-50"></div>
-        </div>
+        </motion.div>
       </section>
 
       {/* SECTION 6 — SCENARIO QUESTIONS */}
       <section className="space-y-16">
-        <div className="text-center space-y-4">
+        <motion.div 
+          variants={revealFadeUp}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="text-center space-y-4"
+        >
           <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Scenario <span className="text-rose-400">Intelligence.</span></h2>
           <p className="text-slate-400 max-w-2xl mx-auto">Real problems. Production-grade solutions.</p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <motion.div 
+          variants={revealStaggerContainer}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+        >
           {scenarios.map((item, i) => (
             <motion.div 
               key={i}
-              {...fadeIn}
+              variants={revealFadeUp}
               className="bg-white/[0.01] border border-white/5 p-8 rounded-[2rem] space-y-4 hover:border-white/10 transition-all"
             >
               <div className="flex items-start justify-between">
@@ -581,11 +657,17 @@ const SalesforceMockInterview: React.FC = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* FAQ Section */}
-      <section className="space-y-8">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="space-y-8"
+      >
         <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-emerald-500 pl-4">
           Frequently Asked Questions (FAQ)
         </h2>
@@ -660,34 +742,46 @@ const SalesforceMockInterview: React.FC = () => {
             </div>
           </details>
         </div>
-      </section>
+      </motion.section>
 
       {/* SECTION 7 — INTERNAL SEO LINKS */}
-      <nav className="grid sm:grid-cols-3 gap-6">
+      <motion.nav 
+        variants={revealStaggerContainer}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="grid sm:grid-cols-3 gap-6"
+      >
         {[
           { title: "Apex Questions", link: "/apex-interview-questions", color: "emerald", icon: Terminal },
           { title: "LWC Guide", link: "/lwc-interview-guide", color: "cyan", icon: Layers },
           { title: "Governor Limits", link: "/governor-limits-explained", color: "rose", icon: ShieldAlert }
         ].map((link, i) => (
-          <Link 
-            key={i}
-            to={link.link}
-            className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between"
-          >
-            <div className="flex items-center gap-4">
-              <div className={`p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
-                <link.icon size={20} />
+          <motion.div key={i} variants={revealFadeUp}>
+            <Link 
+              to={link.link}
+              className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between"
+            >
+              <div className="flex items-center gap-4">
+                <div className={`p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
+                  <link.icon size={20} />
+                </div>
+                <span className="font-bold text-white">{link.title}</span>
               </div>
-              <span className="font-bold text-white">{link.title}</span>
-            </div>
-            <ChevronRight size={18} className="text-slate-400 group-hover:translate-x-1 group-hover:text-white transition-all" />
-          </Link>
+              <ChevronRight size={18} className="text-slate-400 group-hover:translate-x-1 group-hover:text-white transition-all" />
+            </Link>
+          </motion.div>
         ))}
-      </nav>
+      </motion.nav>
 
       {/* SECTION 8 — FINAL CTA */}
-      <section className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#020617] via-slate-900 to-[#020617] border border-white/10 px-6 py-24 text-center">
-        <div className="relative z-10 space-y-10 max-w-4xl mx-auto">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#020617] via-slate-900 to-[#020617] border border-white/10 px-6 py-24 text-center"
+      >        <div className="relative z-10 space-y-10 max-w-4xl mx-auto">
           <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400 mb-4 animate-bounce">
             <Rocket size={32} />
           </div>
@@ -713,7 +807,7 @@ const SalesforceMockInterview: React.FC = () => {
 
         {/* Decorative Grid */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20 -z-10"></div>
-      </section>
+      </motion.section>
 
       <footer className="text-center text-slate-400 text-sm py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p>© 2026 ForcePilot AI. The elite technical simulator for Salesforce professionals.</p>
@@ -723,6 +817,7 @@ const SalesforceMockInterview: React.FC = () => {
           <Link to="/lwc-interview-guide" className="hover:text-emerald-400 transition-colors font-bold">LWC</Link>
         </div>
       </footer>
+      </div>
     </div>
   );
 };

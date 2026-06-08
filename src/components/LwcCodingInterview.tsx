@@ -2,7 +2,6 @@ import React from "react";
 import { 
   ArrowRight, 
   ChevronRight, 
-  Layers, 
   Zap, 
   ShieldCheck, 
   CheckCircle2, 
@@ -15,6 +14,13 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { useJsonLd } from "../hooks/useJsonLd";
+import { 
+  fadeIn,
+  badgeAnimation,
+  staggerContainer,
+  revealStaggerContainer,
+  revealFadeUp
+} from "../utils/animations";
 
 interface QuestionItem {
   q: string;
@@ -77,14 +83,6 @@ const LwcCodingInterview: React.FC = () => {
   }), []);
 
   useJsonLd(faqSchema, "schema-faq");
-
-
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true },
-    transition: { duration: 0.6 }
-  };
 
   const pillars = [
     {
@@ -283,7 +281,7 @@ const LwcCodingInterview: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
+    <div className="text-slate-300 antialiased relative overflow-hidden">
       <Helmet>
         <title>Salesforce LWC Interview Questions & Answers Guide (2026) | Lightning Web Components Practice | ForcePilot AI</title>
         <meta
@@ -303,64 +301,78 @@ const LwcCodingInterview: React.FC = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="guide-hero-section">
-        <div className="guide-hero-container">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="guide-hero-badge border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
-          >
-            <Layers size={14} className="animate-pulse" />
-            <span>Frontend Excellence Track</span>
+      <section className="guide-hero-section border-b border-white/5">
+        <motion.div 
+          initial="initial"
+          animate="animate"
+          variants={staggerContainer}
+          className="flex flex-col items-center text-center"
+        >
+          <motion.div variants={badgeAnimation} className="platform-pill-badge">
+            <div className="dot" />
+            <span className="label-text">Frontend Excellence Track</span>
           </motion.div>
           
-          <h1 className="guide-hero-title">
-            Salesforce LWC <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-blue-500 italic">Coding Interview Questions</span>
-          </h1>
+          <motion.h1 variants={fadeIn} className="guide-hero-title">
+            <span className="block pb-1 sm:pb-2 overflow-visible">Salesforce LWC</span>
+            <span className="block mt-1 sm:mt-2 md:mt-2.5 pb-[0.25em] overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-blue-500">
+              Coding Interview Questions
+            </span>
+          </motion.h1>
           
-          <p className="guide-hero-subtitle">
+          <motion.p variants={fadeIn} className="guide-hero-subtitle">
             The elite technical roadmap for modern Salesforce frontends. Master LWC interview questions for experienced developers. From Shadow DOM to specialized wire adapters.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 sm:mb-0">
             <Link
               to="/#setup"
               state={{ role: "Salesforce LWC Developer" }}
-              className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(34,211,238,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+              className="w-full sm:w-auto px-10 sm:px-12 py-4 sm:py-5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(34,211,238,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
             >
               Practice LWC Coding Interviews
-              <ArrowRight
-                size={20}
-                className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
-              />
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform sm:size-[22px]" />
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* Quick Nav */}
-      <nav className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 sm:px-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-32 space-y-16 sm:space-y-24 pb-8 sm:pb-12">
+      <motion.nav 
+        variants={revealStaggerContainer}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 sm:px-0"
+      >
         {[
           { title: "Apex Questions", link: "/apex-interview-questions", color: "emerald", icon: Terminal },
           { title: "Flow Interview", link: "/salesforce-flow-interview-questions", color: "cyan", icon: Zap },
           { title: "Governor Limits", link: "/governor-limits-explained", color: "rose", icon: ShieldCheck },
           { title: "Scenario Based", link: "/scenario-based-salesforce-interview", color: "blue", icon: Search }
         ].map((link, i) => (
-          <Link key={i} to={link.link} className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className={`p-2.5 sm:p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
-                <link.icon size={18} className="sm:size-[20px]" />
+          <motion.div key={i} variants={revealFadeUp}>
+            <Link to={link.link} className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between h-full">
+              <div className="flex items-center gap-4">
+                <div className={`p-2.5 sm:p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
+                  <link.icon size={18} className="sm:size-[20px]" />
+                </div>
+                <span className="font-bold text-white text-xs sm:text-sm">{link.title}</span>
               </div>
-              <span className="font-bold text-white text-xs sm:text-sm">{link.title}</span>
-            </div>
-            <ChevronRight size={16} className="text-slate-600 group-hover:translate-x-1 group-hover:text-white transition-all sm:size-[18px]" />
-          </Link>
+              <ChevronRight size={16} className="text-slate-600 group-hover:translate-x-1 group-hover:text-white transition-all sm:size-[18px]" />
+            </Link>
+          </motion.div>
         ))}
-      </nav>
+      </motion.nav>
 
       {/* Focus Areas */}
-      <section className="space-y-16">
+      <motion.section 
+        variants={revealStaggerContainer}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="space-y-16"
+      >
         <div className="text-center space-y-4">
           <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Pillars.</span></h2>
           <p className="text-slate-500 max-w-2xl mx-auto">Elite LWC developers are judged on their ability to build modern, reactive, and optimized web standards components.</p>
@@ -370,7 +382,7 @@ const LwcCodingInterview: React.FC = () => {
           {pillars.map((section, i) => (
             <motion.div 
               key={i}
-              {...fadeIn}
+              variants={revealFadeUp}
               className="bg-white/[0.02] border border-white/5 p-8 rounded-[2rem] hover:bg-white/[0.04] transition-all group"
             >
               <h3 className="text-xl font-bold text-white mb-3">{section.title}</h3>
@@ -388,20 +400,28 @@ const LwcCodingInterview: React.FC = () => {
             </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* Questions Section */}
-      <section className="space-y-24">
+      <div className="space-y-24">
         {lwcQuestions.map((section, idx) => (
-          <div key={idx} className="space-y-8">
+          <motion.section 
+            key={idx} 
+            variants={revealFadeUp}
+            initial="initial"
+            whileInView="whileInView"
+            viewport={{ once: true }}
+            className="space-y-8"
+          >
             <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-cyan-500 pl-4">
               {section.title}
             </h2>
 
             <div className="grid gap-6 sm:gap-8">
               {section.questions.map((item, qIdx) => (
-                <div
+                <motion.div
                   key={qIdx}
+                  variants={revealFadeUp}
                   className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-6"
                 >
                   <h3 className="text-xl sm:text-2xl font-semibold text-white leading-tight">
@@ -425,15 +445,21 @@ const LwcCodingInterview: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.section>
         ))}
-      </section>
+      </div>
 
       {/* FAQ Section */}
-      <section className="space-y-8">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="space-y-8"
+      >
         <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-cyan-500 pl-4">
           Frequently Asked Questions (FAQ)
         </h2>
@@ -508,10 +534,16 @@ const LwcCodingInterview: React.FC = () => {
             </div>
           </details>
         </div>
-      </section>
+      </motion.section>
 
       {/* Recruiter Intelligence */}
-      <section className="bg-white/[0.01] border border-white/5 rounded-[3rem] p-8 sm:p-20 flex flex-col lg:flex-row items-center gap-16">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="bg-white/[0.01] border border-white/5 rounded-[3rem] p-8 sm:p-20 flex flex-col lg:flex-row items-center gap-16"
+      >
         <div className="flex-1 space-y-8">
           <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
             Think like a <br />
@@ -547,10 +579,16 @@ const LwcCodingInterview: React.FC = () => {
           </div>
           <div className="text-[10px] text-slate-500 uppercase font-black tracking-widest text-center">Frontend Maturity</div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Final CTA */}
-      <section className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#020617] via-slate-900 to-[#020617] border border-white/10 px-6 py-24 text-center">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#020617] via-slate-900 to-[#020617] border border-white/10 px-6 py-24 text-center"
+      >
         <div className="relative z-10 space-y-10 max-w-4xl mx-auto">
           <h2 className="text-4xl sm:text-7xl font-black text-white leading-tight">
             Stop Rendering. <br />
@@ -569,7 +607,7 @@ const LwcCodingInterview: React.FC = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       <footer className="text-center text-slate-600 text-sm py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p>© 2026 ForcePilot AI. Salesforce-Focused Intelligence.</p>
@@ -579,6 +617,7 @@ const LwcCodingInterview: React.FC = () => {
           <Link to="/governor-limits-explained" className="hover:text-cyan-400 transition-colors">Governor Limits</Link>
         </div>
       </footer>
+      </div>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React from "react";
 import { 
   ArrowRight, 
   ChevronRight, 
-  Terminal, 
+   
   CheckCircle2, 
   Code2, 
   Layers, 
@@ -15,6 +15,13 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { useJsonLd } from "../hooks/useJsonLd";
+import { 
+  fadeIn, 
+  revealFadeUp, 
+  badgeAnimation, 
+  staggerContainer, 
+  revealStaggerContainer 
+} from "../utils/animations";
 
 interface QuestionItem {
   q: string;
@@ -78,13 +85,6 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
 
   useJsonLd(faqSchema, "schema-faq");
 
-
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true },
-    transition: { duration: 0.6 }
-  };
 
   const sections = [
     {
@@ -283,7 +283,7 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
+    <div className="text-slate-300 antialiased relative overflow-hidden">
       <Helmet>
         <title>Salesforce Apex Trigger Interview Questions & Answers Guide (2026) | ForcePilot AI</title>
         <meta
@@ -303,27 +303,30 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="guide-hero-section">
-        <div className="guide-hero-container">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="guide-hero-badge border-blue-500/20 bg-blue-500/5 text-blue-400"
-          >
-            <Terminal size={14} className="animate-pulse" />
-            <span>Apex Engineering Track</span>
+      <section className="guide-hero-section border-b border-white/5">
+        <motion.div 
+          initial="initial"
+          animate="animate"
+          variants={staggerContainer}
+          className="flex flex-col items-center text-center"
+        >
+          <motion.div variants={badgeAnimation} className="platform-pill-badge">
+            <div className="dot" />
+            <span className="label-text">Apex Engineering Track</span>
           </motion.div>
           
-          <h1 className="guide-hero-title">
-            Salesforce Apex <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-500 italic">Trigger Interview Questions</span>
-          </h1>
+          <motion.h1 variants={fadeIn} className="guide-hero-title">
+            <span className="block pb-1 sm:pb-2 overflow-visible">Salesforce Apex</span>
+            <span className="block mt-1 sm:mt-2 md:mt-2.5 pb-[0.25em] overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-500">
+              Trigger Interview Questions
+            </span>
+          </motion.h1>
           
-          <p className="guide-hero-subtitle">
+          <motion.p variants={fadeIn} className="guide-hero-subtitle">
             The definitive guide to production-grade Apex triggers. Master before vs after trigger details, trigger handler framework setups, and trigger bulkification patterns.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 sm:mb-0">
             <Link
               to="/#setup"
               state={{ role: "Salesforce Apex Developer" }}
@@ -335,42 +338,63 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
                 className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
               />
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* Quick Nav */}
-      <nav className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-32 space-y-16 sm:space-y-24 pb-8 sm:pb-12">
+        {/* Quick Nav */}
+      <motion.nav 
+        variants={revealStaggerContainer}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      >
         {[
           { title: "Flow Interview", link: "/salesforce-flow-interview-questions", color: "emerald", icon: Layers },
           { title: "Apex Questions", link: "/apex-interview-questions", color: "cyan", icon: Code2 },
           { title: "Governor Limits", link: "/governor-limits-explained", color: "rose", icon: ShieldAlert },
           { title: "Scenario Based", link: "/scenario-based-salesforce-interview", color: "blue", icon: Search }
         ].map((link, i) => (
-          <Link key={i} to={link.link} className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className={`p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
-                <link.icon size={20} />
+          <motion.div key={i} variants={revealFadeUp}>
+            <Link to={link.link} className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className={`p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
+                  <link.icon size={20} />
+                </div>
+                <span className="font-bold text-white text-sm">{link.title}</span>
               </div>
-              <span className="font-bold text-white text-sm">{link.title}</span>
-            </div>
-            <ChevronRight size={18} className="text-slate-400 group-hover:translate-x-1 group-hover:text-white transition-all" />
-          </Link>
+              <ChevronRight size={18} className="text-slate-400 group-hover:translate-x-1 group-hover:text-white transition-all" />
+            </Link>
+          </motion.div>
         ))}
-      </nav>
+      </motion.nav>
 
       {/* Focus Areas */}
       <section className="space-y-16">
-        <div className="text-center space-y-4">
+        <motion.div 
+          variants={revealFadeUp}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="text-center space-y-4"
+        >
           <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Core <span className="text-blue-400">Concepts.</span></h2>
           <p className="text-slate-400 max-w-2xl mx-auto">Master the trigger nuances that separate senior architects from junior developers.</p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <motion.div 
+          variants={revealStaggerContainer}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
           {sections.map((section, i) => (
             <motion.div 
               key={i}
-              {...fadeIn}
+              variants={revealFadeUp}
               className="bg-white/[0.02] border border-white/5 p-8 rounded-[2rem] hover:bg-white/[0.04] transition-all group"
             >
               <h3 className="text-xl font-bold text-white mb-3">{section.title}</h3>
@@ -387,21 +411,34 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Questions Section */}
       <section className="space-y-24">
         {triggerQuestions.map((section, idx) => (
           <div key={idx} className="space-y-8">
-            <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-blue-500 pl-4">
+            <motion.h2 
+              variants={revealFadeUp}
+              initial="initial"
+              whileInView="whileInView"
+              viewport={{ once: true }}
+              className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-blue-500 pl-4"
+            >
               {section.title}
-            </h2>
+            </motion.h2>
 
-            <div className="grid gap-6 sm:gap-8">
+            <motion.div 
+              variants={revealStaggerContainer}
+              initial="initial"
+              whileInView="whileInView"
+              viewport={{ once: true }}
+              className="grid gap-6 sm:gap-8"
+            >
               {section.questions.map((item, qIdx) => (
-                <div
+                <motion.div
                   key={qIdx}
+                  variants={revealFadeUp}
                   className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-6"
                 >
                   <h3 className="text-xl sm:text-2xl font-semibold text-white leading-tight">
@@ -425,15 +462,21 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         ))}
       </section>
 
       {/* FAQ Section */}
-      <section className="space-y-8">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="space-y-8"
+      >
         <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-blue-500 pl-4">
           Frequently Asked Questions (FAQ)
         </h2>
@@ -508,10 +551,16 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
             </div>
           </details>
         </div>
-      </section>
+      </motion.section>
 
       {/* Recruiter Intelligence */}
-      <section className="bg-white/[0.01] border border-white/5 rounded-[3rem] p-8 sm:p-20 flex flex-col lg:flex-row items-center gap-16">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="bg-white/[0.01] border border-white/5 rounded-[3rem] p-8 sm:p-20 flex flex-col lg:flex-row items-center gap-16"
+      >
         <div className="flex-1 space-y-8">
           <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
             Think like a <br />
@@ -544,11 +593,16 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
           </div>
           <div className="text-[10px] text-slate-400 uppercase font-black tracking-widest text-center">Architectural Maturity</div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Final CTA */}
-      <section className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#020617] via-slate-900 to-[#020617] border border-white/10 px-6 py-24 text-center">
-        <div className="relative z-10 space-y-10 max-w-4xl mx-auto">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#020617] via-slate-900 to-[#020617] border border-white/10 px-6 py-24 text-center"
+      >        <div className="relative z-10 space-y-10 max-w-4xl mx-auto">
           <h2 className="text-4xl sm:text-7xl font-black text-white leading-tight">
             Stop Coding. <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400">
@@ -566,7 +620,7 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       <footer className="text-center text-slate-400 text-sm py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p>© 2026 ForcePilot AI. Salesforce-Focused Intelligence.</p>
@@ -576,6 +630,7 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
           <Link to="/governor-limits-explained" className="hover:text-blue-400 transition-colors">Governor Limits</Link>
         </div>
       </footer>
+      </div>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React from "react";
 import { 
   ArrowRight, 
   ChevronRight, 
-  Workflow, 
+   
   Zap, 
   ShieldCheck, 
   Cpu, 
@@ -17,6 +17,13 @@ import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import Breadcrumbs from "./Breadcrumbs";
 import { useJsonLd } from "../hooks/useJsonLd";
+import { 
+  fadeIn, 
+  revealFadeUp, 
+  badgeAnimation, 
+  staggerContainer, 
+  revealStaggerContainer 
+} from "../utils/animations";
 
 interface QuestionItem {
   q: string;
@@ -107,14 +114,6 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
 
   useJsonLd(faqSchema, "schema-faq");
   useJsonLd(articleSchema, "schema-article");
-
-
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true },
-    transition: { duration: 0.6 }
-  };
 
   const categories = [
     {
@@ -316,7 +315,7 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
+    <div className="text-slate-300 antialiased relative overflow-hidden">
       <Helmet>
         <title>Salesforce Flow Interview Questions & Answers Guide (2026) | Flow Automation | ForcePilot AI</title>
         <meta
@@ -335,38 +334,31 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
         
       </Helmet>
 
-      <Breadcrumbs 
-        hideVisual
-        items={[
-          { name: "Home", path: "/" },
-          { name: "Interview Guides", path: "/blog" },
-          { name: "Flow Questions", path: "/salesforce-flow-interview-questions" }
-        ]} 
-        themeColor="cyan"
-      />
-
       {/* Hero Section */}
-      <section className="guide-hero-section">
-        <div className="guide-hero-container">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="guide-hero-badge border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
-          >
-            <Workflow size={14} className="animate-pulse" />
-            <span>Automation Mastery Track</span>
+      <section className="guide-hero-section border-b border-white/5">
+        <motion.div 
+          initial="initial"
+          animate="animate"
+          variants={staggerContainer}
+          className="flex flex-col items-center text-center"
+        >
+          <motion.div variants={badgeAnimation} className="platform-pill-badge">
+            <div className="dot" />
+            <span className="label-text">Automation Mastery Track</span>
           </motion.div>
           
-          <h1 className="guide-hero-title">
-            Salesforce Flow <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-blue-500 italic">Interview Questions</span>
-          </h1>
+          <motion.h1 variants={fadeIn} className="guide-hero-title">
+            <span className="block pb-1 sm:pb-2 overflow-visible">Salesforce Flow</span>
+            <span className="block mt-1 sm:mt-2 md:mt-2.5 pb-[0.25em] overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-blue-500">
+              Interview Questions
+            </span>
+          </motion.h1>
           
-          <p className="guide-hero-subtitle">
+          <motion.p variants={fadeIn} className="guide-hero-subtitle">
             The definitive guide to low-code automation. Master record triggered flow interview questions and salesforce automation interview questions. Prepare for complex scenario-based designs.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 sm:mb-0">
             <Link
               to="/#setup"
               state={{ role: "Salesforce Admin" }}
@@ -378,32 +370,57 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
                 className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
               />
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* Quick Nav */}
-      <nav className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 sm:px-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-32 space-y-16 sm:space-y-24 pb-8 sm:pb-12">
+        <Breadcrumbs 
+          hideVisual
+          items={[
+            { name: "Home", path: "/" },
+            { name: "Interview Guides", path: "/blog" },
+            { name: "Flow Questions", path: "/salesforce-flow-interview-questions" }
+          ]} 
+          themeColor="cyan"
+        />
+
+        {/* Quick Nav */}
+      <motion.nav 
+        variants={revealStaggerContainer}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 sm:px-0"
+      >
         {[
           { title: "Admin Interview", link: "/salesforce-admin-interview", color: "emerald", icon: Layout },
           { title: "Apex Triggers", link: "/apex-trigger-interview-questions", color: "blue", icon: Database },
           { title: "Governor Limits", link: "/governor-limits-explained", color: "rose", icon: ShieldCheck },
           { title: "Mock Interview", link: "/salesforce-mock-interview", color: "cyan", icon: Zap }
         ].map((link, i) => (
-          <Link key={i} to={link.link} className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className={`p-2.5 sm:p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
-                <link.icon size={18} className="sm:size-[20px]" />
+          <motion.div key={i} variants={revealFadeUp}>
+            <Link to={link.link} className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group flex items-center justify-between h-full">
+              <div className="flex items-center gap-4">
+                <div className={`p-2.5 sm:p-3 rounded-xl bg-${link.color}-500/10 text-${link.color}-400 group-hover:scale-110 transition-transform`}>
+                  <link.icon size={18} className="sm:size-[20px]" />
+                </div>
+                <span className="font-bold text-white text-xs sm:text-sm">{link.title}</span>
               </div>
-              <span className="font-bold text-white text-xs sm:text-sm">{link.title}</span>
-            </div>
-            <ChevronRight size={16} className="text-slate-600 group-hover:translate-x-1 group-hover:text-white transition-all sm:size-[18px]" />
-          </Link>
+              <ChevronRight size={16} className="text-slate-600 group-hover:translate-x-1 group-hover:text-white transition-all sm:size-[18px]" />
+            </Link>
+          </motion.div>
         ))}
-      </nav>
+      </motion.nav>
 
       {/* AI Overview & Quick Definitions Block */}
-      <section className="bg-slate-950/40 border border-white/5 rounded-3xl p-6 sm:p-8 space-y-8 relative overflow-hidden">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="bg-slate-950/40 border border-white/5 rounded-3xl p-6 sm:p-8 space-y-8 relative overflow-hidden"
+      >
         <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
         <div className="space-y-2">
           <h2 className="text-xs font-black text-cyan-400 uppercase tracking-[0.2em]">
@@ -453,20 +470,32 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Categories / Pillars */}
       <section className="space-y-12 sm:space-y-16">
-        <div className="text-center space-y-4">
+        <motion.div 
+          variants={revealFadeUp}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="text-center space-y-4"
+        >
           <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Pillars.</span></h2>
           <p className="text-slate-500 text-xs sm:text-base max-w-2xl mx-auto px-4 sm:px-0">Elite Flow developers are judged on their ability to build efficient, scalable, and maintainable automations.</p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <motion.div 
+          variants={revealStaggerContainer}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8"
+        >
           {categories.map((cat, i) => (
             <motion.div 
               key={i}
-              {...fadeIn}
+              variants={revealFadeUp}
               className="bg-white/[0.02] border border-white/5 p-6 sm:p-8 rounded-[2rem] hover:bg-white/[0.04] transition-all group"
             >
               <div className={`mb-6 inline-flex p-3 sm:p-4 rounded-2xl bg-${cat.color}-500/10 text-${cat.color}-400 group-hover:scale-110 transition-transform`}>
@@ -478,21 +507,31 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
               </p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Questions Section */}
       <section className="space-y-24">
         {flowQuestions.map((section, idx) => (
           <div key={idx} className="space-y-8">
-            <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-cyan-500 pl-4">
+            <motion.h2 
+              variants={revealFadeUp}
+              initial="initial"
+              whileInView="whileInView"
+              viewport={{ once: true }}
+              className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-cyan-500 pl-4"
+            >
               {section.title}
-            </h2>
+            </motion.h2>
 
             <div className="grid gap-6 sm:gap-8">
               {section.questions.map((item, qIdx) => (
-                <div
+                <motion.div
                   key={qIdx}
+                  variants={revealFadeUp}
+                  initial="initial"
+                  whileInView="whileInView"
+                  viewport={{ once: true }}
                   className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 sm:p-8 space-y-6"
                 >
                   <h3 className="text-xl sm:text-2xl font-semibold text-white leading-tight">
@@ -516,7 +555,7 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -525,84 +564,78 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
 
       {/* FAQ Section */}
       <section className="space-y-8">
-        <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-cyan-500 pl-4">
+        <motion.h2 
+          variants={revealFadeUp}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-cyan-500 pl-4"
+        >
           Frequently Asked Questions (FAQ)
-        </h2>
+        </motion.h2>
         <div className="space-y-4">
-          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
-              <h3 className="text-lg font-semibold text-white group-open:text-cyan-400 transition-colors">
-                What is Salesforce Flow, and when should I use it?
-              </h3>
-              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
-                <ChevronDown size={16} />
-              </span>
-            </summary>
-            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
-              Salesforce Flow is a low-code visual tool used to build complex, trigger-based, and screen-guided business automations. It is Salesforce's primary declarative tool and should be used to model most automation rules before relying on developer code.
-            </div>
-          </details>
-
-          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
-              <h3 className="text-lg font-semibold text-white group-open:text-cyan-400 transition-colors">
-                Can a Record-Triggered Flow execute after a record has been deleted?
-              </h3>
-              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
-                <ChevronDown size={16} />
-              </span>
-            </summary>
-            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
-              Yes, record-triggered flows can execute in a "Before-Delete" context. This allows you to inspect field values, validate conditions, or clean up associated configurations before the record is officially removed from the database.
-            </div>
-          </details>
-
-          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
-              <h3 className="text-lg font-semibold text-white group-open:text-cyan-400 transition-colors">
-                How do you bypass a Salesforce Flow for large data migrations?
-              </h3>
-              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
-                <ChevronDown size={16} />
-              </span>
-            </summary>
-            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
-              The best practice is to reference a custom bypass hierarchical setting or custom metadata permission flag in the Flow's Start Element entry condition. During data loading, admins can assign this custom permission to the integration user to deactivate all flows programmatically.
-            </div>
-          </details>
-
-          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
-              <h3 className="text-lg font-semibold text-white group-open:text-cyan-400 transition-colors">
-                How do I call Apex code from a Salesforce Flow?
-              </h3>
-              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
-                <ChevronDown size={16} />
-              </span>
-            </summary>
-            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
-              You can invoke Apex classes using the "Apex Action" element inside Flow Builder, provided the static method is decorated with the <code className="text-cyan-400 bg-slate-950 px-1 rounded font-mono">@InvocableMethod</code> annotation. This enables passing parameters from the Flow and receiving calculated results back. Learn more on the <Link to="/apex-interview-questions" className="text-cyan-400 hover:underline">Apex Interview Questions Guide</Link>.
-            </div>
-          </details>
-
-          <details className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
-              <h3 className="text-lg font-semibold text-white group-open:text-cyan-400 transition-colors">
-                How does ForcePilot AI help prepare for Salesforce Flow interviews?
-              </h3>
-              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
-                <ChevronDown size={16} />
-              </span>
-            </summary>
-            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
-              ForcePilot AI simulates technical interview sessions that test your automation architectural choices, governor limits knowledge, and bulkification patterns. You can practice in real-time on our interactive <Link to="/salesforce-mock-interview" className="text-cyan-400 hover:underline">Salesforce Mock Interview</Link> engine.
-            </div>
-          </details>
+          {[
+            {
+              q: "What is Salesforce Flow, and when should I use it?",
+              a: "Salesforce Flow is a low-code visual tool used to build complex, trigger-based, and screen-guided business automations. It is Salesforce's primary declarative tool and should be used to model most automation rules before relying on developer code."
+            },
+            {
+              q: "Can a Record-Triggered Flow execute after a record has been deleted?",
+              a: "Yes, record-triggered flows can execute in a \"Before-Delete\" context. This allows you to inspect field values, validate conditions, or clean up associated configurations before the record is officially removed from the database."
+            },
+            {
+              q: "How do you bypass a Salesforce Flow for large data migrations?",
+              a: "The best practice is to reference a custom bypass hierarchical setting or custom metadata permission flag in the Flow's Start Element entry condition. During data loading, admins can assign this custom permission to the integration user to deactivate all flows programmatically."
+            },
+            {
+              q: "How do I call Apex code from a Salesforce Flow?",
+              a: (
+                <>
+                  You can invoke Apex classes using the "Apex Action" element inside Flow Builder, provided the static method is decorated with the <code className="text-cyan-400 bg-slate-950 px-1 rounded font-mono">@InvocableMethod</code> annotation. This enables passing parameters from the Flow and receiving calculated results back. Learn more on the <Link to="/apex-interview-questions" className="text-cyan-400 hover:underline">Apex Interview Questions Guide</Link>.
+                </>
+              )
+            },
+            {
+              q: "How does ForcePilot AI help prepare for Salesforce Flow interviews?",
+              a: (
+                <>
+                  ForcePilot AI simulates technical interview sessions that test your automation architectural choices, governor limits knowledge, and bulkification patterns. You can practice in real-time on our interactive <Link to="/salesforce-mock-interview" className="text-cyan-400 hover:underline">Salesforce Mock Interview</Link> engine.
+                </>
+              )
+            }
+          ].map((faq, i) => (
+            <motion.details 
+              key={i}
+              variants={revealFadeUp}
+              initial="initial"
+              whileInView="whileInView"
+              viewport={{ once: true }}
+              className="group bg-white/[0.01] border border-white/5 rounded-[2rem] p-6 [&_summary::-webkit-details-marker]:hidden"
+            >
+              <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+                <h3 className="text-lg font-semibold text-white group-open:text-cyan-400 transition-colors">
+                  {faq.q}
+                </h3>
+                <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                  <ChevronDown size={16} />
+                </span>
+              </summary>
+              <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+                {faq.a}
+              </div>
+            </motion.details>
+          ))}
         </div>
       </section>
 
       {/* Recruiter Strategy */}
-      <section className="bg-[#0a0c10] border border-white/5 rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-20 flex flex-col lg:flex-row items-center gap-12 sm:gap-16 overflow-hidden relative">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="bg-[#0a0c10] border border-white/5 rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-20 flex flex-col lg:flex-row items-center gap-12 sm:gap-16 overflow-hidden relative"
+      >
         <div className="flex-1 space-y-6 sm:space-y-8 relative z-10 text-center lg:text-left">
           <h2 className="text-3xl sm:text-5xl font-bold text-white leading-tight">
             Design for <br />
@@ -650,16 +683,28 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
         </div>
         {/* Glow */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 blur-[120px] rounded-full -z-0"></div>
-      </section>
+      </motion.section>
 
       {/* Scenario Logic */}
       <section className="space-y-16">
-         <div className="text-center space-y-4">
+         <motion.div 
+          variants={revealFadeUp}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="text-center space-y-4"
+        >
           <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Scenario <span className="text-blue-400">Thinking.</span></h2>
           <p className="text-slate-500 max-w-2xl mx-auto">Prepare for complex automation puzzles frequently used by Salesforce Partners.</p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <motion.div 
+          variants={revealStaggerContainer}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+        >
           {[
             {
               title: "The Bulk DML Challenge",
@@ -674,7 +719,7 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
           ].map((item, i) => (
             <motion.div 
               key={i}
-              {...fadeIn}
+              variants={revealFadeUp}
               className="p-8 rounded-[2rem] bg-white/[0.01] border border-white/5 space-y-4 hover:border-white/10 transition-all"
             >
               <h4 className="text-xl font-bold text-white">{item.title}</h4>
@@ -684,78 +729,83 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Related Guides */}
       <section className="space-y-8">
-        <div className="flex items-center justify-between border-b border-white/5 pb-4">
+        <motion.div 
+          variants={revealFadeUp}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="flex items-center justify-between border-b border-white/5 pb-4"
+        >
           <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase">
             Related Guides
           </h2>
           <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/5 px-3 py-1 rounded-full border border-cyan-500/10">
             Continue Learning
           </span>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link
-            to="/governor-limits-explained"
-            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-cyan-500/30 transition-all group flex flex-col justify-between h-40"
-          >
-            <div>
-              <Cpu className="text-cyan-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
-              <h3 className="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">
-                Salesforce Governor Limits Explained
-              </h3>
-              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
-                Learn synchronous vs asynchronous quotas, SOQL constraints, and CPU time.
-              </p>
-            </div>
-            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
-              Explore Guide <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-            </div>
-          </Link>
-
-          <Link
-            to="/scenario-based-salesforce-interview"
-            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-cyan-500/30 transition-all group flex flex-col justify-between h-40"
-          >
-            <div>
-              <Layout className="text-cyan-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
-              <h3 className="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">
-                Scenario-Based Interview Questions
-              </h3>
-              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
-                Navigate complex architecture problems, mixed DML, and sharing hierarchies.
-              </p>
-            </div>
-            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
-              Explore Guide <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-            </div>
-          </Link>
-
-          <Link
-            to="/salesforce-mock-interview"
-            className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-cyan-500/30 transition-all group flex flex-col justify-between h-40"
-          >
-            <div>
-              <Zap className="text-cyan-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
-              <h3 className="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">
-                Salesforce Mock Interview
-              </h3>
-              <p className="text-slate-500 text-xs mt-1 line-clamp-2">
-                Practice explaining your flow designs and trigger patterns to our voice AI recruiter.
-              </p>
-            </div>
-            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
-              Practice Live <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-            </div>
-          </Link>
-        </div>
+        </motion.div>
+        <motion.div 
+          variants={revealStaggerContainer}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          {[
+            {
+              to: "/governor-limits-explained",
+              icon: Cpu,
+              title: "Salesforce Governor Limits Explained",
+              desc: "Learn synchronous vs asynchronous quotas, SOQL constraints, and CPU time."
+            },
+            {
+              to: "/scenario-based-salesforce-interview",
+              icon: Layout,
+              title: "Scenario-Based Interview Questions",
+              desc: "Navigate complex architecture problems, mixed DML, and sharing hierarchies."
+            },
+            {
+              to: "/salesforce-mock-interview",
+              icon: Zap,
+              title: "Salesforce Mock Interview",
+              desc: "Practice explaining your flow designs and trigger patterns to our voice AI recruiter."
+            }
+          ].map((guide, i) => (
+            <motion.div key={i} variants={revealFadeUp}>
+              <Link
+                to={guide.to}
+                className="p-6 rounded-2xl border border-slate-800 bg-slate-900/30 hover:bg-slate-800/40 hover:border-cyan-500/30 transition-all group flex flex-col justify-between h-40"
+              >
+                <div>
+                  <guide.icon className="text-cyan-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+                  <h3 className="text-base font-bold text-white group-hover:text-cyan-400 transition-colors text-sm sm:text-base">
+                    {guide.title}
+                  </h3>
+                  <p className="text-slate-500 text-[10px] sm:text-xs mt-1 line-clamp-2">
+                    {guide.desc}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1 text-[10px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider mt-4">
+                  Explore Guide <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </motion.div>
       </section>
 
       {/* Final CTA */}
-      <section className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#020617] via-slate-900 to-[#020617] border border-white/10 px-6 py-24 text-center">
+      <motion.section 
+        variants={revealFadeUp}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#020617] via-slate-900 to-[#020617] border border-white/10 px-6 py-24 text-center"
+      >
         <div className="relative z-10 space-y-10 max-w-4xl mx-auto">
           <h2 className="text-4xl sm:text-7xl font-black text-white leading-tight">
             Stop Building. <br />
@@ -774,7 +824,7 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       <footer className="text-center text-slate-600 text-sm py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p>© 2026 ForcePilot AI. Salesforce-Focused Intelligence.</p>
@@ -784,6 +834,7 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
           <Link to="/governor-limits-explained" className="hover:text-cyan-400 transition-colors">Governor Limits</Link>
         </div>
       </footer>
+      </div>
     </div>
   );
 };

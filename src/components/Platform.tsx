@@ -128,7 +128,7 @@ const Platform: React.FC = () => {
               Interview intelligence.
             </span>
           </motion.h1>
-          <motion.p variants={fadeIn} className="guide-hero-subtitle">
+          <motion.p variants={fadeIn} className="guide-hero-subtitle !max-w-2xl">
             ForcePilot AI is the technical interview platform for the Salesforce ecosystem. 
             Built for precision, realism, and recruiter-level analysis.
           </motion.p>

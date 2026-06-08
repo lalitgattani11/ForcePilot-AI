@@ -4,7 +4,7 @@ import {
   ArrowRight, 
   ChevronRight,
   Sparkles,
-  ShieldAlert,
+  
   Database,
   Timer,
   BarChart3,
@@ -18,6 +18,13 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Breadcrumbs from './Breadcrumbs';
 import { useJsonLd } from "../hooks/useJsonLd";
+import { 
+  fadeIn, 
+  revealFadeUp, 
+  badgeAnimation, 
+  staggerContainer, 
+  revealStaggerContainer 
+} from "../utils/animations";
 
 const GovernorLimitsExplained: React.FC = () => {
   const faqSchema = React.useMemo(() => ({
@@ -97,7 +104,6 @@ const GovernorLimitsExplained: React.FC = () => {
   useJsonLd(faqSchema, "schema-faq");
   useJsonLd(articleSchema, "schema-article");
 
-
   const limits = [
     {
       icon: Database,
@@ -130,7 +136,7 @@ const GovernorLimitsExplained: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
+    <div className="text-slate-300 antialiased relative overflow-hidden">
       <Helmet>
         <title>Salesforce Governor Limits Explained Guide (2026) | ForcePilot AI</title>
         <meta name="description" content="Master Salesforce Governor Limits for your developer interview. Technical deep-dives into synchronous vs asynchronous limits, CPU time, heap size, and bulkification." />
@@ -144,35 +150,31 @@ const GovernorLimitsExplained: React.FC = () => {
         
       </Helmet>
 
-      <Breadcrumbs 
-        hideVisual
-        items={[
-          { name: "Home", path: "/" },
-          { name: "Interview Guides", path: "/blog" },
-          { name: "Governor Limits", path: "/governor-limits-explained" }
-        ]} 
-        themeColor="rose"
-      />
-
       {/* Hero Section */}
-      <section className="guide-hero-section">
-        <div className="guide-hero-container">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="guide-hero-badge border-rose-500/20 bg-rose-500/5 text-rose-400"
-          >
-            <ShieldAlert size={14} className="animate-pulse" />
-            <span>Multi-Tenant Architecture</span>
+      <section className="guide-hero-section border-b border-white/5">
+        <motion.div 
+          initial="initial"
+          animate="animate"
+          variants={staggerContainer}
+          className="flex flex-col items-center text-center"
+        >
+          <motion.div variants={badgeAnimation} className="platform-pill-badge">
+            <div className="dot" />
+            <span className="label-text">Multi-Tenant Architecture</span>
           </motion.div>
-          <h1 className="guide-hero-title">
-            Salesforce Governor <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-400 italic">Limits Explained</span>
-          </h1>
-          <p className="guide-hero-subtitle">
+          
+          <motion.h1 variants={fadeIn} className="guide-hero-title">
+            <span className="block pb-1 sm:pb-2 overflow-visible">Salesforce Governor</span>
+            <span className="block mt-1 sm:mt-2 md:mt-2.5 pb-[0.25em] overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-400">
+              Limits Explained
+            </span>
+          </motion.h1>
+          
+          <motion.p variants={fadeIn} className="guide-hero-subtitle">
             The non-negotiable rules of the Salesforce platform. Master apex governor limits and prepare for salesforce limits interview questions with our architect-grade guide.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          </motion.p>
+
+          <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 sm:mb-0">
             <Link 
               to="/#setup"
               state={{ role: "Salesforce Apex Developer" }}
@@ -184,30 +186,54 @@ const GovernorLimitsExplained: React.FC = () => {
                 className="group-hover:translate-x-1 transition-transform sm:size-[22px]"
               />
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* Internal Navigation */}
-      <nav className="grid sm:grid-cols-2 gap-4">
-        <Link to="/apex-interview-questions" className="p-4 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800 transition-colors flex items-center justify-between group">
-          <div>
-            <div className="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-1">Apply Knowledge</div>
-            <div className="text-white font-semibold">Apex Interview Questions</div>
-          </div>
-          <ChevronRight size={20} className="text-slate-400 group-hover:translate-x-1 transition-transform" />
-        </Link>
-        <Link to="/lwc-interview-guide" className="p-4 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800 transition-colors flex items-center justify-between group">
-          <div>
-            <div className="text-xs font-bold text-cyan-500 uppercase tracking-widest mb-1">Frontend Focus</div>
-            <div className="text-white font-semibold">LWC Interview Guide</div>
-          </div>
-          <ChevronRight size={20} className="text-slate-400 group-hover:translate-x-1 transition-transform" />
-        </Link>
-      </nav>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-32 space-y-16 sm:space-y-24 pb-8 sm:pb-12">
+        <Breadcrumbs 
+          hideVisual
+          items={[
+            { name: "Home", path: "/" },
+            { name: "Interview Guides", path: "/blog" },
+            { name: "Governor Limits", path: "/governor-limits-explained" }
+          ]} 
+          themeColor="rose"
+        />
+
+        {/* Internal Navigation */}
+      <motion.nav 
+        variants={revealStaggerContainer}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="grid sm:grid-cols-2 gap-4"
+      >
+        <motion.div variants={revealFadeUp}>
+          <Link to="/apex-interview-questions" className="p-4 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800 transition-colors flex items-center justify-between group h-full">
+            <div>
+              <div className="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-1">Apply Knowledge</div>
+              <div className="text-white font-semibold">Apex Interview Questions</div>
+            </div>
+            <ChevronRight size={18} className="text-slate-600 group-hover:text-emerald-500 transition-colors" />
+          </Link>
+        </motion.div>
+        <motion.div variants={revealFadeUp}>
+          <Link to="/lwc-interview-guide" className="p-4 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800 transition-colors flex items-center justify-between group h-full">
+            <div>
+              <div className="text-xs font-bold text-cyan-500 uppercase tracking-widest mb-1">Frontend Focus</div>
+              <div className="text-white font-semibold">LWC Interview Guide</div>
+            </div>
+            <ChevronRight size={18} className="text-slate-600 group-hover:text-cyan-500 transition-colors" />
+          </Link>
+        </motion.div>
+      </motion.nav>
 
       {/* AI Overview & Quick Definitions Block */}
-      <section className="bg-slate-950/40 border border-white/5 rounded-3xl p-6 sm:p-8 space-y-8 relative overflow-hidden">
+      <motion.section 
+        variants={revealFadeUp}
+        className="bg-slate-950/40 border border-white/5 rounded-3xl p-6 sm:p-8 space-y-8 relative overflow-hidden"
+      >
         <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-rose-500/40 to-transparent" />
         <div className="space-y-2">
           <h2 className="text-xs font-black text-rose-400 uppercase tracking-[0.2em]">
@@ -261,16 +287,26 @@ const GovernorLimitsExplained: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Limits Grid */}
-      <section className="space-y-12">
+      <motion.section 
+        variants={revealStaggerContainer}
+        initial="initial"
+        whileInView="whileInView"
+        viewport={{ once: true }}
+        className="space-y-12"
+      >
         <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-rose-500 pl-4">
           Core Transaction Limits
         </h2>
         <div className="grid sm:grid-cols-2 gap-6">
           {limits.map((limit, i) => (
-            <div key={i} className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl space-y-4 hover:border-slate-700 transition-colors">
+            <motion.div 
+              key={i} 
+              variants={revealFadeUp}
+              className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl space-y-4 hover:border-slate-700 transition-colors"
+            >
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-rose-500/10 rounded-lg text-rose-400">
                   <limit.icon size={24} />
@@ -288,102 +324,109 @@ const GovernorLimitsExplained: React.FC = () => {
                   <div className="text-white font-mono">{limit.async}</div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* Structured Educational Content Sections */}
       <section className="space-y-16">
-        <div className="space-y-4">
+        <motion.div 
+          variants={revealFadeUp}
+          className="space-y-4"
+        >
           <h2 className="text-3xl font-bold text-white tracking-tight border-l-4 border-rose-500 pl-4">
             Technical Breakdowns
           </h2>
           <p className="text-slate-400 max-w-3xl">
             A comprehensive look at how each limit operates, the standard Exception causes, and how to avoid them in production code.
           </p>
-        </div>
+        </motion.div>
 
         <div className="space-y-16">
-          {/* SOQL Limits */}
-          <div className="bg-slate-900/20 border border-slate-800/80 rounded-2xl p-6 sm:p-8 space-y-4">
-            <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-              <Database size={20} className="text-rose-400" />
-              SOQL Limits
-            </h3>
-            <p className="text-slate-400 leading-relaxed text-sm">
-              Salesforce enforces a maximum of <strong>100 synchronous SOQL queries</strong> per transaction (relaxed to <strong>200 queries</strong> in asynchronous contexts). If your execution path makes more queries, the platform aborts execution with a <code className="text-rose-400 bg-slate-950 px-1 rounded font-mono">System.LimitException: Too many SOQL queries: 101</code>. To optimize queries, minimize field selections, use indexing, and leverage parent-child relationships instead of issuing separate subqueries. See our <Link to="/apex-interview-questions" className="text-rose-400 hover:underline">Apex Interview Questions</Link> for detailed query mapping examples.
-            </p>
-          </div>
-
-          {/* DML Limits */}
-          <div className="bg-slate-900/20 border border-slate-800/80 rounded-2xl p-6 sm:p-8 space-y-4">
-            <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-              <HardDrive size={20} className="text-rose-400" />
-              DML Limits
-            </h3>
-            <p className="text-slate-400 leading-relaxed text-sm">
-              A single transaction is limited to <strong>150 DML statements</strong> (insert, update, delete, upsert, undelete, merge) and a total of <strong>10,000 processed records</strong>. Exceeding this boundary throws <code className="text-rose-400 bg-slate-950 px-1 rounded font-mono">System.LimitException: Too many DML statements: 151</code>. To preserve database resource cycles, never execute DML operations inside loops. Always collect modified sObjects in a list and perform one database commit.
-            </p>
-          </div>
-
-          {/* CPU Time Limits */}
-          <div className="bg-slate-900/20 border border-slate-800/80 rounded-2xl p-6 sm:p-8 space-y-4">
-            <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-              <Timer size={20} className="text-rose-400" />
-              CPU Time Limits
-            </h3>
-            <p className="text-slate-400 leading-relaxed text-sm">
-              Salesforce limits CPU time to <strong>10 seconds (10,000 ms)</strong> for synchronous runs and <strong>60 seconds (60,000 ms)</strong> for asynchronous paths. CPU time comprises Apex calculations, formula evaluations, and trigger handlers, but excludes database processing time and HTTP callout wait times. To optimize CPU usage, avoid nested loop iterations, streamline search algorithms, and defer heavy processes to asynchronous tasks.
-            </p>
-          </div>
-
-          {/* Heap Size Limits */}
-          <div className="bg-slate-900/20 border border-slate-800/80 rounded-2xl p-6 sm:p-8 space-y-4">
-            <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-              <BarChart3 size={20} className="text-rose-400" />
-              Heap Size Limits
-            </h3>
-            <p className="text-slate-400 leading-relaxed text-sm">
-              The heap size limit is <strong>6 MB</strong> for synchronous processes and <strong>12 MB</strong> for asynchronous execution. Heap size measures the total memory occupied by instantiated objects, query lists, and cached configurations. To prevent heap overflows, use SOQL for-loops to process large query result lists in chunks of 200, filter out unneeded payload fields, and call <code className="text-rose-400 bg-slate-950 px-1 rounded font-mono">clear()</code> on lists that are no longer needed.
-            </p>
-          </div>
-
-          {/* Async Apex Limits */}
-          <div className="bg-slate-900/20 border border-slate-800/80 rounded-2xl p-6 sm:p-8 space-y-4">
-            <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-              <Layers size={20} className="text-rose-400" />
-              Async Apex Limits
-            </h3>
-            <p className="text-slate-400 leading-relaxed text-sm">
-              Asynchronous Apex (Future methods, Queueable classes, Batch jobs, and Scheduled Apex) execute in background threads when resources become available. This grants higher transaction boundaries (e.g. 200 SOQL queries, 12 MB heap size, and 60 seconds CPU time). Developers use async Apex to process large datasets (Batch Apex supports up to 50 million records) and perform web service integration callouts.
-            </p>
-          </div>
-
-          {/* Flow Governor Limits */}
-          <div className="bg-slate-900/20 border border-slate-800/80 rounded-2xl p-6 sm:p-8 space-y-4">
-            <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-              <Workflow size={20} className="text-rose-400" />
-              Flow Governor Limits
-            </h3>
-            <p className="text-slate-400 leading-relaxed text-sm">
-              Salesforce Flows are visual automations, but they run on the same platform engine as Apex and share standard transaction limits (100 SOQL queries and 150 DML statements). Additionally, a single flow transaction cannot execute more than <strong>2,000 flow elements</strong>. To prevent element crashes, utilize Before-Save Flows for fast field updates and avoid looping query components. Read more in our <Link to="/salesforce-flow-interview-questions" className="text-rose-400 hover:underline">Salesforce Flow Guide</Link>.
-            </p>
-          </div>
-
-          {/* Bulkification Strategies */}
-          <div className="bg-slate-900/20 border border-slate-800/80 rounded-2xl p-6 sm:p-8 space-y-4">
-            <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-              <Sparkles size={20} className="text-rose-400" />
-              Bulkification Strategies
-            </h3>
-            <p className="text-slate-400 leading-relaxed text-sm">
-              Bulkification is the design practice that guarantees code behaves correctly and stays within governor limits when processing records in batches (such as trigger batches of 200 records). You must write triggers using a single-trigger framework pattern, collect query filters in Sets, query databases once, and register modifications via collections to bypass DML limit loops. Master bulk-trigger patterns in our <Link to="/apex-trigger-interview-questions" className="text-rose-400 hover:underline">Apex Trigger Guide</Link>.
-            </p>
-          </div>
+          {[
+            {
+              title: "SOQL Limits",
+              icon: Database,
+              content: (
+                <p className="text-slate-400 leading-relaxed text-sm">
+                  Salesforce enforces a maximum of <strong>100 synchronous SOQL queries</strong> per transaction (relaxed to <strong>200 queries</strong> in asynchronous contexts). If your execution path makes more queries, the platform aborts execution with a <code className="text-rose-400 bg-slate-950 px-1 rounded font-mono">System.LimitException: Too many SOQL queries: 101</code>. To optimize queries, minimize field selections, use indexing, and leverage parent-child relationships instead of issuing separate subqueries. See our <Link to="/apex-interview-questions" className="text-rose-400 hover:underline">Apex Interview Questions</Link> for detailed query mapping examples.
+                </p>
+              )
+            },
+            {
+              title: "DML Limits",
+              icon: HardDrive,
+              content: (
+                <p className="text-slate-400 leading-relaxed text-sm">
+                  A single transaction is limited to <strong>150 DML statements</strong> (insert, update, delete, upsert, undelete, merge) and a total of <strong>10,000 processed records</strong>. Exceeding this boundary throws <code className="text-rose-400 bg-slate-950 px-1 rounded font-mono">System.LimitException: Too many DML statements: 151</code>. To preserve database resource cycles, never execute DML operations inside loops. Always collect modified sObjects in a list and perform one database commit.
+                </p>
+              )
+            },
+            {
+              title: "CPU Time Limits",
+              icon: Timer,
+              content: (
+                <p className="text-slate-400 leading-relaxed text-sm">
+                  Salesforce limits CPU time to <strong>10 seconds (10,000 ms)</strong> for synchronous runs and <strong>60 seconds (60,000 ms)</strong> for asynchronous paths. CPU time comprises Apex calculations, formula evaluations, and trigger handlers, but excludes database processing time and HTTP callout wait times. To optimize CPU usage, avoid nested loop iterations, streamline search algorithms, and defer heavy processes to asynchronous tasks.
+                </p>
+              )
+            },
+            {
+              title: "Heap Size Limits",
+              icon: BarChart3,
+              content: (
+                <p className="text-slate-400 leading-relaxed text-sm">
+                  The heap size limit is <strong>6 MB</strong> for synchronous processes and <strong>12 MB</strong> for asynchronous execution. Heap size measures the total memory occupied by instantiated objects, query lists, and cached configurations. To prevent heap overflows, use SOQL for-loops to process large query result lists in chunks of 200, filter out unneeded payload fields, and call <code className="text-rose-400 bg-slate-950 px-1 rounded font-mono">clear()</code> on lists that are no longer needed.
+                </p>
+              )
+            },
+            {
+              title: "Async Apex Limits",
+              icon: Layers,
+              content: (
+                <p className="text-slate-400 leading-relaxed text-sm">
+                  Asynchronous Apex (Future methods, Queueable classes, Batch jobs, and Scheduled Apex) execute in background threads when resources become available. This grants higher transaction boundaries (e.g. 200 SOQL queries, 12 MB heap size, and 60 seconds CPU time). Developers use async Apex to process large datasets (Batch Apex supports up to 50 million records) and perform web service integration callouts.
+                </p>
+              )
+            },
+            {
+              title: "Flow Governor Limits",
+              icon: Workflow,
+              content: (
+                <p className="text-slate-400 leading-relaxed text-sm">
+                  Salesforce Flows are visual automations, but they run on the same platform engine as Apex and share standard transaction limits (100 SOQL queries and 150 DML statements). Additionally, a single flow transaction cannot execute more than <strong>2,000 flow elements</strong>. To prevent element crashes, utilize Before-Save Flows for fast field updates and avoid looping query components. Read more in our <Link to="/salesforce-flow-interview-questions" className="text-rose-400 hover:underline">Salesforce Flow Guide</Link>.
+                </p>
+              )
+            },
+            {
+              title: "Bulkification Strategies",
+              icon: Sparkles,
+              content: (
+                <p className="text-slate-400 leading-relaxed text-sm">
+                  Bulkification is the design practice that guarantees code behaves correctly and stays within governor limits when processing records in batches (such as trigger batches of 200 records). You must write triggers using a single-trigger framework pattern, collect query filters in Sets, query databases once, and register modifications via collections to bypass DML limit loops. Master bulk-trigger patterns in our <Link to="/apex-trigger-interview-questions" className="text-rose-400 hover:underline">Apex Trigger Guide</Link>.
+                </p>
+              )
+            }
+          ].map((section, idx) => (
+            <motion.div 
+              key={idx}
+              variants={revealFadeUp}
+              className="bg-slate-900/20 border border-slate-800/80 rounded-2xl p-6 sm:p-8 space-y-4"
+            >
+              <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+                <section.icon size={20} className="text-rose-400" />
+                {section.title}
+              </h3>
+              {section.content}
+            </motion.div>
+          ))}
 
           {/* Real Interview Scenarios */}
-          <div className="bg-slate-900/20 border border-slate-800/80 rounded-2xl p-6 sm:p-8 space-y-6">
+          <motion.div 
+            variants={revealFadeUp}
+            className="bg-slate-900/20 border border-slate-800/80 rounded-2xl p-6 sm:p-8 space-y-6"
+          >
             <h3 className="text-2xl font-bold text-white flex items-center gap-3">
               <HelpCircle size={20} className="text-rose-400" />
               Real Interview Scenarios
@@ -408,12 +451,15 @@ const GovernorLimitsExplained: React.FC = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Recruiter Section */}
-      <section className="bg-slate-900/80 border border-slate-800 rounded-3xl p-8 sm:p-12 space-y-6">
+      <motion.section 
+        variants={revealFadeUp}
+        className="bg-slate-900/80 border border-slate-800 rounded-3xl p-8 sm:p-12 space-y-6"
+      >
         <h2 className="text-2xl font-bold text-white flex items-center gap-3">
           <Sparkles className="text-orange-400" />
           The "Architect" mindset
@@ -426,88 +472,61 @@ const GovernorLimitsExplained: React.FC = () => {
             "I once saw a senior developer fail an interview because they couldn't explain how to handle 10,001 records in a single transaction. They knew the limit was 10k, but they didn't know how to move to Batch Apex or Queueables. That's what separates mid-level from senior."
           </p>
         </div>
-      </section>
+      </motion.section>
 
       {/* FAQ Section */}
-      <section className="space-y-8">
+      <motion.section 
+        variants={revealFadeUp}
+        className="space-y-8"
+      >
         <h2 className="text-2xl font-bold text-white uppercase tracking-widest border-l-4 border-rose-500 pl-4">
           Frequently Asked Questions (FAQ)
         </h2>
         <div className="space-y-4">
-          <details className="group bg-slate-900/40 border border-slate-800 rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
-              <h3 className="text-lg font-semibold text-white group-open:text-rose-400 transition-colors">
-                What is a transaction boundary in Salesforce?
-              </h3>
-              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
-                <ChevronDown size={16} />
-              </span>
-            </summary>
-            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
-              A transaction boundary defines the lifetime of a single execution block. A transaction begins when an event occurs (such as a user DML save, a flow trigger, or an API callout) and ends when all downstream validation rules, database triggers, and commits complete. Governor limits are reset at each new transaction boundary.
-            </div>
-          </details>
-
-          <details className="group bg-slate-900/40 border border-slate-800 rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
-              <h3 className="text-lg font-semibold text-white group-open:text-rose-400 transition-colors">
-                Why does Salesforce enforce Governor Limits?
-              </h3>
-              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
-                <ChevronDown size={16} />
-              </span>
-            </summary>
-            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
-              Salesforce is built on a multi-tenant architecture, meaning multiple customer orgs (tenants) share physical hardware, memory, and database servers. Governor limits ensure that a single tenant's poorly optimized script cannot monopolize system resource pools, guaranteeing platform stability for all.
-            </div>
-          </details>
-
-          <details className="group bg-slate-900/40 border border-slate-800 rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
-              <h3 className="text-lg font-semibold text-white group-open:text-rose-400 transition-colors">
-                What is the difference between synchronous and asynchronous limits?
-              </h3>
-              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
-                <ChevronDown size={16} />
-              </span>
-            </summary>
-            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
-              Synchronous tasks execute immediately, blocking user threads and enforcing tighter limits (100 SOQL queries, 10s CPU, 6 MB heap). Asynchronous tasks (Queueables, Batch Apex, `@future` calls) run in the background, allowing Salesforce to schedule resource usage. This grants higher thresholds (200 SOQL queries, 60s CPU, 12 MB heap).
-            </div>
-          </details>
-
-          <details className="group bg-slate-900/40 border border-slate-800 rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
-              <h3 className="text-lg font-semibold text-white group-open:text-rose-400 transition-colors">
-                How do you resolve a System.LimitException: Too many SOQL queries: 101 error?
-              </h3>
-              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
-                <ChevronDown size={16} />
-              </span>
-            </summary>
-            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
-              This exception is triggered when SOQL queries are placed inside loop statements. To resolve it, gather the query parameters in a Set, execute a single bulk SOQL query outside the loop, and load the results into a Map. This allows retrieving data inside loops in-memory without making additional database calls.
-            </div>
-          </details>
-
-          <details className="group bg-slate-900/40 border border-slate-800 rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
-              <h3 className="text-lg font-semibold text-white group-open:text-rose-400 transition-colors">
-                How does ForcePilot AI help developers master limits?
-              </h3>
-              <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
-                <ChevronDown size={16} />
-              </span>
-            </summary>
-            <div className="mt-4 text-slate-300 leading-relaxed text-sm">
-              ForcePilot AI evaluates coding submissions, trigger architecture choices, and async configurations, advising on bulk-safe compliance. Developers can test their skills in real time on our interactive <Link to="/salesforce-mock-interview" className="text-rose-400 hover:underline">Salesforce Mock Interview</Link> simulator.
-            </div>
-          </details>
+          {[
+            {
+              q: "What is a transaction boundary in Salesforce?",
+              ans: "A transaction boundary defines the lifetime of a single execution block. A transaction begins when an event occurs (such as a user DML save, a flow trigger, or an API callout) and ends when all downstream validation rules, database triggers, and commits complete. Governor limits are reset at each new transaction boundary."
+            },
+            {
+              q: "Why does Salesforce enforce Governor Limits?",
+              ans: "Salesforce is built on a multi-tenant architecture, meaning multiple customer orgs (tenants) share physical hardware, memory, and database servers. Governor limits ensure that a single tenant's poorly optimized script cannot monopolize system resource pools, guaranteeing platform stability for all."
+            },
+            {
+              q: "What is the difference between synchronous and asynchronous limits?",
+              ans: "Synchronous tasks execute immediately, blocking user threads and enforcing tighter limits (100 SOQL queries, 10s CPU, 6 MB heap). Asynchronous tasks (Queueables, Batch Apex, @future calls) run in the background, allowing Salesforce to schedule resource usage. This grants higher thresholds (200 SOQL queries, 60s CPU, 12 MB heap)."
+            },
+            {
+              q: "How do you resolve a System.LimitException: Too many SOQL queries: 101 error?",
+              ans: "This exception is triggered when SOQL queries are placed inside loop statements. To resolve it, gather the query parameters in a Set, execute a single bulk SOQL query outside the loop, and load the results into a Map. This allows retrieving data inside loops in-memory without making additional database calls."
+            },
+            {
+              q: "How does ForcePilot AI help developers master limits?",
+              ans: "ForcePilot AI evaluates coding submissions, trigger architecture choices, and async configurations, advising on bulk-safe compliance. Developers can test their skills in real time on our interactive Salesforce Mock Interview simulator."
+            }
+          ].map((item, idx) => (
+            <details key={idx} className="group bg-slate-900/40 border border-slate-800 rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden">
+              <summary className="flex items-center justify-between cursor-pointer focus:outline-none">
+                <h3 className="text-lg font-semibold text-white group-open:text-rose-400 transition-colors">
+                  {item.q}
+                </h3>
+                <span className="ml-1.5 flex-shrink-0 rounded-full bg-slate-800 p-1.5 text-slate-400 group-open:rotate-180 transition-transform duration-300">
+                  <ChevronDown size={16} />
+                </span>
+              </summary>
+              <div className="mt-4 text-slate-300 leading-relaxed text-sm">
+                {item.ans}
+              </div>
+            </details>
+          ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* Recommended Next Topics */}
-      <section className="space-y-8">
+      <motion.section 
+        variants={revealFadeUp}
+        className="space-y-8"
+      >
         <div className="flex items-center justify-between border-b border-white/5 pb-4">
           <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase">
             Recommended Next Topics
@@ -571,38 +590,42 @@ const GovernorLimitsExplained: React.FC = () => {
             </div>
           </Link>
         </div>
-      </section>
+      </motion.section>
 
       {/* Final CTA */}
-      <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-rose-600 to-orange-700 px-6 py-16 text-center shadow-2xl">
-        <div className="relative z-10 space-y-8 max-w-3xl mx-auto">
-          <h2 className="text-3xl sm:text-5xl font-bold text-white leading-tight">
-            Design for <br/> Platform Scale.
+      <motion.section 
+        variants={revealFadeUp}
+        className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#020617] via-slate-900 to-[#020617] border border-white/10 px-6 py-24 text-center"
+      >
+        <div className="relative z-10 space-y-10 max-w-4xl mx-auto">
+          <h2 className="text-4xl sm:text-7xl font-black text-white leading-tight">
+            Master the <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-400">
+              Platform Rules.
+            </span>
           </h2>
-          <p className="text-rose-50 text-lg opacity-90">
-            ForcePilot AI challenges your architectural decisions. Practice handling large datasets, long-running processes, and complex trigger recursions.
-          </p>
-          <div className="pt-6">
-            <Link 
+          <div className="pt-8">
+            <Link
               to="/#setup"
               state={{ role: "Salesforce Apex Developer" }}
-              className="px-10 py-5 bg-white text-rose-700 hover:bg-rose-50 rounded-2xl font-bold text-lg transition-all shadow-xl flex items-center justify-center gap-3 mx-auto group"
+              className="px-6 py-4 text-sm sm:px-10 sm:py-5 sm:text-base lg:px-14 lg:py-6 lg:text-xl bg-rose-600 hover:bg-rose-500 text-white rounded-[2rem] font-black transition-all shadow-[0_0_50px_rgba(244,63,94,0.3)] flex items-center justify-center gap-4 mx-auto group active:scale-95 text-center"
             >
-              Master Governor Limits
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              Start Practice Session
+              <ArrowRight className="size-4 sm:size-5 lg:size-6 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <footer className="text-center text-slate-400 text-sm py-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="text-center text-slate-400 text-sm py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p>© 2026 ForcePilot AI. Salesforce-Focused Intelligence.</p>
-        <div className="flex gap-6">
+        <div className="flex gap-8">
           <Link to="/" className="hover:text-rose-400 transition-colors">Home</Link>
+          <Link to="/salesforce-mock-interview" className="hover:text-rose-400 transition-colors">Mock Interview</Link>
           <Link to="/apex-interview-questions" className="hover:text-rose-400 transition-colors">Apex Questions</Link>
-          <Link to="/lwc-interview-guide" className="hover:text-rose-400 transition-colors">LWC Guide</Link>
         </div>
       </footer>
+      </div>
     </div>
   );
 };
