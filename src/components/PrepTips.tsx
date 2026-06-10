@@ -10,16 +10,21 @@ import {
   Brain,
   AlertCircle,
   ShieldCheck,
-  Star,
   Users,
   ChevronDown,
   ChevronRight,
   Layout,
   Terminal,
-  Search
+  Search,
+  ArrowRight
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { useJsonLd } from "../hooks/useJsonLd";
+import { 
+  fadeIn, 
+  badgeAnimation, 
+  staggerContainer 
+} from "../utils/animations";
 
 interface QuestionItem {
   title: string;
@@ -263,7 +268,7 @@ const PrepTips: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-slate-300 antialiased">
+    <div className="text-slate-300 antialiased relative overflow-hidden">
       <Helmet>
         <title>Salesforce Interview Preparation Tips Guide (2026) | ForcePilot AI</title>
         <meta
@@ -282,23 +287,44 @@ const PrepTips: React.FC = () => {
         
       </Helmet>
 
-      {/* Hero Header */}
-      <section className="guide-hero-section">
-        <div className="guide-hero-container">
-          <div className="guide-hero-badge border-purple-500/20 bg-purple-500/5 text-purple-300">
-            <Star size={14} className="text-purple-400" />
-            <span>Elite Preparation Framework</span>
-          </div>
-          <h1 className="guide-hero-title">
-            Interview <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 italic">Preparation Tips.</span>
-          </h1>
-          <p className="guide-hero-subtitle">
+      {/* Hero Section */}
+      <section className="guide-hero-section border-b border-white/5">
+        <motion.div 
+          initial="initial"
+          animate="animate"
+          variants={staggerContainer}
+          className="flex flex-col items-center text-center"
+        >
+          <motion.div variants={badgeAnimation} className="platform-pill-badge">
+            <div className="dot" />
+            <span className="label-text">Elite Preparation Track</span>
+          </motion.div>
+          
+          <motion.h1 variants={fadeIn} className="guide-hero-title">
+            <span className="block pb-1 sm:pb-2 overflow-visible">Interview</span>
+            <span className="block mt-1 sm:mt-2 md:mt-2.5 pb-[0.25em] overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-purple-500">
+              Preparation Tips
+            </span>
+          </motion.h1>
+          
+          <motion.p variants={fadeIn} className="guide-hero-subtitle">
             Maximize your performance with our salesforce interview preparation tips. Learn how to prepare for salesforce developer interview rounds using recruiter-ready structures.
-          </p>
-        </div>
+          </motion.p>
+
+          <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 sm:mb-0">
+            <Link
+              to="/#setup"
+              className="w-full sm:w-auto px-10 sm:px-12 py-4 sm:py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            >
+              Start Practice Session
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform sm:size-[22px]" />
+            </Link>
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* Strategy Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-32 space-y-16 sm:space-y-24 pb-8 sm:pb-12">
+        {/* Strategy Grid */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         {categories.map((cat, i) => (
           <motion.div 
@@ -612,6 +638,16 @@ const PrepTips: React.FC = () => {
           Join the top 1% of Salesforce technical performers.
         </p>
       </section>
+
+      <footer className="text-center text-slate-600 text-sm py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p>© 2026 ForcePilot AI. Salesforce-Focused Intelligence.</p>
+        <div className="flex gap-8">
+          <Link to="/" className="hover:text-emerald-400 transition-colors">Home</Link>
+          <Link to="/salesforce-mock-interview" className="hover:text-emerald-400 transition-colors">Mock Interview</Link>
+          <Link to="/governor-limits-explained" className="hover:text-emerald-400 transition-colors">Governor Limits</Link>
+        </div>
+      </footer>
+      </div>
     </div>
   );
 };

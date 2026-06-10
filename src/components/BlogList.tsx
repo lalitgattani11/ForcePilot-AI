@@ -14,6 +14,11 @@ import {
   Layers 
 } from 'lucide-react';
 import { BLOG_POSTS } from '../data/blogPosts';
+import { 
+  fadeIn, 
+  badgeAnimation, 
+  staggerContainer
+} from '../utils/animations';
 
 const getIconComponent = (iconName: string) => {
   switch (iconName) {
@@ -57,7 +62,7 @@ const BlogList: React.FC = () => {
   } as const;
 
   return (
-    <>
+    <div className="text-slate-300 antialiased relative overflow-hidden">
       <Helmet>
         <title>Salesforce Engineering Blog & Developer Guides | ForcePilot AI</title>
         <meta name="description" content="Access deep-dive Salesforce technical articles on Apex architecture, governor limits, LWC performance, and interview strategies written by industry leaders." />
@@ -77,23 +82,35 @@ const BlogList: React.FC = () => {
         <meta property="twitter:description" content="Access deep-dive Salesforce technical articles on Apex architecture, governor limits, LWC performance, and interview strategies." />
       </Helmet>
 
-      <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 px-4 sm:px-0">
-        {/* Hero Header */}
-        <section className="guide-hero-section">
-          <div className="guide-hero-badge border-emerald-500/20 bg-emerald-500/5 text-emerald-300">
-            <BookOpen size={14} className="text-emerald-400" />
-            <span>Engineering Intelligence Hub</span>
-          </div>
-          <h1 className="guide-hero-title">
-            Technical <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 italic">Salesforce Blog&nbsp;</span>
-          </h1>
-          <p className="guide-hero-subtitle">
+      {/* Hero Section */}
+      <section className="guide-hero-section border-b border-white/5">
+        <motion.div 
+          initial="initial"
+          animate="animate"
+          variants={staggerContainer}
+          className="flex flex-col items-center text-center"
+        >
+          <motion.div variants={badgeAnimation} className="platform-pill-badge">
+            <div className="dot" />
+            <span className="label-text">Engineering Intelligence Hub</span>
+          </motion.div>
+          
+          <motion.h1 variants={fadeIn} className="guide-hero-title">
+            <span className="block pb-1 sm:pb-2 overflow-visible">Technical</span>
+            <span className="block mt-1 sm:mt-2 md:mt-2.5 pb-[0.25em] overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500">
+              Salesforce Blog
+            </span>
+          </motion.h1>
+          
+          <motion.p variants={fadeIn} className="guide-hero-subtitle">
             Deep-dive architectural blueprints, recruiter-grade strategy playbooks, and LWC rendering optimizations curated for modern Salesforce engineers.
-          </p>
-        </section>
+          </motion.p>
+        </motion.div>
+      </section>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-32 space-y-16 sm:space-y-24 pb-8 sm:pb-12">
         {/* Filters and Search Strip */}
-        <section className="max-w-6xl mx-auto px-4">
+        <section className="">
           <div className="flex flex-col md:flex-row gap-6 items-center justify-between pb-8 border-b border-white/5">
             {/* Category Tabs */}
             <div className="flex flex-nowrap overflow-x-auto scrollbar-hide gap-2 w-full md:w-auto -mx-4 px-4 md:mx-0 md:px-0">
@@ -127,7 +144,7 @@ const BlogList: React.FC = () => {
         </section>
 
         {/* Blog Post Grid */}
-        <section className="max-w-6xl mx-auto px-4 pb-16">
+        <section className="pb-16">
           {filteredPosts.length > 0 ? (
             <motion.div 
               variants={containerVariants}
@@ -257,7 +274,7 @@ const BlogList: React.FC = () => {
         </section>
 
         {/* Curated Developer Interview Guides */}
-        <section className="max-w-6xl mx-auto px-4 pb-20 border-t border-white/5 pt-16 space-y-10">
+        <section className="pb-20 border-t border-white/5 pt-16 space-y-10">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-300 text-[10px] font-black uppercase tracking-[0.25em] backdrop-blur-sm">
               <Layers size={12} className="text-cyan-400" />
@@ -362,10 +379,20 @@ const BlogList: React.FC = () => {
               </div>
             </Link>
           </div>
-        </section>
-      </div>
-    </>
-  );
-};
+          </section>
+
+          <footer className="text-center text-slate-600 text-sm py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p>© 2026 ForcePilot AI. Salesforce-Focused Intelligence.</p>
+          <div className="flex gap-8">
+            <Link to="/" className="hover:text-emerald-400 transition-colors">Home</Link>
+            <Link to="/salesforce-mock-interview" className="hover:text-emerald-400 transition-colors">Mock Interview</Link>
+            <Link to="/governor-limits-explained" className="hover:text-emerald-400 transition-colors">Governor Limits</Link>
+          </div>
+          </footer>
+          </div>
+          </div>
+          );
+          };
+
 
 export default BlogList;

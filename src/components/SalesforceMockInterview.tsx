@@ -424,22 +424,22 @@ const SalesforceMockInterview: React.FC = () => {
             <motion.div 
               key={i}
               variants={revealFadeUp}
-              className="group relative bg-[#0a0c10] border border-white/5 rounded-3xl overflow-hidden hover:border-cyan-500/30 transition-all cursor-pointer shadow-2xl"
+              className={`group relative bg-slate-950/20 border border-white/5 rounded-3xl overflow-hidden hover:bg-slate-900/40 hover:border-${cat.color}-500/30 transition-all duration-500 cursor-pointer shadow-2xl flex flex-col h-full`}
               onClick={() => navigate('/#setup', { state: { role: cat.slug } })}
             >
-              <div className="p-8 space-y-6">
-                <div className={`w-14 h-14 rounded-2xl bg-${cat.color}-500/10 flex items-center justify-center text-${cat.color}-400 group-hover:scale-110 transition-transform`}>
+              <div className="p-8 space-y-6 flex flex-col h-full">
+                <div className={`w-14 h-14 rounded-2xl bg-${cat.color}-500/10 flex items-center justify-center text-${cat.color}-400 group-hover:scale-110 transition-transform duration-500`}>
                   <cat.icon size={30} />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-2xl font-bold text-white">{cat.title}</h3>
+                <div className="space-y-2 flex-grow">
+                  <h3 className="text-2xl font-bold text-white group-hover:text-white transition-colors">{cat.title}</h3>
                   <p className="text-slate-400 text-sm leading-relaxed">{cat.desc}</p>
                 </div>
-                <div className="pt-4 flex items-center text-xs font-bold uppercase tracking-widest text-cyan-500 gap-2">
+                <div className={`pt-4 flex items-center text-xs font-bold uppercase tracking-widest text-${cat.color}-400 gap-2 mt-auto`}>
                   Launch Track <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-              <div className={`absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-${cat.color}-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity`}></div>
+              <div className={`absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-${cat.color}-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
             </motion.div>
           ))}
         </motion.div>

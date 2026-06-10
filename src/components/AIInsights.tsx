@@ -1,14 +1,21 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { 
-  BrainCircuit, 
   Activity, 
   ShieldCheck, 
   MessageSquare, 
   Zap,
   Cpu,
-  Search
+  Search,
+  ArrowRight
 } from "lucide-react";
+import { 
+  fadeIn, 
+  badgeAnimation, 
+  staggerContainer 
+} from "../utils/animations";
 
 const AIInsights: React.FC = () => {
   const insightCards = [
@@ -63,24 +70,54 @@ const AIInsights: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pt-0 pb-8 sm:pb-12 px-4 sm:px-0">
-      {/* Hero Header */}
-      <section className="guide-hero-section">
-        <div className="guide-hero-container">
-          <div className="guide-hero-badge border-cyan-500/20 bg-cyan-500/5 text-cyan-300">
-            <BrainCircuit size={14} className="text-cyan-400" />
-            <span>Intelligence Engine</span>
-          </div>
-          <h1 className="guide-hero-title">
-            Interview <br className="sm:hidden" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 italic">AI Insights.</span>
-          </h1>
-          <p className="guide-hero-subtitle">
-            Deep-dive into the technical intelligence that powers ForcePilot AI. Understand how we analyze and grade your performance.
-          </p>
-        </div>
+    <div className="text-slate-300 antialiased relative overflow-hidden">
+      <Helmet>
+        <title>Interview AI Insights & Grading Logic | ForcePilot AI</title>
+        <meta
+          name="description"
+          content="Understand the technical intelligence that powers ForcePilot AI. Learn how we evaluate Salesforce interview performance, technical accuracy, and communication clarity."
+        />
+        <link rel="canonical" href="https://forcepilotai.online/ai-insights" />
+      </Helmet>
+
+      {/* Hero Section */}
+      <section className="guide-hero-section border-b border-white/5">
+        <motion.div 
+          initial="initial"
+          animate="animate"
+          variants={staggerContainer}
+          className="flex flex-col items-center text-center"
+        >
+          <motion.div variants={badgeAnimation} className="platform-pill-badge">
+            <div className="dot" />
+            <span className="label-text">Intelligence Excellence Track</span>
+          </motion.div>
+          
+          <motion.h1 variants={fadeIn} className="guide-hero-title">
+            <span className="block pb-1 sm:pb-2 overflow-visible">Interview AI</span>
+            <span className="block mt-1 sm:mt-2 md:mt-2.5 pb-[0.25em] overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-500">
+              Insights & Logic
+            </span>
+          </motion.h1>
+          
+          <motion.p variants={fadeIn} className="guide-hero-subtitle">
+            Deep-dive into the technical intelligence that powers ForcePilot AI. Understand how we analyze and grade your performance using recruiter-grade technical standards.
+          </motion.p>
+
+          <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 sm:mb-0">
+            <Link
+              to="/#setup"
+              className="w-full sm:w-auto px-10 sm:px-12 py-4 sm:py-5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl font-bold text-base sm:text-lg transition-all shadow-[0_0_40px_rgba(34,211,238,0.2)] flex items-center justify-center gap-3 group active:scale-95 text-center"
+            >
+              Experience AI Grading
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform sm:size-[22px]" />
+            </Link>
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* Analysis Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-32 space-y-16 sm:space-y-24 pb-8 sm:pb-12">
+        {/* Analysis Grid */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         {insightCards.map((card, i) => (
           <motion.div 
@@ -246,6 +283,16 @@ const AIInsights: React.FC = () => {
           <span className="text-[8px] sm:text-xs font-bold text-slate-400 uppercase tracking-[0.1em] sm:tracking-[0.2em] truncate">Validated against real recruiter standards.</span>
         </div>
       </section>
+
+      <footer className="text-center text-slate-600 text-sm py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p>© 2026 ForcePilot AI. Salesforce-Focused Intelligence.</p>
+        <div className="flex gap-8">
+          <Link to="/" className="hover:text-emerald-400 transition-colors">Home</Link>
+          <Link to="/salesforce-mock-interview" className="hover:text-emerald-400 transition-colors">Mock Interview</Link>
+          <Link to="/governor-limits-explained" className="hover:text-emerald-400 transition-colors">Governor Limits</Link>
+        </div>
+      </footer>
+      </div>
     </div>
   );
 };

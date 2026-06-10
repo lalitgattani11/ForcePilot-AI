@@ -36,6 +36,11 @@ import type {
   InterviewerPersonality,
 } from "../types";
 
+import {
+  revealFadeUp, 
+  revealStaggerContainer 
+} from "../utils/animations";
+
 interface InterviewHistoryRecord {
   id: string;
   role: string;
@@ -1062,7 +1067,13 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+        <motion.div 
+          variants={revealStaggerContainer}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4"
+        >
           {[
             {
               title: "Mock Interview",
@@ -1121,35 +1132,36 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
               color: "rose",
             },
           ].map((item, i) => (
-            <Link
-              key={i}
-              to={item.link}
-              className="group relative bg-white/[0.02] border border-white/5 p-8 rounded-3xl hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500 overflow-hidden"
-            >
-              <div
-                className={`mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-${item.color}-500/10 text-${item.color}-400 group-hover:scale-110 transition-transform duration-500`}
+            <motion.div key={i} variants={revealFadeUp}>
+              <Link
+                to={item.link}
+                className={`group relative bg-slate-950/20 border border-white/5 p-8 rounded-3xl hover:bg-slate-900/40 hover:border-${item.color}-500/30 transition-all duration-500 overflow-hidden flex flex-col h-full`}
               >
-                <item.icon size={24} />
-              </div>
+                <div
+                  className={`mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-${item.color}-500/10 text-${item.color}-400 group-hover:scale-110 transition-transform duration-500`}
+                >
+                  <item.icon size={24} />
+                </div>
 
-              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-                {item.title}
-                <ArrowRight
-                  size={16}
-                  className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500"
-                />
-              </h3>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                {item.desc}
-              </p>
+                <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                  {item.title}
+                  <ArrowRight
+                    size={16}
+                    className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500"
+                  />
+                </h3>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  {item.desc}
+                </p>
 
-              {/* Decorative Gradient Overlay */}
-              <div
-                className={`absolute -right-12 -bottom-12 h-32 w-32 bg-${item.color}-500/5 blur-[60px] rounded-full group-hover:bg-${item.color}-500/10 transition-colors duration-500`}
-              ></div>
-            </Link>
+                {/* Decorative Gradient Overlay */}
+                <div
+                  className={`absolute -right-12 -bottom-12 h-32 w-32 bg-${item.color}-500/5 blur-[60px] rounded-full group-hover:bg-${item.color}-500/10 transition-colors duration-500`}
+                ></div>
+              </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
     </div>
   );
