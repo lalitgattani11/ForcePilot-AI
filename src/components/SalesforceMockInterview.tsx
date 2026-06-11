@@ -408,7 +408,7 @@ const SalesforceMockInterview: React.FC = () => {
           className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 text-center md:text-left"
         >
           <div className="space-y-4 w-full">
-            <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Tracks.</span></h2>
+            <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Tracks</span></h2>
             <p className="text-slate-400 max-w-xl mx-auto md:mx-0">Choose your specialization and start a targeted simulation.</p>
           </div>
         </motion.div>
@@ -456,7 +456,7 @@ const SalesforceMockInterview: React.FC = () => {
               viewport={{ once: true }}
               className="text-center space-y-4"
             >
-              <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Simulator <span className="text-emerald-400">Breakdown.</span></h2>
+              <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Simulator <span className="text-emerald-400">Breakdown</span></h2>
               <p className="text-slate-400 max-w-2xl mx-auto">Explore the detailed specialized modules available in our practice platform.</p>
             </motion.div>
 
@@ -500,7 +500,7 @@ const SalesforceMockInterview: React.FC = () => {
         className="bg-white/[0.01] border border-white/5 rounded-[3rem] p-8 sm:p-20 space-y-20"
       >
         <div className="text-center space-y-4">
-          <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">The <span className="text-emerald-400">Experience.</span></h2>
+          <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">The <span className="text-emerald-400">Experience</span></h2>
           <p className="text-slate-400">How ForcePilot AI elevates your preparation.</p>
         </div>
 
@@ -539,7 +539,7 @@ const SalesforceMockInterview: React.FC = () => {
         >
           <h2 className="text-4xl sm:text-6xl font-bold text-white leading-tight">
             Recruiter-Grade <br />
-            <span className="text-emerald-400">Analytics.</span>
+            <span className="text-emerald-400">Analytics</span>
           </h2>
           <p className="text-slate-400 text-lg leading-relaxed">
             Stop receiving generic feedback. ForcePilot AI provides a multidimensional breakdown of your technical persona, mirroring the internal scorecards used by Salesforce Partners and Fortune 500 recruiters.
@@ -627,7 +627,7 @@ const SalesforceMockInterview: React.FC = () => {
           viewport={{ once: true }}
           className="text-center space-y-4"
         >
-          <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Scenario <span className="text-rose-400">Intelligence.</span></h2>
+          <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Scenario <span className="text-rose-400">Intelligence</span></h2>
           <p className="text-slate-400 max-w-2xl mx-auto">Real problems. Production-grade solutions.</p>
         </motion.div>
 
@@ -786,9 +786,9 @@ const SalesforceMockInterview: React.FC = () => {
             <Rocket size={32} />
           </div>
           <h2 className="text-4xl sm:text-7xl font-black text-white leading-tight">
-            Stop Preparing. <br />
+            Stop Preparing <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500">
-              Start Executing.
+              Start Executing
             </span>
           </h2>
           <p className="text-slate-400 text-xl font-medium max-w-2xl mx-auto">

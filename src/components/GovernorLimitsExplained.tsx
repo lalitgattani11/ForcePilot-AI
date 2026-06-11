@@ -601,7 +601,7 @@ const GovernorLimitsExplained: React.FC = () => {
           <h2 className="text-4xl sm:text-7xl font-black text-white leading-tight">
             Master the <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-400">
-              Platform Rules.
+              Platform Rules
             </span>
           </h2>
           <div className="pt-8">

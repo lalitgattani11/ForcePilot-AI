@@ -330,7 +330,7 @@ const ScenarioBasedSalesforceInterview: React.FC = () => {
           viewport={{ once: true }}
           className="text-center space-y-4"
         >
-          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Production <span className="text-rose-400">Puzzles.</span></h2>
+          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Production <span className="text-rose-400">Puzzles</span></h2>
           <p className="text-slate-500 max-w-2xl mx-auto">Prepare for the "What would you do?" questions that define high-level technical rounds.</p>
         </motion.div>
 
@@ -492,8 +492,8 @@ const ScenarioBasedSalesforceInterview: React.FC = () => {
       >
         <div className="flex-1 space-y-8">
           <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
-            Stop Memorizing. <br />
-            <span className="text-orange-400">Start Solving.</span>
+            Stop Memorizing <br />
+            <span className="text-orange-400">Start Solving</span>
           </h2>
           <p className="text-slate-400 text-lg leading-relaxed">
             In senior technical interviews, there is rarely a single "correct" answer. Interviewers want to see your <strong>design process</strong>. ForcePilot AI evaluates how you weigh pros and cons, consider platform limits, and prioritize long-term maintainability.

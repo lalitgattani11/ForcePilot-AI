@@ -382,7 +382,7 @@ const SalesforceAdminInterview: React.FC = () => {
           viewport={{ once: true }}
           className="text-center space-y-4"
         >
-          <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Focus <span className="text-emerald-400">Domains.</span></h2>
+          <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Focus <span className="text-emerald-400">Domains</span></h2>
           <p className="text-slate-500 text-xs sm:text-base max-w-2xl mx-auto px-4 sm:px-0">Master the critical areas recruiters focus on during Admin interviews.</p>
         </motion.div>
 
@@ -541,7 +541,7 @@ const SalesforceAdminInterview: React.FC = () => {
         <div className="flex-1 space-y-6 sm:space-y-8 text-center lg:text-left">
           <h2 className="text-3xl sm:text-5xl font-bold text-white leading-tight">
             Think like a <br />
-            <span className="text-cyan-400">System Architect.</span>
+            <span className="text-cyan-400">System Architect</span>
           </h2>
           <p className="text-slate-400 text-base sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
             The best Admins don't just know where the buttons are; they understand the "why" behind every configuration. ForcePilot AI evaluates your ability to balance security with usability.

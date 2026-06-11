@@ -125,7 +125,7 @@ const Platform: React.FC = () => {
           <motion.h1 variants={fadeIn} className="guide-hero-title">
             <span className="block pb-1 sm:pb-2 overflow-visible">Recruiter-grade</span>
             <span className="block mt-1 sm:mt-2 md:mt-2.5 pb-[0.25em] overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500">
-              Interview intelligence.
+              Interview intelligence
             </span>
           </motion.h1>
           <motion.p variants={fadeIn} className="guide-hero-subtitle !max-w-2xl">
@@ -257,7 +257,7 @@ const Platform: React.FC = () => {
               viewport={{ once: true }}
               className="text-4xl md:text-6xl font-bold text-white tracking-tight"
             >
-              Interview <span className="text-cyan-400">Intelligence.</span>
+              Interview <span className="text-cyan-400">Intelligence</span>
             </motion.h2>
           </div>
 
@@ -303,7 +303,7 @@ const Platform: React.FC = () => {
             <div className="meta-label">Capabilities</div>
             <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">
               Engineered for <br />
-              <span className="text-slate-400 font-medium">performance.</span>
+              <span className="text-slate-400 font-medium">performance</span>
             </h2>
           </div>
 
@@ -333,7 +333,7 @@ const Platform: React.FC = () => {
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-12 sm:mb-20">
             <div className="meta-label">Audience</div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">Built for Salesforce professionals.</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">Built for Salesforce professionals</h2>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -367,7 +367,7 @@ const Platform: React.FC = () => {
               <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 lg:mb-8 tracking-tight">
                 Built for recruiter-grade <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
-                  interview readiness.
+                  interview readiness
                 </span>
               </h2>
               <div className="space-y-6 text-slate-400 leading-relaxed text-base sm:text-lg">
@@ -394,7 +394,7 @@ const Platform: React.FC = () => {
         <div className="max-w-[800px] mx-auto px-6 relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-10 tracking-tight leading-tight">
             Elevate your technical <br />
-            <span className="text-slate-400">interview readiness.</span>
+            <span className="text-slate-400">interview readiness</span>
           </h2>
           <Link to="/#setup" className="cta-button inline-flex items-center gap-2">
             Get Started Now <ArrowRight size={18} />

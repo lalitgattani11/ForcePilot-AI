@@ -380,7 +380,7 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
           viewport={{ once: true }}
           className="text-center space-y-4"
         >
-          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Core <span className="text-blue-400">Concepts.</span></h2>
+          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Core <span className="text-blue-400">Concepts</span></h2>
           <p className="text-slate-400 max-w-2xl mx-auto">Master the trigger nuances that separate senior architects from junior developers.</p>
         </motion.div>
 
@@ -564,7 +564,7 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
         <div className="flex-1 space-y-8">
           <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
             Think like a <br />
-            <span className="text-indigo-400">Technical Lead.</span>
+            <span className="text-indigo-400">Technical Lead</span>
           </h2>
           <p className="text-slate-400 text-lg leading-relaxed">
             Interviewer expectations have evolved. They don't just want to see code that works; they want to see code that is <strong>defensive</strong>. ForcePilot AI evaluates your ability to handle null pointer exceptions, bulk data scenarios, and complex governor limit constraints.
@@ -604,9 +604,9 @@ const ApexTriggerInterviewQuestions: React.FC = () => {
         className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#020617] via-slate-900 to-[#020617] border border-white/10 px-6 py-24 text-center"
       >        <div className="relative z-10 space-y-10 max-w-4xl mx-auto">
           <h2 className="text-4xl sm:text-7xl font-black text-white leading-tight">
-            Stop Coding. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400">
-              Start Engineering.
+            Stop Coding <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">
+              Start Engineering
             </span>
           </h2>
           <div className="pt-8">

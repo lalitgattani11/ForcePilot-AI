@@ -60,7 +60,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   onStart,
   onViewHistoryDetail,
 }) => {
-  const { user } = useAuth();
+  const { user, signInWithGoogle } = useAuth();
   const location = useLocation();
   const roles = useMemo<Role[]>(
     () => [
@@ -91,6 +91,19 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
       }
     }
   }, [location.state, roles]);
+
+  // Auto-scroll to setup after login if intended
+  useEffect(() => {
+    if (user && localStorage.getItem('postLoginAction') === 'scrollToSetup') {
+      localStorage.removeItem('postLoginAction');
+      const setupElement = document.getElementById('setup');
+      if (setupElement) {
+        setTimeout(() => {
+          setupElement.scrollIntoView({ behavior: 'smooth' });
+        }, 800);
+      }
+    }
+  }, [user]);
 
 
 
@@ -124,7 +137,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   return (
     <div className="flex flex-col w-full max-w-[1600px] mx-auto px-2 sm:px-5 lg:px-8 gap-12 sm:gap-16 lg:gap-20 relative overflow-hidden">
       {/* 1. HERO SECTION */}
-      <section className="relative flex flex-col items-center justify-center pt-12 pb-4 sm:pt-20 sm:pb-6 overflow-visible w-full">
+      <section className="relative flex flex-col items-center justify-center pt-12 pb-4 sm:pt-20 sm:pb-6 overflow-visible w-full border-b border-white/5">
         {/* Ambient background blur behind hero */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-tr from-cyan-500/10 via-emerald-500/10 to-transparent blur-[140px] pointer-events-none -z-10 animate-pulse-neural"></div>
 
@@ -146,7 +159,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] italic overflow-visible pr-[0.1em] -mr-[0.1em] sm:pr-[0.05em] sm:-mr-[0.05em]">Salesforce</span> mastery.
           </h1>
 
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.4 }}
@@ -160,37 +173,38 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 max-w-md mx-auto"
+            className="flex flex-col items-center justify-center pt-2 max-w-md mx-auto"
           >
-            <button
-              onClick={() => document.getElementById('setup')?.scrollIntoView({ behavior: 'smooth' })}
-              className="cta-button group flex items-center gap-3 w-full sm:w-auto justify-center"
-            >
-              <span>Start Mock Interview</span>
-              <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-            </button>
-            <button
-              onClick={() => document.getElementById('platform-preview')?.scrollIntoView({ behavior: 'smooth' })}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl md:rounded-2xl font-bold text-sm text-slate-300 hover:text-white border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300 backdrop-blur-md flex items-center gap-3 justify-center group"
-            >
-              <span>Explore Platform</span>
-              <ChevronDown size={16} className="transition-transform duration-300 group-hover:translate-y-0.5" />
-            </button>
-          </motion.div>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+              <button
+                onClick={() => {
+                  if (user) {
+                    document.getElementById('setup')?.scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    localStorage.setItem('postLoginAction', 'scrollToSetup');
+                    signInWithGoogle();
+                  }
+                }}
+                className="cta-button group flex items-center gap-3 w-full sm:w-auto justify-center"
+              >
+                <span>Start Interview</span>
+                <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
+              <button
+                onClick={() => document.getElementById('platform-preview')?.scrollIntoView({ behavior: 'smooth' })}
+                className="w-full sm:w-auto px-8 py-4 rounded-xl md:rounded-2xl font-bold text-sm text-slate-300 hover:text-white border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300 backdrop-blur-md flex items-center gap-3 justify-center group"
+              >
+                <span>Explore Platform</span>
+                <ChevronDown size={16} className="transition-transform duration-300 group-hover:translate-y-0.5" />
+              </button>
+            </div>
 
-          {!user && (
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="pt-2"
-            >
-              <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white/[0.02] border border-white/5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                <Zap size={12} className="text-cyan-400 animate-pulse" />
-                Sign in to track your career evolution
-              </div>
-            </motion.div>
-          )}
+            {!user && (
+              <p className="text-xs sm:text-sm text-slate-500 font-medium text-center mt-4">
+                Sign in to unlock interview history and progress tracking.
+              </p>
+            )}
+          </motion.div>
         </div>
       </section>
 
@@ -521,7 +535,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             Experience ForcePilot
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
-            Designed for Salesforce <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">Engineering Leaders.</span>
+            Designed for Salesforce <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">Engineering Leaders</span>
           </h2>
           <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
             A highly optimized, intelligence-backed suite created to prep you for senior, lead, and architectural Salesforce interviews.

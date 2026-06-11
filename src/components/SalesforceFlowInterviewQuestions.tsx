@@ -481,7 +481,7 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
           viewport={{ once: true }}
           className="text-center space-y-4"
         >
-          <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Pillars.</span></h2>
+          <h2 className="text-2xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Pillars</span></h2>
           <p className="text-slate-500 text-xs sm:text-base max-w-2xl mx-auto px-4 sm:px-0">Elite Flow developers are judged on their ability to build efficient, scalable, and maintainable automations.</p>
         </motion.div>
 
@@ -639,7 +639,7 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
         <div className="flex-1 space-y-6 sm:space-y-8 relative z-10 text-center lg:text-left">
           <h2 className="text-3xl sm:text-5xl font-bold text-white leading-tight">
             Design for <br />
-            <span className="text-emerald-400">Transaction Scale.</span>
+            <span className="text-emerald-400">Transaction Scale</span>
           </h2>
           <p className="text-slate-400 text-base sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
             Interviewer focus has shifted from "Can you build a Flow?" to "Can you build a Flow that won't break the org?". We evaluate your understanding of bulkification and governor limit impacts.
@@ -694,7 +694,7 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
           viewport={{ once: true }}
           className="text-center space-y-4"
         >
-          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Scenario <span className="text-blue-400">Thinking.</span></h2>
+          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Scenario <span className="text-blue-400">Thinking</span></h2>
           <p className="text-slate-500 max-w-2xl mx-auto">Prepare for complex automation puzzles frequently used by Salesforce Partners.</p>
         </motion.div>
 
@@ -808,9 +808,9 @@ const SalesforceFlowInterviewQuestions: React.FC = () => {
       >
         <div className="relative z-10 space-y-10 max-w-4xl mx-auto">
           <h2 className="text-4xl sm:text-7xl font-black text-white leading-tight">
-            Stop Building. <br />
+            Stop Building <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">
-              Start Engineering.
+              Start Engineering
             </span>
           </h2>
           <div className="pt-8">

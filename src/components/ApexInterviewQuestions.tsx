@@ -538,7 +538,7 @@ const ApexInterviewQuestions: React.FC = () => {
       >
         <div className="relative z-10 space-y-8 max-w-3xl mx-auto">
           <h2 className="text-3xl sm:text-5xl font-bold text-white leading-tight">
-            Recruiter-Grade <br /> Apex Mastery.
+            Recruiter-Grade <br /> Apex Mastery
           </h2>
           <p className="text-emerald-50 text-lg opacity-90">
             ForcePilot AI adapts to your technical depth. Get real-time feedback

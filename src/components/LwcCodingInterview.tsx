@@ -374,7 +374,7 @@ const LwcCodingInterview: React.FC = () => {
         className="space-y-16"
       >
         <div className="text-center space-y-4">
-          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Pillars.</span></h2>
+          <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">Technical <span className="text-cyan-400">Pillars</span></h2>
           <p className="text-slate-500 max-w-2xl mx-auto">Elite LWC developers are judged on their ability to build modern, reactive, and optimized web standards components.</p>
         </div>
 
@@ -547,7 +547,7 @@ const LwcCodingInterview: React.FC = () => {
         <div className="flex-1 space-y-8">
           <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
             Think like a <br />
-            <span className="text-emerald-400">Web Standards Expert.</span>
+            <span className="text-emerald-400">Web Standards Expert</span>
           </h2>
           <p className="text-slate-400 text-lg leading-relaxed">
             Salesforce has moved LWC closer to native web standards. Interviewers are now looking for developers who understand the underlying platform mechanics like Custom Elements, Templates, and Shadow DOM. ForcePilot AI evaluates your ability to build future-proof frontends.
@@ -591,9 +591,9 @@ const LwcCodingInterview: React.FC = () => {
       >
         <div className="relative z-10 space-y-10 max-w-4xl mx-auto">
           <h2 className="text-4xl sm:text-7xl font-black text-white leading-tight">
-            Stop Rendering. <br />
+            Stop Rendering <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-blue-500">
-              Start Engineering.
+              Start Engineering
             </span>
           </h2>
           <div className="pt-8">
